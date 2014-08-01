@@ -80,7 +80,7 @@ def exec_command_pipe(name, *args):
 
 def file_open(name, mode="r", subdir='modules'):
     """Open a file from the root dir, using a subdir folder."""
-    from trytond.modules import EGG_MODULES
+    from trytond.modules import EGG_MODULES, MODULES_PATH
     root_path = os.path.dirname(os.path.dirname(os.path.abspath(
                 unicode(__file__, sys.getfilesystemencoding()))))
 
@@ -114,7 +114,8 @@ def file_open(name, mode="r", subdir='modules'):
                     or name.startswith('tests' + os.sep))):
             name = os.path.join(root_path, name)
         else:
-            name = os.path.join(root_path, subdir, name)
+            name = os.path.join(MODULES_PATH, name)
+            print(name)
     else:
         name = os.path.join(root_path, name)
 
