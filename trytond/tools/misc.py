@@ -78,54 +78,6 @@ def exec_command_pipe(name, *args):
     return os.popen2(cmd, 'b')
 
 
-def file_open(name, mode="r", subdir='modules'):
-    """Open a file from the root dir, using a subdir folder."""
-    from trytond.modules import EGG_MODULES, MODULES_PATH
-    root_path = os.path.dirname(os.path.dirname(os.path.abspath(
-                unicode(__file__, sys.getfilesystemencoding()))))
-
-    egg_name = False
-    if subdir == 'modules':
-        module_name = name.split(os.sep)[0]
-        if module_name in EGG_MODULES:
-            epoint = EGG_MODULES[module_name]
-            mod_path = os.path.join(epoint.dist.location,
-                    *epoint.module_name.split('.')[:-1])
-            egg_name = os.path.join(mod_path, name)
-            if not os.path.isfile(egg_name):
-                # Find module in path
-                for path in sys.path:
-                    mod_path = os.path.join(path,
-                            *epoint.module_name.split('.')[:-1])
-                    egg_name = os.path.join(mod_path, name)
-                    if os.path.isfile(egg_name):
-                        break
-                if not os.path.isfile(egg_name):
-                    # When testing modules from setuptools location is the
-                    # module directory
-                    egg_name = os.path.join(
-                        os.path.dirname(epoint.dist.location), name)
-
-    if subdir:
-        if (subdir == 'modules'
-                and (name.startswith('ir' + os.sep)
-                    or name.startswith('res' + os.sep)
-                    or name.startswith('webdav' + os.sep)
-                    or name.startswith('tests' + os.sep))):
-            name = os.path.join(root_path, name)
-        else:
-            name = os.path.join(MODULES_PATH, name)
-            print(name)
-    else:
-        name = os.path.join(root_path, name)
-
-    for i in (name, egg_name):
-        if i and os.path.isfile(i):
-            return open(i, mode)
-
-    raise IOError('File not found : %s ' % name)
-
-
 def get_smtp_server():
     """
     Instanciate, configure and return a SMTP or SMTP_SSL instance from

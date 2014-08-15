@@ -1,5 +1,7 @@
 #This file is part of Tryton.  The COPYRIGHT file at the top level of
 #this repository contains the full copyright notices and license terms.
+from trytond.modules import Index
+
 try:
     import cStringIO as StringIO
 except ImportError:
@@ -21,7 +23,7 @@ from sql.aggregate import Max
 from ..model import ModelView, ModelSQL, fields
 from ..wizard import Wizard, StateView, StateTransition, StateAction, \
     Button
-from ..tools import file_open, reduce_ids
+from ..tools import reduce_ids
 from .. import backend
 from ..pyson import PYSONEncoder
 from ..transaction import Transaction
@@ -1042,8 +1044,7 @@ class TranslationSet(Wizard):
 
             odt_content = ''
             if report.report:
-                with file_open(report.report.replace('/', os.sep),
-                        mode='rb') as fp:
+                with open(Index().module_file(report.report.replace('/', os.sep)), 'rb') as fp:
                     odt_content = fp.read()
             for content in (report.report_content_custom, odt_content):
                 if not content:

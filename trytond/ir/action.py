@@ -10,13 +10,14 @@ from sql import Table
 from sql.aggregate import Count
 
 from ..model import ModelView, ModelStorage, ModelSQL, fields
-from ..tools import file_open, safe_eval
+from ..tools import safe_eval
 from .. import backend
 from ..pyson import PYSONEncoder, CONTEXT, PYSON
 from ..transaction import Transaction
 from ..pool import Pool
 from ..cache import Cache
 from ..rpc import RPC
+from trytond.modules import Index
 
 __all__ = [
     'Action', 'ActionKeyword', 'ActionReport',
@@ -589,9 +590,9 @@ class ActionReport(ActionMixin, ModelSQL, ModelView):
             data = getattr(report, name + '_custom')
             if not data and getattr(report, name[:-8]):
                 try:
-                    with file_open(
-                            getattr(report, name[:-8]).replace('/', os.sep),
-                            mode='rb') as fp:
+                    with open(Index().module_file(
+                            getattr(report, name[:-8]).replace('/', os.sep)),
+                              'rb') as fp:
                         data = fp.read()
                 except Exception:
                     data = None
@@ -619,8 +620,8 @@ class ActionReport(ActionMixin, ModelSQL, ModelView):
             default = 0
         for report in reports:
             try:
-                with file_open(report.style.replace('/', os.sep),
-                        mode='rb') as fp:
+                with open(Index().module_file(report.style.replace('/', os.sep)),
+                          'rb') as fp:
                     data = fp.read()
             except Exception:
                 data = None
