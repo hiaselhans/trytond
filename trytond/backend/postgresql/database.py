@@ -229,7 +229,7 @@ class Database(DatabaseInterface):
 
     @staticmethod
     def init(cursor):
-        from trytond.modules import get_module_info
+        from trytond.modules import Index
         sql_file = os.path.join(os.path.dirname(__file__), 'init.sql')
         with open(sql_file) as fp:
             for line in fp.read().split(';'):
@@ -240,7 +240,7 @@ class Database(DatabaseInterface):
             state = 'uninstalled'
             if module in ('ir', 'res'):
                 state = 'to install'
-            info = get_module_info(module)
+            info = Index()[module].info
             cursor.execute('SELECT NEXTVAL(\'ir_module_module_id_seq\')')
             module_id = cursor.fetchone()[0]
             cursor.execute('INSERT INTO ir_module_module '

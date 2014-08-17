@@ -89,11 +89,9 @@ class ModelView(Model):
     @ClassProperty
     @classmethod
     def _modules_list(cls):
-        from trytond.modules import create_graph, get_module_list
-        if ModelView.__modules_list:
-            return ModelView.__modules_list
-        graph = create_graph(get_module_list())[0]
-        ModelView.__modules_list = [x.name for x in graph] + [None]
+        if not ModelView.__modules_list:
+            from trytond.modules import Index
+            ModelView.__modules_list = [m.name for m in Index().create_graph()]
         return ModelView.__modules_list
 
     @classmethod
