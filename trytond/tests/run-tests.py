@@ -19,7 +19,7 @@ parser.add_argument("-c", "--config", dest="config",
     help="specify config file")
 parser.add_argument("-m", "--modules", action="store_true", dest="modules",
     default=False, help="Run also modules tests")
-parser.add_argument("-v", action="count", default=0, dest="verbosity",
+parser.add_argument("-v", default=0, type=int, dest="verbosity",
     help="Increase verbosity")
 parser.add_argument('tests', metavar='test', nargs='*')
 opt = parser.parse_args()
