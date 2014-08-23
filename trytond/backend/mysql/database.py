@@ -1,5 +1,5 @@
-#This file is part of Tryton.  The COPYRIGHT file at the top level of
-#this repository contains the full copyright notices and license terms.
+# This file is part of Tryton.  The COPYRIGHT file at the top level of
+# this repository contains the full copyright notices and license terms.
 from trytond.backend.database import DatabaseInterface, CursorInterface
 from trytond.config import CONFIG
 import MySQLdb
@@ -216,7 +216,7 @@ class Database(DatabaseInterface):
 
     @staticmethod
     def init(cursor):
-        from trytond.modules import get_module_info
+        from trytond.modules import Index
         sql_file = os.path.join(os.path.dirname(__file__), 'init.sql')
         with open(sql_file) as fp:
             for line in fp.read().split(';'):
@@ -227,7 +227,7 @@ class Database(DatabaseInterface):
             state = 'uninstalled'
             if module in ('ir', 'res'):
                 state = 'to install'
-            info = get_module_info(module)
+            info = Index()[module].info
             cursor.execute('INSERT INTO ir_module_module '
                 '(create_uid, create_date, name, state) '
                 'VALUES (%s, now(), %s, %s)',
