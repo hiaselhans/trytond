@@ -1,5 +1,5 @@
-#This file is part of Tryton.  The COPYRIGHT file at the top level of
-#this repository contains the full copyright notices and license terms.
+# This file is part of Tryton.  The COPYRIGHT file at the top level of
+# this repository contains the full copyright notices and license terms.
 from trytond.backend.database import DatabaseInterface, CursorInterface
 from trytond.config import CONFIG
 import os
@@ -15,7 +15,7 @@ try:
     from pysqlite2 import dbapi2 as sqlite
     from pysqlite2.dbapi2 import IntegrityError as DatabaseIntegrityError
     from pysqlite2.dbapi2 import OperationalError as DatabaseOperationalError
-    #pysqlite2 < 2.5 doesn't return correct rowcount
+    # pysqlite2 < 2.5 doesn't return correct rowcount
     _FIX_ROWCOUNT = sqlite.version_info < (2, 5, 0)
 except ImportError:
     import sqlite3 as sqlite
@@ -283,7 +283,7 @@ class Database(DatabaseInterface):
 
     @staticmethod
     def init(cursor):
-        from trytond.modules import get_module_info
+        from trytond.modules import Index
         sql_file = os.path.join(os.path.dirname(__file__), 'init.sql')
         with open(sql_file) as fp:
             for line in fp.read().split(';'):
@@ -296,7 +296,7 @@ class Database(DatabaseInterface):
             state = 'uninstalled'
             if module in ('ir', 'res'):
                 state = 'to install'
-            info = get_module_info(module)
+            info = Index()[module].info
             insert = ir_module.insert(
                 [ir_module.create_uid, ir_module.create_date, ir_module.name,
                     ir_module.state],

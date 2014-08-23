@@ -1,5 +1,5 @@
-#This file is part of Tryton.  The COPYRIGHT file at the top level of
-#this repository contains the full copyright notices and license terms.
+# This file is part of Tryton.  The COPYRIGHT file at the top level of
+# this repository contains the full copyright notices and license terms.
 import os
 import sys
 import logging
@@ -12,7 +12,7 @@ from lxml import etree
 from trytond.model import ModelView, ModelSQL, fields
 from trytond import backend
 from trytond.pyson import CONTEXT, Eval, Bool, PYSONDecoder
-from trytond.tools import safe_eval, file_open
+from trytond.tools import safe_eval
 from trytond.transaction import Transaction
 from trytond.wizard import Wizard, StateView, Button
 from trytond.pool import Pool
@@ -173,9 +173,10 @@ class View(ModelSQL, ModelView):
     def get_arch(self, name):
         value = None
         if self.name and self.module:
+            from trytond.modules import Index
             path = os.path.join(self.module, 'view', self.name + '.xml')
             try:
-                with file_open(path, subdir='modules') as fp:
+                with open(Index().module_file(path), 'r') as fp:
                     value = fp.read()
             except IOError:
                 pass

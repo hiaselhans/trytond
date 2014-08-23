@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-#This file is part of Tryton.  The COPYRIGHT file at the top level of
-#this repository contains the full copyright notices and license terms.
+# This file is part of Tryton.  The COPYRIGHT file at the top level of
+# this repository contains the full copyright notices and license terms.
 import os
 import sys
 import unittest
@@ -220,21 +220,16 @@ def modules_suite(modules=None):
         suite_ = suite()
     else:
         suite_ = all_suite()
-    from trytond.modules import create_graph, get_module_list, \
-        MODULES_PATH, EGG_MODULES
-    graph = create_graph(get_module_list())[0]
+    from trytond.modules import Index
+    graph = Index().create_graph()
     for package in graph:
         module = package.name
         if modules and module not in modules:
             continue
         test_module = 'trytond.modules.%s.tests' % module
-        if os.path.isdir(os.path.join(MODULES_PATH, module)) or \
-                module in EGG_MODULES:
-            try:
-                test_mod = __import__(test_module, fromlist=[''])
-            except ImportError:
-                continue
-        else:
+        try:
+            test_mod = __import__(test_module, fromlist=[''])
+        except ImportError:
             continue
         for test in test_mod.suite():
             found = False
