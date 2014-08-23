@@ -147,7 +147,7 @@ class Index(dict):
         for name in ('ir', 'res', 'webdav', 'tests'):
             self.add_module(name, os.path.join(TRYTON_ROOT, name))
 
-    def create_graph(self, module_list=None):
+    def create_graph(self, modules_list=None):
         """
         Create a sorted list (=graph) with lowest dependencies first for
         'module_list' or for all modules in Index
@@ -155,32 +155,30 @@ class Index(dict):
         :param module_list: list of module names
         :return: sorted list of module-nodes
         """
-        if module_list is None:
-            module_list = self.keys()
+        if modules_list is None:
+            modules_list = self.keys()
+
+        to_install = [self[mod_name] for mod_name in modules_list]
         sorted_list = []
 
-        def _add_deps(module_name):
-            """
-            internal function to first add dependencies recursively, as soon as
-            all dependencies are fulfilled, add the module itself
-            """
-            module_node = self[module_name]
+        def add_module(module):
+            # Add a module to sorted list, if all its dependencies have
+            # been fulfilled. Returns true on success
+            for dep in module.depends:
+                if self[dep] not in sorted_list:
+                    return False
+            for x_dep in module.extras_depend:
+                if x_dep in modules_list and self[x_dep] not in sorted_list:
+                    return False
+            sorted_list.append(module)
+            to_install.remove(module)
+            return True
 
-            if module_node in sorted_list:
-                return
-            for dep in module_node.depends:
-                _add_deps(dep)
-            for xdep in module_node.extras_depend:
-                if xdep in module_list:
-                    _add_deps(xdep)
-            sorted_list.append(module_node)
-
-        for module in module_list:
-            try:
-                _add_deps(module)
-            except RuntimeError:  # endless recursion on circular depends
-                raise ImportError("Circular dependencies for Module %s"
-                                  % module)
+        while to_install:
+            amount_added = sum([add_module(mod) for mod in to_install])
+            if amount_added == 0:
+                raise Exception('Missing dependencies for modules: %s' %
+                                to_install)
 
         return sorted_list
 
