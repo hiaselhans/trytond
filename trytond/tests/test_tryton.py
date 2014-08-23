@@ -10,7 +10,7 @@ from lxml import etree
 from trytond.config import CONFIG
 from trytond.pool import Pool
 from trytond import backend
-from trytond.protocols.dispatcher import create
+from trytond.protocols.dispatcher import create, drop
 from trytond.transaction import Transaction
 from trytond.pyson import PYSONEncoder, Eval
 from trytond.exceptions import UserError
@@ -77,8 +77,9 @@ def install_module(name):
     cursor = database.cursor()
     databases = database.list(cursor)
     cursor.close()
-    if DB_NAME not in databases:
-        create(DB_NAME, CONFIG['admin_passwd'], 'en_US', USER_PASSWORD)
+    if DB_NAME in databases:
+        drop(DB_NAME, CONFIG['admin_passwd'])
+    create(DB_NAME, CONFIG['admin_passwd'], 'en_US', USER_PASSWORD)
     with Transaction().start(DB_NAME, USER,
             context=CONTEXT) as transaction:
         Module = POOL.get('ir.module.module')
