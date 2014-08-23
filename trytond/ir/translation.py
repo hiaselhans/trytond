@@ -1,5 +1,6 @@
-#This file is part of Tryton.  The COPYRIGHT file at the top level of
-#this repository contains the full copyright notices and license terms.
+# This file is part of Tryton.  The COPYRIGHT file at the top level of
+# this repository contains the full copyright notices and license terms.
+
 try:
     import cStringIO as StringIO
 except ImportError:
@@ -21,13 +22,14 @@ from sql.aggregate import Max
 from ..model import ModelView, ModelSQL, fields
 from ..wizard import Wizard, StateView, StateTransition, StateAction, \
     Button
-from ..tools import file_open, reduce_ids, grouped_slice
+from ..tools import reduce_ids, grouped_slice
 from .. import backend
 from ..pyson import PYSONEncoder
 from ..transaction import Transaction
 from ..pool import Pool
 from ..cache import Cache
 from ..const import RECORD_CACHE_SIZE
+from trytond.modules import Index
 
 __all__ = ['Translation',
     'TranslationSetStart', 'TranslationSetSucceed', 'TranslationSet',
@@ -208,7 +210,7 @@ class Translation(ModelSQL, ModelView):
                             ir_translation.module, ir_translation.fuzzy,
                             ir_translation.res_id],
                         [[trans_name, 'en_US', 'field', field.string,
-                                string_md5, '', module_name, False, -1]]))
+                          string_md5, '', module_name, False, -1]]))
             elif trans_fields[trans_name]['src'] != field.string:
                 cursor.execute(*ir_translation.update(
                         [ir_translation.src, ir_translation.src_md5],
@@ -227,7 +229,7 @@ class Translation(ModelSQL, ModelView):
                                 ir_translation.module, ir_translation.fuzzy,
                                 ir_translation.res_id],
                             [[trans_name, 'en_US', 'help', field.help,
-                                    help_md5, '', module_name, False, -1]]))
+                              help_md5, '', module_name, False, -1]]))
             elif trans_help[trans_name]['src'] != field.help:
                 cursor.execute(*ir_translation.update(
                         [ir_translation.src, ir_translation.src_md5],
@@ -247,7 +249,7 @@ class Translation(ModelSQL, ModelView):
                                 ir_translation.module, ir_translation.fuzzy,
                                 ir_translation.res_id],
                             [[trans_name, 'en_US', 'selection', val, val_md5,
-                                    '', module_name, False, -1]]))
+                              '', module_name, False, -1]]))
 
         for field_name, field in model._fields.iteritems():
             trans_name = model.__name__ + ',' + field_name
@@ -281,7 +283,7 @@ class Translation(ModelSQL, ModelView):
                             ir_translation.module, ir_translation.fuzzy,
                             ir_translation.res_id],
                         [[model.__name__, 'en_US', 'error', error, error_md5,
-                                '', module_name, False, -1]]))
+                          '', module_name, False, -1]]))
 
     @classmethod
     def register_wizard(cls, wizard, module_name):
@@ -308,7 +310,7 @@ class Translation(ModelSQL, ModelView):
                             ir_translation.module, ir_translation.fuzzy,
                             ir_translation.res_id],
                         [[trans_name, 'en_US', 'wizard_button', button.string,
-                                src_md5, '', module_name, False, -1]]))
+                          src_md5, '', module_name, False, -1]]))
             elif trans_buttons[trans_name] != button.string:
                 cursor.execute(*ir_translation.update(
                         [ir_translation.src, ir_translation.src_md5],
@@ -426,7 +428,7 @@ class Translation(ModelSQL, ModelView):
         if to_fetch:
             cursor = Transaction().cursor
             table = cls.__table__()
-            fuzzy_sql = table.fuzzy == False
+            fuzzy_sql = not table.fuzzy
             if Transaction().context.get('fuzzy_translation', False):
                 fuzzy_sql = None
             in_max = cursor.IN_MAX / 7
@@ -1035,8 +1037,7 @@ class TranslationSet(Wizard):
 
             odt_content = ''
             if report.report:
-                with file_open(report.report.replace('/', os.sep),
-                        mode='rb') as fp:
+                with open(Index().module_file(report.report), 'rb') as fp:
                     odt_content = fp.read()
             for content in (report.report_content_custom, odt_content):
                 if not content:
@@ -1100,7 +1101,7 @@ class TranslationSet(Wizard):
                                 translation.fuzzy, translation.src_md5,
                                 translation.res_id],
                             [[report.report_name, 'en_US', 'odt', string, '',
-                                    report.module, False, src_md5, -1]]))
+                              report.module, False, src_md5, -1]]))
             if strings:
                 cursor.execute(*translation.delete(
                         where=(translation.name == report.report_name)
@@ -1196,7 +1197,7 @@ class TranslationSet(Wizard):
                                 translation.module, translation.fuzzy,
                                 translation.res_id],
                             [[view.model, 'en_US', 'view', string, string_md5,
-                                    '', view.module, False, -1]]))
+                              '', view.module, False, -1]]))
             if strings:
                 cursor.execute(*translation.delete(
                         where=(translation.name == view.model)

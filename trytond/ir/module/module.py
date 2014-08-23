@@ -1,9 +1,9 @@
-#This file is part of Tryton.  The COPYRIGHT file at the top level of
-#this repository contains the full copyright notices and license terms.
+# This file is part of Tryton.  The COPYRIGHT file at the top level of
+# this repository contains the full copyright notices and license terms.
 from functools import wraps
 
 from trytond.model import ModelView, ModelSQL, fields
-from trytond.modules import create_graph, get_module_list, get_module_info
+from trytond.modules import Index, get_module_list
 from trytond.wizard import Wizard, StateView, Button, StateTransition, \
     StateAction
 from trytond import backend
@@ -94,7 +94,8 @@ class Module(ModelSQL, ModelView):
         return 'uninstalled'
 
     def get_version(self, name):
-        return get_module_info(self.name).get('version', '')
+        if self.name in Index():
+            return Index()[self.name].info.get('version', '')
 
     @classmethod
     def get_parents(cls, modules, name):
@@ -158,7 +159,7 @@ class Module(ModelSQL, ModelView):
     @filter_state('uninstalled')
     def install(cls, modules):
         modules_install = set(modules)
-        graph, packages, later = create_graph(get_module_list())
+        graph = Index()
 
         def get_parents(module):
             parents = set(p for p in module.parents)
@@ -168,10 +169,7 @@ class Module(ModelSQL, ModelView):
 
         for module in modules:
             if module.name not in graph:
-                missings = []
-                for package, deps, xdep, info in packages:
-                    if package == module.name:
-                        missings = [x for x in deps if x not in graph]
+                missings = [x for x in module.all_depends if x not in graph]
                 cls.raise_user_error('missing_dep', (missings, module.name))
 
             modules_install.update((m for m in get_parents(module)
@@ -185,7 +183,7 @@ class Module(ModelSQL, ModelView):
     @filter_state('installed')
     def upgrade(cls, modules):
         modules_installed = set(modules)
-        graph, packages, later = create_graph(get_module_list())
+        graph = Index()
 
         def get_childs(module):
             childs = set(c for c in module.childs)
@@ -196,13 +194,15 @@ class Module(ModelSQL, ModelView):
         for module in modules:
             if module.name not in graph:
                 missings = []
-                for package, deps, xdep, info in packages:
-                    if package == module.name:
-                        missings = [x for x in deps if x not in graph]
+                for package in graph:
+                    # (this wouldnt happen) todo
+                    if package.name == module.name:
+                        missings = [x for x in package.deps if x not in graph]
                 cls.raise_user_error('missing_dep', (missings, module.name))
 
             modules_installed.update((m for m in get_childs(module)
                     if m.state == 'installed'))
+
         cls.write(list(modules_installed), {
                 'state': 'to upgrade',
                 })
@@ -260,11 +260,11 @@ class Module(ModelSQL, ModelView):
         for name in module_names:
             if name in name2module:
                 module = name2module[name]
-                tryton = get_module_info(name)
+                tryton = Index()[name].info
                 cls._update_dependencies(module, tryton.get('depends', []))
                 continue
 
-            tryton = get_module_info(name)
+            tryton = Index()[name].info
             if not tryton:
                 continue
             module, = cls.create([{
