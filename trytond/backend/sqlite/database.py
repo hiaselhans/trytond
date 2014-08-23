@@ -296,7 +296,6 @@ class Database(DatabaseInterface):
             state = 'uninstalled'
             if module in ('ir', 'res'):
                 state = 'to install'
-            info = Index()[module].info
             insert = ir_module.insert(
                 [ir_module.create_uid, ir_module.create_date, ir_module.name,
                     ir_module.state],
@@ -304,7 +303,7 @@ class Database(DatabaseInterface):
             cursor.execute(*insert)
             cursor.execute('SELECT last_insert_rowid()')
             module_id, = cursor.fetchone()
-            for dependency in info.get('depends', []):
+            for dependency in Index()[module].depends:
                 insert = ir_module_dependency.insert(
                     [ir_module_dependency.create_uid,
                         ir_module_dependency.create_date,

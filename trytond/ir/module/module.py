@@ -3,7 +3,7 @@
 from functools import wraps
 
 from trytond.model import ModelView, ModelSQL, fields
-from trytond.modules import Index, get_module_list
+from trytond.modules import Index
 from trytond.wizard import Wizard, StateView, Button, StateTransition, \
     StateAction
 from trytond import backend
@@ -94,8 +94,7 @@ class Module(ModelSQL, ModelView):
         return 'uninstalled'
 
     def get_version(self, name):
-        if self.name in Index():
-            return Index()[self.name].info.get('version', '')
+        return Index()[self.name].info.get('version', '')
 
     @classmethod
     def get_parents(cls, modules, name):
@@ -159,7 +158,8 @@ class Module(ModelSQL, ModelView):
     @filter_state('uninstalled')
     def install(cls, modules):
         modules_install = set(modules)
-        graph = Index()
+        graph = Index().create_graph()
+        graph_names = [m.name for m in graph]
 
         def get_parents(module):
             parents = set(p for p in module.parents)
@@ -168,8 +168,9 @@ class Module(ModelSQL, ModelView):
             return parents
 
         for module in modules:
-            if module.name not in graph:
-                missings = [x for x in module.all_depends if x not in graph]
+            if module.name not in graph_names:
+                missings = [dep for dep in Index()[module.name].depends
+                            if dep not in graph_names]
                 cls.raise_user_error('missing_dep', (missings, module.name))
 
             modules_install.update((m for m in get_parents(module)
@@ -183,7 +184,8 @@ class Module(ModelSQL, ModelView):
     @filter_state('installed')
     def upgrade(cls, modules):
         modules_installed = set(modules)
-        graph = Index()
+        graph = Index().create_graph()
+        graph_names = [m.name for m in graph]
 
         def get_childs(module):
             childs = set(c for c in module.childs)
@@ -192,16 +194,13 @@ class Module(ModelSQL, ModelView):
             return childs
 
         for module in modules:
-            if module.name not in graph:
-                missings = []
-                for package in graph:
-                    # (this wouldnt happen) todo
-                    if package.name == module.name:
-                        missings = [x for x in package.deps if x not in graph]
+            if module.name not in graph_names:
+                missings = [dep for dep in Index()[module.name].depends
+                            if dep not in graph_names]
                 cls.raise_user_error('missing_dep', (missings, module.name))
 
             modules_installed.update((m for m in get_childs(module)
-                    if m.state == 'installed'))
+                                      if m.state == 'installed'))
 
         cls.write(list(modules_installed), {
                 'state': 'to upgrade',
@@ -251,28 +250,23 @@ class Module(ModelSQL, ModelView):
     def update_list(cls):
         'Update the list of available packages'
         count = 0
-        module_names = get_module_list()
+        module_names = Index().keys()
 
         modules = cls.search([])
-        name2module = dict((m.name, m) for m in modules)
+        name2module = {m.name: m for m in modules}
 
-        # iterate through installed modules and mark them as being so
+        # iterate through installed modules and add to database if missing,
+        # update dependencies
         for name in module_names:
             if name in name2module:
                 module = name2module[name]
-                tryton = Index()[name].info
-                cls._update_dependencies(module, tryton.get('depends', []))
-                continue
+            else:
+                module, = cls.create([{'name': name,
+                                       'state': 'uninstalled',
+                                       }])
+                count += 1
 
-            tryton = Index()[name].info
-            if not tryton:
-                continue
-            module, = cls.create([{
-                        'name': name,
-                        'state': 'uninstalled',
-                        }])
-            count += 1
-            cls._update_dependencies(module, tryton.get('depends', []))
+            cls._update_dependencies(module, depends=Index()[name].depends)
         return count
 
     @classmethod

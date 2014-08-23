@@ -227,14 +227,13 @@ class Database(DatabaseInterface):
             state = 'uninstalled'
             if module in ('ir', 'res'):
                 state = 'to install'
-            info = Index()[module].info
             cursor.execute('INSERT INTO ir_module_module '
                 '(create_uid, create_date, name, state) '
                 'VALUES (%s, now(), %s, %s)',
                 (0, module, state))
             cursor.execute('SELECT LAST_INSERT_ID()')
             module_id, = cursor.fetchone()
-            for dependency in info.get('depends', []):
+            for dependency in Index()[module].depends:
                 cursor.execute('INSERT INTO ir_module_module_dependency '
                     '(create_uid, create_date, module, name) '
                     'VALUES (%s, now(), %s, %s)',
