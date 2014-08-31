@@ -40,13 +40,13 @@ def _importable(package):
     #                             cwd=os.path.dirname(package.path))
     #
     #return exit_code == 0
-    if package.name in ('ir', 'webdav', 'tests', 'res'):
-        return True
+
     try:
         package.import_module()
     except Exception, e:
         logger.info(str(e))
-        return False
+        raise
+        #return False
     return True
 
 
@@ -56,15 +56,13 @@ def monitor():
 
     :return: True if at least one file has changed
     '''
-    import logging
-    logger = logging.getLogger('monitor')
     modified = False
     last_keys = set(Index().keys())
     Index().create_index()
 
     # check all imported modules:
     for module in sys.modules.keys():
-        if not module.startswith('trytond.'):
+        if not module.startswith('trytond.modules'):
             continue
         if not hasattr(sys.modules[module], '__file__'):
             continue
@@ -90,7 +88,7 @@ def monitor():
     # Do not restart on module-errors
     if modified:
         for package in Index().itervalues():
-            if not _importable(package):
+            if package._imported and not _importable(package):
                 logger.info('Module import failed on %s. not reloading' %
                             package.name)
                 return False

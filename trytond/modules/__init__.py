@@ -10,7 +10,7 @@ from glob import iglob
 from sql import Table
 from sql.functions import Now
 
-import trytond.tools as tools  # fix because of circular import
+import trytond.tools as tools  # fix because of circular import (transaction)
 from trytond.config import CONFIG
 from trytond.transaction import Transaction
 from trytond.cache import Cache
@@ -46,28 +46,34 @@ class Module(object):
                     self.info[key] = []
         except IOError:
             if not name == 'all':
-                raise Exception('Module %s not found' % self.name)
+                raise Exception('"%s" (%s) is not a valid tryton-module' %
+                                (self.name, self.path))
 
     def import_module(self):
         self._imported = True
-        search_path = [os.path.dirname(self.path)]
-        mod_file, pathname, description = imp.find_module(self.name,
-                                                         search_path)
-        module = imp.load_module('trytond.modules.' + self.name,
-                                mod_file, pathname, description)
-        if mod_file is not None:
-           mod_file.close()
-
+        #search_path = [os.path.dirname(self.path)]
+        #mod_file, pathname, description = imp.find_module(self.name,
+        #                                                 search_path)
+        #module = imp.load_module('trytond.modules.' + self.name,
+        #                        mod_file, pathname, description)
+        #if mod_file is not None:
+        #   mod_file.close()
+        module = imp.load_package('trytond.modules.' + self.name, self.path)
+        # in future (>3.4):
+        # loader = importlib.machinery.SourceFileLoader(
+        #           'trytond.modules.' + self.name,
+        #           self.path + '__init__.py')
+        # module = loader.load_module()
         return module
 
     def import_tests(self):
-        #self.import_module()
-        #test_module = 'trytond.modules.%s.tests' % self.name
-        #try:
-        #    return __import__(test_module, fromlist=[''])
-        #except ImportError:
-        #    return None
-        pass
+        if not self._imported:
+            self.import_module()
+        test_module = 'trytond.modules.%s.tests' % self.name
+        try:
+            return __import__(test_module, fromlist=[''])
+        except ImportError:
+            return None
 
     def is_to_install(self):
         for kind in ('init', 'update'):
@@ -223,15 +229,6 @@ class Index(dict):
         return os.path.join(self[module].path, *path[1:])
 
 
-# ###LEGACY STUFF#########
-def create_graph(module_list=None):
-    return Index().create_graph(module_list), [], set()
-
-
-def get_module_list():
-    return Index().keys()
-
-
 def load_module_graph(graph, pool, lang=None):
     """
     Load all the modules from a given graph
@@ -344,26 +341,9 @@ def register_classes():
     Index().create_index()
     sorted_list = Index().create_graph()
 
-    import trytond.ir
-    trytond.ir.register()
-
-    import trytond.res
-    trytond.res.register()
-
-    import trytond.webdav
-    trytond.webdav.register()
-
-    import trytond.tests
-    trytond.tests.register()
-
-    # todo: add to list+dependency: tests>webdav>res>ir
-
     logger = logging.getLogger('modules')
 
     for package in sorted_list:
-
-        if package.name in ('ir', 'res', 'webdav', 'tests'):
-            continue
 
         logger.info('%s:registering classes' % package.name)
         if not os.path.isdir(package.path):
@@ -373,8 +353,6 @@ def register_classes():
         module = package.import_module()
         if hasattr(module, 'register'):
             module.register()
-
-    print("juhu")
 
 
 def load_modules(database_name, pool, update=False, lang=None):
