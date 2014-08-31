@@ -31,7 +31,7 @@ class Module(object):
     def __init__(self, name, path):
         self.name = name
         self.path = path
-        self._module = None
+        self._imported = False
         # parse config file
         config = ConfigParser.ConfigParser()
         try:
@@ -49,24 +49,25 @@ class Module(object):
                 raise Exception('Module %s not found' % self.name)
 
     def import_module(self):
-        if self._module is None:
-            search_path = [os.path.dirname(self.path)]
-            mod_file, pathname, description = imp.find_module(self.name,
-                                                              search_path)
-            self._module = imp.load_module('trytond.modules.' + self.name,
-                                     mod_file, pathname, description)
-            if mod_file is not None:
-                mod_file.close()
+        self._imported = True
+        search_path = [os.path.dirname(self.path)]
+        mod_file, pathname, description = imp.find_module(self.name,
+                                                         search_path)
+        module = imp.load_module('trytond.modules.' + self.name,
+                                mod_file, pathname, description)
+        if mod_file is not None:
+           mod_file.close()
 
-        return self._module
+        return module
 
     def import_tests(self):
-        self.import_module()
-        test_module = 'trytond.modules.%s.tests' % self.name
-        try:
-            return __import__(test_module, fromlist=[''])
-        except ImportError:
-            return None
+        #self.import_module()
+        #test_module = 'trytond.modules.%s.tests' % self.name
+        #try:
+        #    return __import__(test_module, fromlist=[''])
+        #except ImportError:
+        #    return None
+        pass
 
     def is_to_install(self):
         for kind in ('init', 'update'):
@@ -260,6 +261,7 @@ def load_module_graph(graph, pool, lang=None):
                 package_state = 'to install'
         if package_state in ('to install', 'to upgrade'):
             # actually this has no effect sometimes..
+            # actually it should be childs, which is modules to depend on module
             for child in Index().recursive_deps(module.name):
                 module_states[child] = package_state
 
@@ -371,6 +373,8 @@ def register_classes():
         module = package.import_module()
         if hasattr(module, 'register'):
             module.register()
+
+    print("juhu")
 
 
 def load_modules(database_name, pool, update=False, lang=None):
