@@ -9,15 +9,15 @@ from functools import partial
 from sql import Table
 from sql.aggregate import Count
 
-from ..model import ModelView, ModelStorage, ModelSQL, fields
-from ..tools import safe_eval
-from .. import backend
-from ..pyson import PYSONEncoder, CONTEXT, PYSON
-from ..transaction import Transaction
-from ..pool import Pool
-from ..cache import Cache
-from ..rpc import RPC
 from trytond.modules import Index
+from trytond.model import ModelView, ModelStorage, ModelSQL, fields
+from trytond.tools import safe_eval
+import trytond.backend as backend
+from trytond.pyson import PYSONEncoder, CONTEXT, PYSON
+from trytond.transaction import Transaction
+from trytond.pool import Pool
+from trytond.cache import Cache
+from trytond.rpc import RPC
 
 __all__ = [
     'Action', 'ActionKeyword', 'ActionReport',
