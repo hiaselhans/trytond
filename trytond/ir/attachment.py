@@ -4,12 +4,12 @@ import os
 import hashlib
 from sql.operators import Concat
 
-from ..model import ModelView, ModelSQL, fields
-from ..config import CONFIG
-from .. import backend
-from ..transaction import Transaction
-from ..pyson import Eval
-from ..pool import Pool
+from trytond.model import ModelView, ModelSQL, fields
+from trytond.config import CONFIG
+from trytond.transaction import Transaction
+from trytond.pyson import Eval
+from trytond.pool import Pool
+import trytond.backend as backend
 
 __all__ = [
     'Attachment',

@@ -19,16 +19,16 @@ try:
 except ImportError:
     bcrypt = None
 
-from ..model import ModelView, ModelSQL, fields
-from ..wizard import Wizard, StateView, Button, StateTransition
-from ..tools import safe_eval, grouped_slice
-from .. import backend
-from ..transaction import Transaction
-from ..cache import Cache
-from ..pool import Pool
-from ..config import CONFIG
-from ..pyson import PYSONEncoder
-from ..rpc import RPC
+from trytond.model import ModelView, ModelSQL, fields
+from trytond.wizard import Wizard, StateView, Button, StateTransition
+from trytond.tools import safe_eval, grouped_slice
+import trytond.backend as backend
+from trytond.transaction import Transaction
+from trytond.cache import Cache
+from trytond.pool import Pool
+from trytond.config import CONFIG
+from trytond.pyson import PYSONEncoder
+from trytond.rpc import RPC
 
 __all__ = [
     'User', 'LoginAttempt', 'UserAction', 'UserGroup', 'Warning_',

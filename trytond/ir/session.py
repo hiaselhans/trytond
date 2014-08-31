@@ -9,8 +9,8 @@ import datetime
 
 from trytond.model import ModelSQL, fields
 from trytond.config import CONFIG
-from .. import backend
-from ..transaction import Transaction
+import trytond.backend as backend
+from trytond.transaction import Transaction
 
 __all__ = [
     'Session', 'SessionWizard',
