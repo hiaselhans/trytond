@@ -1,11 +1,11 @@
 #This file is part of Tryton.  The COPYRIGHT file at the top level of
 #this repository contains the full copyright notices and license terms.
-from ..model import ModelView, ModelSQL, fields
-from ..tools import safe_eval
-from ..transaction import Transaction
-from ..cache import Cache
-from ..pool import Pool
-from .. import backend
+from trytond.model import ModelView, ModelSQL, fields
+from trytond.tools import safe_eval
+from trytond.transaction import Transaction
+from trytond.cache import Cache
+from trytond.pool import Pool
+import trytond.backend as backend
 
 __all__ = [
     'RuleGroup', 'Rule',

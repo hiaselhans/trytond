@@ -2,9 +2,9 @@
 #this repository contains the full copyright notices and license terms.
 "Group"
 from itertools import chain
-from ..model import ModelView, ModelSQL, fields
-from ..pool import Pool, PoolMeta
-from ..tools import grouped_slice
+from trytond.model import ModelView, ModelSQL, fields
+from trytond.pool import Pool, PoolMeta
+from trytond.tools import grouped_slice
 
 __all__ = [
     'Group', 'Group2',

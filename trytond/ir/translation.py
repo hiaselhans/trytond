@@ -18,16 +18,16 @@ from sql.conditionals import Case
 from sql.operators import Or, And
 from sql.aggregate import Max
 
-from ..model import ModelView, ModelSQL, fields
-from ..wizard import Wizard, StateView, StateTransition, StateAction, \
+from trytond.model import ModelView, ModelSQL, fields
+from trytond.wizard import Wizard, StateView, StateTransition, StateAction, \
     Button
-from ..tools import file_open, reduce_ids, grouped_slice
-from .. import backend
-from ..pyson import PYSONEncoder
-from ..transaction import Transaction
-from ..pool import Pool
-from ..cache import Cache
-from ..const import RECORD_CACHE_SIZE
+from trytond.tools import file_open, reduce_ids, grouped_slice
+import trytond.backend as backend
+from trytond.pyson import PYSONEncoder
+from trytond.transaction import Transaction
+from trytond.pool import Pool
+from trytond.cache import Cache
+from trytond.const import RECORD_CACHE_SIZE
 
 __all__ = ['Translation',
     'TranslationSetStart', 'TranslationSetSucceed', 'TranslationSet',
