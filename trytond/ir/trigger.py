@@ -5,14 +5,14 @@ import time
 from sql import Literal
 from sql.aggregate import Count, Max
 
-from ..model import ModelView, ModelSQL, fields
-from ..pyson import Eval
-from ..tools import safe_eval, grouped_slice
-from .. import backend
-from ..tools import reduce_ids
-from ..transaction import Transaction
-from ..cache import Cache
-from ..pool import Pool
+from trytond.model import ModelView, ModelSQL, fields
+from trytond.pyson import Eval
+from trytond.tools import safe_eval, grouped_slice
+import trytond.backend as backend
+from trytond.tools import reduce_ids
+from trytond.transaction import Transaction
+from trytond.cache import Cache
+from trytond.pool import Pool
 
 __all__ = [
     'Trigger', 'TriggerLog',
