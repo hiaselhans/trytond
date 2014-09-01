@@ -9,7 +9,6 @@ import zipfile
 import polib
 import xml.dom.minidom
 from difflib import SequenceMatcher
-import os
 from hashlib import md5
 from lxml import etree
 from itertools import izip

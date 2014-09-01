@@ -189,12 +189,14 @@ class Index(dict):
 
         return sorted_list
 
-    def get_parents(self, module_name):
+    def get_children(self, module_name):
         """
         Get all modules which depend on 'module_name'
         """
-        return filter(lambda module: module_name in self.recursive_deps(module),
-                      self.keys())
+        return filter(lambda module: module_name in module.depends,
+                      self.itervalues())
+        #return filter(lambda module: module_name in self.recursive_deps(module),
+        #              self.keys())
 
     def recursive_deps(self, module_name):
         """
@@ -254,12 +256,12 @@ def load_module_graph(graph, pool, lang=None):
         if module.is_to_install():
             if package_state == 'installed':
                 package_state = 'to upgrade'
-            else:
+            elif package_state != 'to upgrade':
                 package_state = 'to install'
         if package_state in ('to install', 'to upgrade'):
-            # actually this has no effect sometimes..
-            # actually it should be childs, which is modules to depend on module
-            for child in Index().recursive_deps(module.name):
+            # if there is a module in the graph which depends on the current
+            # one it should be updated aswell (it is later in the graph)
+            for child in Index().get_children(module.name):
                 module_states[child] = package_state
 
             for cls_type in classes.keys():
@@ -273,7 +275,7 @@ def load_module_graph(graph, pool, lang=None):
                 if hasattr(model, '_history'):
                     models_to_update_history.add(model.__name__)
 
-            # Instanciate a new parser for the package:
+            # Instantiate a new parser for the package:
             tryton_parser = convert.TrytondXmlHandler(
                 pool=pool, module=module.name, module_state=package_state
             )
@@ -335,15 +337,26 @@ def load_module_graph(graph, pool, lang=None):
 
 
 def register_classes():
-    '''
+    """
     Import all modules to register the classes in the Pool
-    '''
+    """
     Index().create_index()
     sorted_list = Index().create_graph()
+    import trytond.ir
+    trytond.ir.register()
+    import trytond.res
+    trytond.res.register()
+    import trytond.webdav
+    trytond.webdav.register()
+    import trytond.tests
+    trytond.tests.register()
 
     logger = logging.getLogger('modules')
 
     for package in sorted_list:
+
+        if package.name in ('ir', 'res', 'webdav', 'tests'):
+            continue
 
         logger.info('%s:registering classes' % package.name)
         if not os.path.isdir(package.path):
