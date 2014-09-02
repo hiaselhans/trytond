@@ -35,6 +35,11 @@ def _modified(path):
 
 
 def _importable(package):
+    """
+    check if a package can be imported or not
+    :param package:
+    :return: True on success
+    """
     #exit_code = subprocess.call((sys.executable, '-c', 'import %s' %
     #                             package.name),
     #                             cwd=os.path.dirname(package.path))
@@ -58,8 +63,11 @@ def monitor():
     '''
     modified = False
     last_keys = set(Index().keys())
-    Index().create_index()
-
+    try:
+        Index.create_index()
+    except Exception:
+        pass
+    
     # check all imported modules:
     for module in sys.modules.keys():
         if not module.startswith('trytond.modules'):
@@ -82,7 +90,7 @@ def monitor():
                 if _modified(os.path.join(view_dir, filename)):
                     modified = True
 
-    if last_keys.difference(Index().keys()):
+    if last_keys and last_keys.symmetric_difference(Index().keys()):
         modified = True
 
     # Do not restart on module-errors

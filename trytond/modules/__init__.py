@@ -46,8 +46,8 @@ class Module(object):
                     self.info[key] = []
         except IOError:
             if not name == 'all':
-                raise Exception('"%s" (%s) is not a valid tryton-module' %
-                                (self.name, self.path))
+                raise ImportWarning('"%s" (%s) is not a valid tryton-module' %
+                                    (self.name, self.path))
 
     def import_module(self):
         self._imported = True
@@ -117,17 +117,16 @@ class Index(dict):
             self[name] = Module(name, path)
         return self[name]
 
-    def create_index(self):
+    @classmethod
+    def create_index(cls):
         """
         Check all module sources and fill Index-dict {module_name: module}
         """
+        dct = {}
 
-        # INSERT MODULES FROM Tryton-path
-        for modules_path in MODULES_PATH:
-            for folder in os.listdir(modules_path):
-                if (os.path.isdir(os.path.join(modules_path, folder))
-                        and not folder.startswith('.')):
-                    self.add_module(folder, os.path.join(modules_path, folder))
+        # INSERT BUILTIN
+        for name in ('ir', 'res', 'webdav', 'tests'):
+            dct[name] = Module(name, os.path.join(TRYTON_ROOT, name))
 
         # INSERT EGGS
         try:
@@ -143,16 +142,22 @@ class Index(dict):
                                                 *egg.module_name.split('.'))
                         if os.path.isdir(mod_path):
                             break
-                if os.path.isdir(mod_path):
-                    self.add_module(mod_name, mod_path)
-                else:
-                    self.add_module(mod_name, egg.dist.location)
+                if not os.path.isdir(mod_path):
+                    mod_path = egg.dist.location
+                dct[mod_name] = Module(mod_name, mod_path)
         except ImportError:
             pass
 
-        # INSERT BUILTIN
-        for name in ('ir', 'res', 'webdav', 'tests'):
-            self.add_module(name, os.path.join(TRYTON_ROOT, name))
+        # INSERT MODULES FROM Tryton-path
+        for modules_path in MODULES_PATH:
+            for folder in os.listdir(modules_path):
+                if (os.path.isdir(os.path.join(modules_path, folder))
+                        and not folder.startswith('.')):
+                    dct[folder] = Module(folder,
+                                         os.path.join(modules_path, folder))
+
+        cls().clear()
+        return cls(dct)
 
     def create_graph(self, modules_list=None):
         """
@@ -195,8 +200,15 @@ class Index(dict):
         """
         return filter(lambda module: module_name in module.depends,
                       self.itervalues())
-        #return filter(lambda module: module_name in self.recursive_deps(module),
-        #              self.keys())
+
+    def get_all_children(self, module_name):
+        """
+        Get all modules which depend or extras_depend on 'module_name'
+        """
+        return filter(lambda module: module_name in module.depends +
+                                                    module.extras_depend,
+                      self.itervalues())
+
 
     def recursive_deps(self, module_name):
         """
@@ -261,7 +273,7 @@ def load_module_graph(graph, pool, lang=None):
         if package_state in ('to install', 'to upgrade'):
             # if there is a module in the graph which depends on the current
             # one it should be updated aswell (it is later in the graph)
-            for child in Index().get_children(module.name):
+            for child in Index().get_all_children(module.name):
                 module_states[child] = package_state
 
             for cls_type in classes.keys():
@@ -340,8 +352,8 @@ def register_classes():
     """
     Import all modules to register the classes in the Pool
     """
-    Index().create_index()
-    sorted_list = Index().create_graph()
+    index = Index.create_index()
+    sorted_list = index.create_graph()
     import trytond.ir
     trytond.ir.register()
     import trytond.res
