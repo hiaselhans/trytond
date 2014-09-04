@@ -29,15 +29,18 @@ def setup(branch='develop'):
         'https://api.github.com/orgs/tryton/repos?per_page=1000'
     ).json()
     for repo in all_repos:
-        if re.match('Mirror of tryton \w*', repo['description']):
+        if repo['name'] not in ['proteus', 'tryton', 'sao', 'trytond',
+                                'google_translate', 'ci', 'neso']:
             with lcd('trytond/modules'), settings(warn_only=True):
                 git_clone(repo['git_url'], branch)
 
-    local('python setup.py install')
+    local('python2 setup.py develop')
 
 
 def runtests():
     """
     Run the tests finally
     """
-    local('python setup.py test')
+    #local('python setup.py test')
+    #local('ls trytond/modules')
+    local('python trytond/tests/run-tests.py -v -v -m')

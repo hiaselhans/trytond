@@ -26,6 +26,27 @@ ir_lang = Table('ir_lang')
 ir_module = Table('ir_module')
 res_user = Table('res_user')
 
+exposed_methods = {
+    "common": {}
+}
+
+def expose_method(object_type):
+    def put_in_method(func):
+        exposed_methods[object_type][func.__name__] = func
+        return func
+    return put_in_method
+
+
+class Dispatcher:
+    def __init__(self, port, blabla):
+        self.port = port
+    def dispatch_methods(self, object_type, method, args):
+        return exposed_methods[object_type][method](self, *args)
+
+    @expose_method("common")
+    def my_own_exposed_func(self, arg1, arg2):
+        print("1")
+
 
 def dispatch(host, port, protocol, database_name, user, session, object_type,
         object_name, method, *args, **kwargs):
