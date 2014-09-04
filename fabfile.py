@@ -8,7 +8,9 @@
     :license: BSD, see LICENSE for more details.
 """
 import requests
-from fabric.api import local, lcd
+import re
+
+from fabric.api import local, lcd, settings
 
 
 def git_clone(repository, branch):
@@ -22,23 +24,20 @@ def setup(branch='develop'):
     """
     Setup a new environment completely with all submodules
     """
-    git_clone('git@github.com:tryton/trytond.git', branch)
+    #git_clone('git@github.com:tryton/trytond.git', branch)
     all_repos = requests.get(
         'https://api.github.com/orgs/tryton/repos?per_page=1000'
     ).json()
     for repo in all_repos:
-        if repo['name'] in ['proteus', 'tryton', 'sao']:
-            continue
-        with lcd('trytond/trytond/modules'):
-            git_clone(repo['git_url'], branch)
+        if re.match('Mirror of tryton \w*', repo['description']):
+            with lcd('trytond/modules'), settings(warn_only=True):
+                git_clone(repo['git_url'], branch)
 
-    with lcd('trytond'):
-        local('python setup.py install')
+    local('python setup.py install')
 
 
 def runtests():
     """
     Run the tests finally
     """
-    with lcd('trytond'):
-        local('python setup.py test')
+    local('python setup.py test')
