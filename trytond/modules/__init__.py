@@ -312,14 +312,6 @@ def register_classes():
     '''
     Import modules to register the classes in the Pool
     '''
-    import trytond.ir
-    trytond.ir.register()
-    import trytond.res
-    trytond.res.register()
-    import trytond.webdav
-    trytond.webdav.register()
-    import trytond.tests
-    trytond.tests.register()
     logger = logging.getLogger('modules')
 
     for package in create_graph(get_module_list())[0]:
@@ -327,10 +319,8 @@ def register_classes():
         logger.info('%s:registering classes' % module)
 
         if module in ('ir', 'res', 'webdav', 'tests'):
-            MODULES.append(module)
-            continue
-
-        if os.path.isdir(OPJ(MODULES_PATH, module)):
+            mod_path = os.path.dirname(MODULES_PATH)
+        elif os.path.isdir(OPJ(MODULES_PATH, module)):
             mod_path = MODULES_PATH
         elif module in EGG_MODULES:
             ep = EGG_MODULES[module]
