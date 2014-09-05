@@ -19,6 +19,9 @@ def git_clone(repository, branch):
     """
     local('git clone %s -b %s' % (repository, branch))
 
+def install(develop=True):
+    local('python2 setup.py {}'.format('develop' if develop else ''))
+
 
 def setup(branch='develop'):
     """
@@ -29,12 +32,18 @@ def setup(branch='develop'):
         'https://api.github.com/orgs/tryton/repos?per_page=1000'
     ).json()
     for repo in all_repos:
-        if repo['name'] not in ['proteus', 'tryton', 'sao', 'trytond',
+        if repo['name'] == 'proteus':
+            git_clone(repo['git_url'], branch)
+            with lcd('proteus'):
+                install()
+
+        elif repo['name'] not in ['tryton', 'sao', 'trytond',
                                 'google_translate', 'ci', 'neso']:
             with lcd('trytond/modules'), settings(warn_only=True):
                 git_clone(repo['git_url'], branch)
 
-    local('python2 setup.py develop')
+    install()
+
 
 
 def runtests():
