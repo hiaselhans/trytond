@@ -67,7 +67,8 @@ class TrytonConfigParser(ConfigParser.RawConfigParser):
     def update_etc(self, configfile=os.environ.get('TRYTOND_CONFIG')):
         if not configfile:
             return
-        self.read(configfile)
+        if not self.read(configfile):
+            raise IOError("No configfile found")
 
     def get(self, section, option, default=None):
         try:
