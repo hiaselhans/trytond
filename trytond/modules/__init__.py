@@ -11,7 +11,7 @@ from sql import Table
 from sql.functions import Now
 
 import trytond.tools as tools  # fix because of circular import (transaction)
-from trytond.config import CONFIG
+from trytond.config import config
 from trytond.transaction import Transaction
 from trytond.cache import Cache
 import trytond.convert as convert
