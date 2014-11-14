@@ -8,7 +8,7 @@ from .field import Field, SQLType
 from .char import Char
 from ...transaction import Transaction
 from ...pool import Pool
-from ...config import CONFIG
+from ... import backend
 
 
 class Reference(Field):
@@ -68,7 +68,7 @@ class Reference(Field):
 
         # Check if reference ids still exist
         with Transaction().set_context(active_test=False), \
-                Transaction().set_user(0):
+                Transaction().set_context(_check_access=False):
             for ref_model, (ref_ids, ids) in ref_to_check.iteritems():
                 try:
                     pool.get(ref_model)
@@ -109,7 +109,7 @@ class Reference(Field):
         return Char.sql_format(value)
 
     def sql_type(self):
-        db_type = CONFIG['db_type']
+        db_type = backend.name()
         if db_type == 'mysql':
             return SQLType('CHAR', 'VARCHAR(255)')
         return SQLType('VARCHAR', 'VARCHAR')

@@ -2,6 +2,7 @@
 #this repository contains the full copyright notices and license terms.
 import datetime
 import warnings
+from ast import literal_eval
 
 from trytond.model import ModelView, ModelSQL, fields
 from trytond.cache import Cache
@@ -135,7 +136,7 @@ class Lang(ModelSQL, ModelView):
         '''
         for lang in langs:
             try:
-                grouping = safe_eval(lang.grouping)
+                grouping = literal_eval(lang.grouping)
                 for i in grouping:
                     if not isinstance(i, int):
                         raise
@@ -257,10 +258,10 @@ class Lang(ModelSQL, ModelView):
 
         if monetary:
             thousands_sep = monetary.mon_thousands_sep
-            grouping = safe_eval(monetary.mon_grouping)
+            grouping = literal_eval(monetary.mon_grouping)
         else:
             thousands_sep = lang.thousands_sep
-            grouping = safe_eval(lang.grouping)
+            grouping = literal_eval(lang.grouping)
         if not grouping:
             return (s, 0)
         if s[-1] == ' ':

@@ -7,72 +7,82 @@ msgid ""
 "You try to bypass an access rule!\n"
 "(Document type: %s)"
 msgstr ""
-"Опитвате се да прескочите право за достъп!\n"
-"(Вид документ: %s)"
+"¡Está intentando evitar una regla de acceso!\n"
+"(Tipo de documento: %s)"
 
 msgctxt "error:access_error:"
 msgid ""
 "You try to bypass an access rule.\n"
 "(Document type: %s)"
 msgstr ""
+"Esta intentando evitar una regla de acceso.\n"
+"(Tipo de documento: %s)"
 
 msgctxt "error:delete_xml_record:"
 msgid "You are not allowed to delete this record."
-msgstr "Нямате права да изтривате този запис."
+msgstr "No está autorizado para eliminar este registro."
 
 msgctxt "error:digits_validation_record:"
 msgid ""
 "The number of digits \"%(digits)s\" of field \"%(field)s\" on \"%(value)s\" "
 "exceeds its limit."
 msgstr ""
+"El número de decimales \"%(digits)s\" del campo \"%(field)s\" en el "
+"valor\"%(value)s\" excede su limite."
 
 msgctxt "error:domain_validation_record:"
 msgid ""
 "The value of the field \"%(field)s\" on \"%(model)s\" is not valid according"
 " to its domain."
 msgstr ""
+"El valor del campo \"%(field)s\" en \"%(model)s\" no es válido según su "
+"dominio."
 
 msgctxt "error:foreign_model_exist:"
 msgid ""
 "Could not delete the records because they are used on field \"%(field)s\" of"
 " \"%(model)s\"."
 msgstr ""
+"No se pudieron eliminar los registros porque son utilizados en el campo "
+"\"%(field)s\" de \"%(model)s\"."
 
 msgctxt "error:foreign_model_missing:"
 msgid "The value \"%(value)s\" of field \"%(field)s\" on \"%(model)s\" doesn't exist."
-msgstr ""
+msgstr "El valor \"%(value)s\" del campo \"%(field)s\" en \"%(model)s\" no existe."
 
 msgctxt "error:ir.action.act_window:"
 msgid "Invalid context \"%(context)s\" on action \"%(action)s\"."
-msgstr ""
+msgstr "El contexto \"%(context)s\" en la acción \"%(action)s\" no es válido."
 
 msgctxt "error:ir.action.act_window:"
 msgid "Invalid domain or search criteria \"%(domain)s\" on action \"%(action)s\"."
 msgstr ""
+"El dominio o el criterio de búsqueda \"%(domain)s\" en la acción "
+"\"%(action)s\" no es válido."
 
 msgctxt "error:ir.action.act_window:"
 msgid "Invalid view \"%(view)s\" for action \"%(action)s\"."
-msgstr ""
+msgstr "La vista \"%(view)s\" para la acción \"%(action)s\" no es válida."
 
 msgctxt "error:ir.action.keyword:"
 msgid "Wrong wizard model in keyword action \"%s\"."
-msgstr ""
+msgstr "Modelo de asistente incorrecto en la acción de teclado \"%s\"."
 
 msgctxt "error:ir.action.report:"
 msgid "Invalid email definition on report \"%s\"."
-msgstr ""
+msgstr "La definición de correo electrónico sobre el informe \"%s\" no es válido."
 
 msgctxt "error:ir.action.report:"
 msgid "The internal name must be unique by module!"
-msgstr "Вътрепното име трябва да е уникално в модула!"
+msgstr "¡El nombre interno debe ser único por módulo!"
 
 msgctxt "error:ir.attachment:"
 msgid "The  names of attachments must be unique by resource!"
-msgstr "Имената на прикачените файлове трябва да са уникални по ресурс!"
+msgstr "¡Los nombres de los archivos adjuntos deben ser únicos por recurso!"
 
 msgctxt "error:ir.cron:"
 msgid "Scheduled action failed"
-msgstr "Планираното действие неуспяло"
+msgstr "La acción programada ha fallado"
 
 msgctxt "error:ir.cron:"
 msgid ""
@@ -82,279 +92,304 @@ msgid ""
 "\n"
 "%s\n"
 msgstr ""
+"La siguiente acción falló cuando se ejecutaba: \"%s\"\n"
+"%s\n"
+" Traza del programa:\n"
+"\n"
+"%s\n"
 
 msgctxt "error:ir.lang:"
 msgid "Default language can not be deleted."
-msgstr ""
+msgstr "El idioma por defecto no puede ser eliminado."
 
 msgctxt "error:ir.lang:"
 msgid "Invalid date format \"%(format)s\" on \"%(language)s\" language."
 msgstr ""
+"El formato de la fecha \"%(format)s\" para el idioma \"%(languages)s\" no es"
+" válido."
 
 msgctxt "error:ir.lang:"
 msgid "Invalid grouping \"%(grouping)s\" on \"%(language)s\" language."
-msgstr ""
+msgstr "Agrupamiento no válido \"%(grouping)s\" en idioma \"%(languages)s\"."
 
 msgctxt "error:ir.lang:"
 msgid "The default language must be translatable."
-msgstr ""
+msgstr "El idioma por defecto debe ser traducible."
 
 msgctxt "error:ir.lang:"
 msgid "decimal_point and thousands_sep must be different!"
-msgstr "десетична точка и разделител на хиляди трябва да са различни!"
+msgstr "¡el punto decimal y el separador de miles deben ser distintos!"
 
 msgctxt "error:ir.model.access:"
 msgid "You can not create this kind of document! (%s)"
-msgstr "Не може да създадете този вид документ! (%s)"
+msgstr "No puede crear este tipo de documento (%s)"
 
 msgctxt "error:ir.model.access:"
 msgid "You can not delete this document! (%s)"
-msgstr "Не може да изтриете този документ! (%s)"
+msgstr "No puede eliminar este documento (%s)"
 
 msgctxt "error:ir.model.access:"
 msgid "You can not read this document! (%s)"
-msgstr "Не може да четете този документ! (%s)"
+msgstr "No puede leer este documento (%s)"
 
 msgctxt "error:ir.model.access:"
 msgid "You can not write in this document! (%s)"
-msgstr "Не може да пишете в този документ! (%s)"
+msgstr "No puede escribir en este documento (%s)"
 
 msgctxt "error:ir.model.button:"
 msgid "The button name in model must be unique!"
-msgstr "Името на бутон в модела трябва да е уникално!"
+msgstr "¡El nombre del botón en el modelo debe ser único!"
 
 msgctxt "error:ir.model.data:"
 msgid "The triple (fs_id, module, model) must be unique!"
-msgstr "Тройката (fs_id, module, model) трябва да е уникална!"
+msgstr "La terna (fs_id, modulo, modelo) debe ser única!"
 
 msgctxt "error:ir.model.field.access:"
 msgid "You can not read the field! (%s.%s)"
-msgstr "Не може да прочетете полето! (%s.%s)"
+msgstr "No puede leer el campo! (%s.%s)"
 
 msgctxt "error:ir.model.field.access:"
 msgid "You can not write on the field! (%s.%s)"
-msgstr "Не може да записвате полето! (%s.%s)"
+msgstr "¡No puede escribir en el campo! (%s.%s)"
 
 msgctxt "error:ir.model.field:"
 msgid "Model Field name \"%s\" is not a valid python identifier."
-msgstr ""
+msgstr "El nombre del Campo Modelo \"%s\" no es un identificador python válido."
 
 msgctxt "error:ir.model.field:"
 msgid "The field name in model must be unique!"
-msgstr "Името на полето трябва да е уникално!"
+msgstr "¡El nombre del campo en el modelo debe ser único!"
 
 msgctxt "error:ir.model:"
 msgid "Module name \"%s\" is not a valid python identifier."
-msgstr ""
+msgstr "El nombre del modulo \"%s\" no es un identificador python válido."
 
 msgctxt "error:ir.model:"
 msgid "The model must be unique!"
-msgstr "Модела трябва да е уникален!"
+msgstr "¡El modelo debe ser único!"
 
 msgctxt "error:ir.module.module.dependency:"
 msgid "Dependency must be unique by module!"
-msgstr "Зависимостта трябва да е уникална за модул!"
+msgstr "¡Las dependencias por módulo deben ser únicas!"
 
 msgctxt "error:ir.module.module:"
 msgid "Missing dependencies %s for module \"%s\""
-msgstr "Липсващи зависимости %s за модул \"%s\""
+msgstr "Faltan las dependencias %s para el módulo \"%s\""
 
 msgctxt "error:ir.module.module:"
 msgid "The modules you are trying to uninstall depends on installed modules:"
 msgstr ""
-"От модула който исакте да деинсталирате зависят следните инсталирани модули:"
+"Los módulos que está intentando desinstalar dependen de módulos instalados:"
 
 msgctxt "error:ir.module.module:"
 msgid "The name of the module must be unique!"
-msgstr "Името на модула трябва да е уникално!"
+msgstr "¡El nombre del módulo debe ser único!"
 
 msgctxt "error:ir.module.module:"
 msgid "You can not remove a module that is installed or will be installed"
-msgstr "Не може да изтривате модул който инсталиран или ще бъде инсталиран"
+msgstr ""
+"No puede eliminar un módulo que está instalado o que va a ser instalado"
 
 msgctxt "error:ir.rule.group:"
 msgid "Global and Default are mutually exclusive!"
-msgstr "Глобален и По подразбиране са взаимно самоизключващи се!"
+msgstr "Global y Predeterminado son mutuamente excluyentes"
 
 msgctxt "error:ir.rule:"
 msgid "Invalid domain in rule \"%s\"."
-msgstr ""
+msgstr "Dominio no válido en la regla \"%s\"."
 
 msgctxt "error:ir.sequence.strict:"
 msgid "Invalid prefix \"%(prefix)s\" on sequence \"%(sequence)s\"."
-msgstr ""
+msgstr "El prefijo \"%(prefix)s\" en la secuencia \"%(sequence)s\" no es válido."
 
 msgctxt "error:ir.sequence.strict:"
 msgid "Invalid suffix \"%(suffix)s\" on sequence \"%(sequence)s\"."
-msgstr ""
+msgstr "El sufijo \"%(sufix)s\" de la secuencia \"%(sequence)s\" no es válido."
 
 msgctxt "error:ir.sequence.strict:"
 msgid "Last Timestamp cannot be in the future on sequence \"%s\"."
-msgstr ""
+msgstr "La ultima fecha-hora no puede ser del futuro para la secuencia \"%s\"."
 
 msgctxt "error:ir.sequence.strict:"
 msgid "Missing sequence."
-msgstr ""
+msgstr "Falta la secuencia."
 
 msgctxt "error:ir.sequence.strict:"
 msgid "Timestamp rounding should be greater than 0"
-msgstr "Закръгляване дата и час трябва да бъде по-голяма от 0"
+msgstr "El redondeo de la fecha-hora debe ser mayor que 0"
 
 msgctxt "error:ir.sequence:"
 msgid "Invalid prefix \"%(prefix)s\" on sequence \"%(sequence)s\"."
-msgstr ""
+msgstr "El prefijo \"%(prefix)s\" en la secuencia \"%(sequence)s\" no es válido."
 
 msgctxt "error:ir.sequence:"
 msgid "Invalid suffix \"%(suffix)s\" on sequence \"%(sequence)s\"."
-msgstr ""
+msgstr "El sufijo \"%(sufix)s\" de la secuencia \"%(sequence)s\" no es válido."
 
 msgctxt "error:ir.sequence:"
 msgid "Last Timestamp cannot be in the future on sequence \"%s\"."
 msgstr ""
+"La ultima fecha-hora no puede estar en el futuro para la secuencia \"%s\"."
 
 msgctxt "error:ir.sequence:"
 msgid "Missing sequence."
-msgstr ""
+msgstr "Falta la secuencia."
 
 msgctxt "error:ir.sequence:"
 msgid "Timestamp rounding should be greater than 0"
-msgstr "Закръгляване дата и час трябва да бъде по-голяма от 0"
+msgstr "El redondeo de la fecha-hora debe ser mayor que 0"
 
 msgctxt "error:ir.translation:"
 msgid "Translation must be unique"
-msgstr "Превода трябва да е уникален"
+msgstr "La traducción debe ser única"
 
 msgctxt "error:ir.translation:"
 msgid ""
 "You can not export translation %(name)s because it is an overridden "
 "translation by module %(overriding_module)s"
 msgstr ""
+"No puede exportar la traduccion %(name)s porque es una traducción "
+"sobreescrita por el módulo %(overrinding_module)s"
 
 msgctxt "error:ir.trigger:"
 msgid "\"On Time\" and others are mutually exclusive!"
-msgstr "\"В даден момент\" и останалите са взаимно изключващи се!"
+msgstr "¡\"A Tiempo\" y otros son mutuamente excluyentes!"
 
 msgctxt "error:ir.trigger:"
 msgid ""
 "Condition \"%(condition)s\" is not a valid python expression on trigger "
 "\"%(trigger)s\"."
 msgstr ""
+"La condición \"%(condition)s\" no es una expressión python válida en el "
+"disparador \"%s(trigger)s\"."
 
 msgctxt "error:ir.ui.menu:"
 msgid "\"%s\" is not a valid menu name because it is not allowed to contain \" / \"."
-msgstr ""
+msgstr "\"%s\" no es un nombre válido de menú porque no esta permitido contener \"/\""
 
 msgctxt "error:ir.ui.view:"
 msgid "Invalid XML for view \"%s\"."
-msgstr ""
+msgstr "XML no válido para la vista \"%s\"."
 
 msgctxt "error:read_error:"
 msgid ""
 "You try to read records that don't exist anymore!\n"
 "(Document type: %s)"
 msgstr ""
-"Опитвате се да прочетете запис който вече не съществува!\n"
-"(Вид документ: %s)"
+"¡Está intentando leer registros que ya no existen!\n"
+"(Tipo de documento: %s)"
 
 msgctxt "error:read_error:"
 msgid ""
 "You try to read records that don't exist anymore.\n"
 "(Document type: %s)"
 msgstr ""
+"Está intentando leer registros que ya no existen.\n"
+"(Tipo de documento: %s)"
 
 msgctxt "error:recursion_error:"
 msgid ""
 "Recursion error: Record \"%(rec_name)s\" with parent \"%(parent_rec_name)s\""
 " was configured as ancestor of itself."
 msgstr ""
+"Error de recursión: El registro \"%(rec_name)s\" con padre \"%(rec_name)s\" "
+"fue configurado como antecesor de si mismo."
 
 msgctxt "error:reference_syntax_error:"
 msgid "Syntax error for reference %r in %s"
-msgstr "Синтактична грешка за отпратка %r в %s"
+msgstr "Error de sintaxis para referencia %r en %s"
 
 msgctxt "error:relation_not_found:"
 msgid "Relation not found: %r in %s"
-msgstr "Не е намерена зависимост: %r в %s"
+msgstr "Relación no encontrada: %r en %s"
 
 msgctxt "error:required_field:"
 msgid "The field \"%(field)s\" on \"%(model)s\" is required."
-msgstr ""
+msgstr "El campo \"%(field)s\" en \"%(model)s\" es requerido."
 
 msgctxt "error:required_validation_record:"
 msgid "The field \"%(field)s\" on \"%(model)s\" is required."
-msgstr ""
+msgstr "El campo \"%(field)s\" en \"%(model)s\" es requerido."
 
 msgctxt "error:search_function_missing:"
 msgid "Missing search function on field \"%s\"."
-msgstr "Липсват функции за търсене върху поле \"%s\"."
+msgstr "Falta la función de búsqueda en el campo \"%s\"."
 
 msgctxt "error:selection_validation_record:"
 msgid ""
 "The value \"%(value)s\" of field \"%(field)s\" on \"%(model)s\" is not in "
 "the selection."
 msgstr ""
+"El valor \"%(value)s\" del campo \"%(field)s\" en el modelo \"%(model)s\" no"
+" esta en la selección."
 
 msgctxt "error:selection_value_notfound:"
 msgid "Value not in the selection for field \"%s\"."
-msgstr ""
+msgstr "El valor no se encuentra en la selección para el campo \"%s\"."
 
 msgctxt "error:size_validation_record:"
 msgid "The size \"%(size)s\" of the field \"%(field)s\" on \"%(model)s\" is too long."
 msgstr ""
+"El tamaño \"%(size)s\" del campo \"%(field)s\" en \"%(model)s\" is demasiado"
+" largo."
 
 msgctxt "error:time_format_validation_record:"
 msgid "The time value \"%(value)s\" of field \"%(field)s\" on \"%(model)s\" is not valid."
 msgstr ""
+"El valor del tiempo \"%(value)s\" del campo \"%(field)s\" en \"%(model)s\" "
+"no es válido."
 
 msgctxt "error:too_many_relations_found:"
 msgid "Too many relations found: %r in %s"
-msgstr "Намерени са твърде много зависимости: %r в %s"
+msgstr "Demasiadas relaciones encontradas: %r en %s"
 
 msgctxt "error:write_error:"
 msgid ""
 "You try to write on records that don't exist anymore!\n"
 "(Document type: %s)"
 msgstr ""
-"Опитвате се да запишете в запис който вече не съшествува!\n"
-"(Вид документ: %s)"
+"¡Está tratando de escribir en registros que ya no existen!\n"
+"(Tipo de documento: %s)"
 
 msgctxt "error:write_error:"
 msgid ""
 "You try to write on records that don't exist anymore.\n"
 "(Document type: %s)"
 msgstr ""
+"Esta intentando modificar registros que ya no existen.\n"
+"(Tipo de documento : %s)"
 
 msgctxt "error:write_xml_record:"
 msgid "You are not allowed to modify this record."
-msgstr "Нямате права да променяте този запис."
+msgstr "No está autorizado para modificar este registro."
 
 msgctxt "error:xml_id_syntax_error:"
 msgid "Syntax error for XML id %r in %s"
-msgstr "Ситактична грешка за XML id %r в %s"
+msgstr "Error de sintaxis para XML id %r en %s"
 
 msgctxt "error:xml_record_desc:"
 msgid "This record is part of the base configuration."
-msgstr "Този запис е част от основната конфигурация."
+msgstr "Este registro es parte de la configuración base."
 
 msgctxt "field:ir.action,active:"
 msgid "Active"
-msgstr "Активен"
+msgstr "Activo"
 
 msgctxt "field:ir.action,create_date:"
 msgid "Create Date"
-msgstr "Създадено на"
+msgstr "Fecha de Creación"
 
 msgctxt "field:ir.action,create_uid:"
 msgid "Create User"
-msgstr "Създадено от"
+msgstr "Creado por Usuario"
 
 msgctxt "field:ir.action,groups:"
 msgid "Groups"
-msgstr "Групи"
+msgstr "Grupos"
 
 msgctxt "field:ir.action,icon:"
 msgid "Icon"
-msgstr "Икона"
+msgstr "Icono"
 
 msgctxt "field:ir.action,id:"
 msgid "ID"
@@ -362,226 +397,207 @@ msgstr "ID"
 
 msgctxt "field:ir.action,keywords:"
 msgid "Keywords"
-msgstr "Ключови думи"
+msgstr "Acciones de teclado"
 
 msgctxt "field:ir.action,name:"
 msgid "Name"
-msgstr "Име"
+msgstr "Nombre"
 
 msgctxt "field:ir.action,rec_name:"
 msgid "Name"
-msgstr "Име"
+msgstr "Nombre"
 
 msgctxt "field:ir.action,type:"
 msgid "Type"
-msgstr "Вид"
+msgstr "Tipo"
 
 msgctxt "field:ir.action,usage:"
 msgid "Usage"
-msgstr "Използване"
+msgstr "Uso"
 
 msgctxt "field:ir.action,write_date:"
 msgid "Write Date"
-msgstr "Променено на"
+msgstr "Fecha de Modificación"
 
 msgctxt "field:ir.action,write_uid:"
 msgid "Write User"
-msgstr "Променено от"
+msgstr "Modificado por Usuario"
 
 msgctxt "field:ir.action.act_window,act_window_domains:"
 msgid "Domains"
-msgstr ""
+msgstr "Dominios"
 
 msgctxt "field:ir.action.act_window,act_window_views:"
 msgid "Views"
-msgstr "Изгледи"
+msgstr "Vistas"
 
 msgctxt "field:ir.action.act_window,action:"
 msgid "Action"
-msgstr "Действие"
+msgstr "Acción"
 
-#, fuzzy
 msgctxt "field:ir.action.act_window,active:"
 msgid "Active"
-msgstr "Активен"
+msgstr "Activo"
 
 msgctxt "field:ir.action.act_window,context:"
 msgid "Context Value"
-msgstr "Стойност на котекст"
+msgstr "Valor del Contexto"
 
 msgctxt "field:ir.action.act_window,create_date:"
 msgid "Create Date"
-msgstr "Създадено на"
+msgstr "Fecha de Creación"
 
 msgctxt "field:ir.action.act_window,create_uid:"
 msgid "Create User"
-msgstr "Създадено от"
+msgstr "Creado por Usuario"
 
 msgctxt "field:ir.action.act_window,domain:"
 msgid "Domain Value"
-msgstr "Стойност на домейн"
+msgstr "Valor del Dominio"
 
 msgctxt "field:ir.action.act_window,domains:"
 msgid "Domains"
-msgstr ""
+msgstr "Dominios"
 
-#, fuzzy
 msgctxt "field:ir.action.act_window,groups:"
 msgid "Groups"
-msgstr "Групи"
+msgstr "Grupos"
 
-#, fuzzy
 msgctxt "field:ir.action.act_window,icon:"
 msgid "Icon"
-msgstr "Икона"
+msgstr "Icono"
 
 msgctxt "field:ir.action.act_window,id:"
 msgid "ID"
 msgstr "ID"
 
-#, fuzzy
 msgctxt "field:ir.action.act_window,keywords:"
 msgid "Keywords"
-msgstr "Ключови думи"
+msgstr "Acciones de teclado"
 
 msgctxt "field:ir.action.act_window,limit:"
 msgid "Limit"
-msgstr "Ограничение"
+msgstr "Límite"
 
-#, fuzzy
 msgctxt "field:ir.action.act_window,name:"
 msgid "Name"
-msgstr "Име на прикачен файл"
+msgstr "Nombre"
 
 msgctxt "field:ir.action.act_window,order:"
 msgid "Order Value"
-msgstr ""
+msgstr "Valor Ordenado"
 
 msgctxt "field:ir.action.act_window,pyson_context:"
 msgid "PySON Context"
-msgstr "PySON контекст"
+msgstr "Contexto PySON"
 
 msgctxt "field:ir.action.act_window,pyson_domain:"
 msgid "PySON Domain"
-msgstr "PySON контекст"
+msgstr "Dominio de PySON"
 
 msgctxt "field:ir.action.act_window,pyson_order:"
 msgid "PySON Order"
-msgstr ""
+msgstr "Orden PySON"
 
 msgctxt "field:ir.action.act_window,pyson_search_value:"
 msgid "PySON Search Criteria"
-msgstr "PySON критерии за търсене"
+msgstr "Criterio de Búsqueda de PySON"
 
 msgctxt "field:ir.action.act_window,rec_name:"
 msgid "Name"
-msgstr "Име"
+msgstr "Nombre"
 
 msgctxt "field:ir.action.act_window,res_model:"
 msgid "Model"
-msgstr "Модел"
+msgstr "Modelo"
 
 msgctxt "field:ir.action.act_window,search_value:"
 msgid "Search Criteria"
-msgstr "Критерии за търсене"
+msgstr "Criterio de Búsqueda"
 
-#, fuzzy
 msgctxt "field:ir.action.act_window,type:"
 msgid "Type"
-msgstr "Вид"
+msgstr "Tipo"
 
-#, fuzzy
 msgctxt "field:ir.action.act_window,usage:"
 msgid "Usage"
-msgstr "Използване"
+msgstr "Uso"
 
 msgctxt "field:ir.action.act_window,views:"
 msgid "Views"
-msgstr "Изгледи"
+msgstr "Vistas"
 
 msgctxt "field:ir.action.act_window,window_name:"
 msgid "Window Name"
-msgstr "Име на прозорец"
+msgstr "Nombre de Ventana"
 
 msgctxt "field:ir.action.act_window,write_date:"
 msgid "Write Date"
-msgstr "Променено на"
+msgstr "Fecha de Modificación"
 
 msgctxt "field:ir.action.act_window,write_uid:"
 msgid "Write User"
-msgstr "Променено от"
+msgstr "Modificado por Usuario"
 
-#, fuzzy
 msgctxt "field:ir.action.act_window.domain,act_window:"
 msgid "Action"
-msgstr "Действие"
+msgstr "Acción"
 
-#, fuzzy
 msgctxt "field:ir.action.act_window.domain,active:"
 msgid "Active"
-msgstr "Активен"
+msgstr "Activo"
 
-#, fuzzy
 msgctxt "field:ir.action.act_window.domain,create_date:"
 msgid "Create Date"
-msgstr "Създадено на"
+msgstr "Fecha de Creación"
 
-#, fuzzy
 msgctxt "field:ir.action.act_window.domain,create_uid:"
 msgid "Create User"
-msgstr "Създадено от"
+msgstr "Creado por Usuario"
 
-#, fuzzy
 msgctxt "field:ir.action.act_window.domain,domain:"
 msgid "Domain"
-msgstr "Домейн"
+msgstr "Dominio"
 
-#, fuzzy
 msgctxt "field:ir.action.act_window.domain,id:"
 msgid "ID"
 msgstr "ID"
 
-#, fuzzy
 msgctxt "field:ir.action.act_window.domain,name:"
 msgid "Name"
-msgstr "Име на прикачен файл"
+msgstr "Nombre"
 
-#, fuzzy
 msgctxt "field:ir.action.act_window.domain,rec_name:"
 msgid "Name"
-msgstr "Име на прикачен файл"
+msgstr "Nombre"
 
-#, fuzzy
 msgctxt "field:ir.action.act_window.domain,sequence:"
 msgid "Sequence"
-msgstr "Последователност"
+msgstr "Secuencia"
 
-#, fuzzy
 msgctxt "field:ir.action.act_window.domain,write_date:"
 msgid "Write Date"
-msgstr "Променено на"
+msgstr "Fecha de Modificación"
 
-#, fuzzy
 msgctxt "field:ir.action.act_window.domain,write_uid:"
 msgid "Write User"
-msgstr "Променено от"
+msgstr "Modificado por Usuario"
 
 msgctxt "field:ir.action.act_window.view,act_window:"
 msgid "Action"
-msgstr "Действие"
+msgstr "Acción"
 
-#, fuzzy
 msgctxt "field:ir.action.act_window.view,active:"
 msgid "Active"
-msgstr "Активен"
+msgstr "Activo"
 
 msgctxt "field:ir.action.act_window.view,create_date:"
 msgid "Create Date"
-msgstr "Създадено на"
+msgstr "Fecha de Creación"
 
 msgctxt "field:ir.action.act_window.view,create_uid:"
 msgid "Create User"
-msgstr "Създадено от"
+msgstr "Creado por Usuario"
 
 msgctxt "field:ir.action.act_window.view,id:"
 msgid "ID"
@@ -589,40 +605,39 @@ msgstr "ID"
 
 msgctxt "field:ir.action.act_window.view,rec_name:"
 msgid "Name"
-msgstr "Име"
+msgstr "Nombre"
 
 msgctxt "field:ir.action.act_window.view,sequence:"
 msgid "Sequence"
-msgstr "Последователност"
+msgstr "Secuencia"
 
 msgctxt "field:ir.action.act_window.view,view:"
 msgid "View"
-msgstr "Изглед"
+msgstr "Vista"
 
 msgctxt "field:ir.action.act_window.view,write_date:"
 msgid "Write Date"
-msgstr "Променено на"
+msgstr "Fecha de Modificación"
 
 msgctxt "field:ir.action.act_window.view,write_uid:"
 msgid "Write User"
-msgstr "Променено от"
+msgstr "Modificado por Usuario"
 
 msgctxt "field:ir.action.keyword,action:"
 msgid "Action"
-msgstr "Действие"
+msgstr "Acción"
 
 msgctxt "field:ir.action.keyword,create_date:"
 msgid "Create Date"
-msgstr "Създадено на"
+msgstr "Fecha de Creación"
 
 msgctxt "field:ir.action.keyword,create_uid:"
 msgid "Create User"
-msgstr "Създадено от"
+msgstr "Creado por Usuario"
 
-#, fuzzy
 msgctxt "field:ir.action.keyword,groups:"
 msgid "Groups"
-msgstr "Групи"
+msgstr "Grupos"
 
 msgctxt "field:ir.action.keyword,id:"
 msgid "ID"
@@ -630,316 +645,295 @@ msgstr "ID"
 
 msgctxt "field:ir.action.keyword,keyword:"
 msgid "Keyword"
-msgstr "Ключова дума"
+msgstr "Tecla"
 
 msgctxt "field:ir.action.keyword,model:"
 msgid "Model"
-msgstr "Модел"
+msgstr "Modelo"
 
 msgctxt "field:ir.action.keyword,rec_name:"
 msgid "Name"
-msgstr "Име"
+msgstr "Nombre"
 
 msgctxt "field:ir.action.keyword,write_date:"
 msgid "Write Date"
-msgstr "Променено на"
+msgstr "Fecha de Modificación"
 
 msgctxt "field:ir.action.keyword,write_uid:"
 msgid "Write User"
-msgstr "Променено от"
+msgstr "Modificado por Usuario"
 
 msgctxt "field:ir.action.report,action:"
 msgid "Action"
-msgstr "Действие"
+msgstr "Acción"
 
-#, fuzzy
 msgctxt "field:ir.action.report,active:"
 msgid "Active"
-msgstr "Активен"
+msgstr "Activo"
 
 msgctxt "field:ir.action.report,create_date:"
 msgid "Create Date"
-msgstr "Създадено на"
+msgstr "Fecha de Creación"
 
 msgctxt "field:ir.action.report,create_uid:"
 msgid "Create User"
-msgstr "Създадено от"
+msgstr "Creado por Usuario"
 
 msgctxt "field:ir.action.report,direct_print:"
 msgid "Direct Print"
-msgstr "Директен печат"
+msgstr "Impresión Directa"
 
 msgctxt "field:ir.action.report,email:"
 msgid "Email"
-msgstr "Email"
+msgstr "Correo electrónico"
 
 msgctxt "field:ir.action.report,extension:"
 msgid "Extension"
-msgstr "Разширение"
+msgstr "Extensión"
 
-#, fuzzy
 msgctxt "field:ir.action.report,groups:"
 msgid "Groups"
-msgstr "Групи"
+msgstr "Grupos"
 
-#, fuzzy
 msgctxt "field:ir.action.report,icon:"
 msgid "Icon"
-msgstr "Икона"
+msgstr "Icono"
 
 msgctxt "field:ir.action.report,id:"
 msgid "ID"
 msgstr "ID"
 
-#, fuzzy
 msgctxt "field:ir.action.report,keywords:"
 msgid "Keywords"
-msgstr "Ключови думи"
+msgstr "Acciones de teclado"
 
 msgctxt "field:ir.action.report,model:"
 msgid "Model"
-msgstr "Модел"
+msgstr "Modelo"
 
 msgctxt "field:ir.action.report,module:"
 msgid "Module"
-msgstr "Модул"
+msgstr "Módulo"
 
-#, fuzzy
 msgctxt "field:ir.action.report,name:"
 msgid "Name"
-msgstr "Име на прикачен файл"
+msgstr "Nombre"
 
 msgctxt "field:ir.action.report,pyson_email:"
 msgid "PySON Email"
-msgstr "PySON Email"
+msgstr "Correo electrónico PySON"
 
 msgctxt "field:ir.action.report,rec_name:"
 msgid "Name"
-msgstr "Име"
+msgstr "Nombre"
 
 msgctxt "field:ir.action.report,report:"
 msgid "Path"
-msgstr "Път"
+msgstr "Ruta"
 
 msgctxt "field:ir.action.report,report_content:"
 msgid "Content"
-msgstr "Съдържание"
+msgstr "Contenido"
 
 msgctxt "field:ir.action.report,report_content_custom:"
 msgid "Content"
-msgstr "Съдържание"
+msgstr "Contenido"
 
 msgctxt "field:ir.action.report,report_content_name:"
 msgid "Content Name"
-msgstr ""
+msgstr "Nombre del Contenido"
 
 msgctxt "field:ir.action.report,report_name:"
 msgid "Internal Name"
-msgstr "Вътрешно име"
+msgstr "Nombre Interno"
 
 msgctxt "field:ir.action.report,style:"
 msgid "Style"
-msgstr "Стил"
+msgstr "Estilo"
 
 msgctxt "field:ir.action.report,style_content:"
 msgid "Style"
-msgstr "Стил"
+msgstr "Estilo"
 
 msgctxt "field:ir.action.report,template_extension:"
 msgid "Template Extension"
-msgstr "Разширение на шаблон"
+msgstr "Extensión de Plantilla"
 
-#, fuzzy
 msgctxt "field:ir.action.report,type:"
 msgid "Type"
-msgstr "Вид"
+msgstr "Tipo"
 
-#, fuzzy
 msgctxt "field:ir.action.report,usage:"
 msgid "Usage"
-msgstr "Използване"
+msgstr "Uso"
 
 msgctxt "field:ir.action.report,write_date:"
 msgid "Write Date"
-msgstr "Променено на"
+msgstr "Fecha de Modificación"
 
 msgctxt "field:ir.action.report,write_uid:"
 msgid "Write User"
-msgstr "Променено от"
+msgstr "Modificado por Usuario"
 
 msgctxt "field:ir.action.url,action:"
 msgid "Action"
-msgstr "Действие"
+msgstr "Acción"
 
-#, fuzzy
 msgctxt "field:ir.action.url,active:"
 msgid "Active"
-msgstr "Активен"
+msgstr "Activo"
 
 msgctxt "field:ir.action.url,create_date:"
 msgid "Create Date"
-msgstr "Създадено на"
+msgstr "Fecha de Creación"
 
 msgctxt "field:ir.action.url,create_uid:"
 msgid "Create User"
-msgstr "Създадено от"
+msgstr "Creado por Usuario"
 
-#, fuzzy
 msgctxt "field:ir.action.url,groups:"
 msgid "Groups"
-msgstr "Групи"
+msgstr "Grupos"
 
-#, fuzzy
 msgctxt "field:ir.action.url,icon:"
 msgid "Icon"
-msgstr "Икона"
+msgstr "Icono"
 
 msgctxt "field:ir.action.url,id:"
 msgid "ID"
 msgstr "ID"
 
-#, fuzzy
 msgctxt "field:ir.action.url,keywords:"
 msgid "Keywords"
-msgstr "Ключови думи"
+msgstr "Teclas"
 
-#, fuzzy
 msgctxt "field:ir.action.url,name:"
 msgid "Name"
-msgstr "Име на прикачен файл"
+msgstr "Nombre"
 
 msgctxt "field:ir.action.url,rec_name:"
 msgid "Name"
-msgstr "Име"
+msgstr "Nombre"
 
-#, fuzzy
 msgctxt "field:ir.action.url,type:"
 msgid "Type"
-msgstr "Вид"
+msgstr "Tipo"
 
 msgctxt "field:ir.action.url,url:"
 msgid "Action Url"
-msgstr "URL на действие"
+msgstr "URL de la acción"
 
-#, fuzzy
 msgctxt "field:ir.action.url,usage:"
 msgid "Usage"
-msgstr "Използване"
+msgstr "Uso"
 
 msgctxt "field:ir.action.url,write_date:"
 msgid "Write Date"
-msgstr "Променено на"
+msgstr "Fecha de Modificación"
 
 msgctxt "field:ir.action.url,write_uid:"
 msgid "Write User"
-msgstr "Променено от"
+msgstr "Modificado por Usuario"
 
 msgctxt "field:ir.action.wizard,action:"
 msgid "Action"
-msgstr "Действие"
+msgstr "Acción"
 
-#, fuzzy
 msgctxt "field:ir.action.wizard,active:"
 msgid "Active"
-msgstr "Активен"
+msgstr "Activo"
 
 msgctxt "field:ir.action.wizard,create_date:"
 msgid "Create Date"
-msgstr "Създадено на"
+msgstr "Fecha de Creación"
 
 msgctxt "field:ir.action.wizard,create_uid:"
 msgid "Create User"
-msgstr "Създадено от"
+msgstr "Creado por Usuario"
 
 msgctxt "field:ir.action.wizard,email:"
 msgid "Email"
-msgstr "Email"
+msgstr "Correo electrónico"
 
-#, fuzzy
 msgctxt "field:ir.action.wizard,groups:"
 msgid "Groups"
-msgstr "Групи"
+msgstr "Grupos"
 
-#, fuzzy
 msgctxt "field:ir.action.wizard,icon:"
 msgid "Icon"
-msgstr "Икона"
+msgstr "Icono"
 
 msgctxt "field:ir.action.wizard,id:"
 msgid "ID"
 msgstr "ID"
 
-#, fuzzy
 msgctxt "field:ir.action.wizard,keywords:"
 msgid "Keywords"
-msgstr "Ключови думи"
+msgstr "Teclas"
 
 msgctxt "field:ir.action.wizard,model:"
 msgid "Model"
-msgstr "Модел"
+msgstr "Modelo"
 
-#, fuzzy
 msgctxt "field:ir.action.wizard,name:"
 msgid "Name"
-msgstr "Име на прикачен файл"
+msgstr "Nombre"
 
 msgctxt "field:ir.action.wizard,rec_name:"
 msgid "Name"
-msgstr "Име"
+msgstr "Nombre"
 
-#, fuzzy
 msgctxt "field:ir.action.wizard,type:"
 msgid "Type"
-msgstr "Вид"
+msgstr "Tipo"
 
-#, fuzzy
 msgctxt "field:ir.action.wizard,usage:"
 msgid "Usage"
-msgstr "Използване"
+msgstr "Uso"
 
 msgctxt "field:ir.action.wizard,window:"
 msgid "Window"
-msgstr "Прозорец"
+msgstr "Ventana"
 
 msgctxt "field:ir.action.wizard,wiz_name:"
 msgid "Wizard name"
-msgstr "Име на помощник"
+msgstr "Nombre del asistente"
 
 msgctxt "field:ir.action.wizard,write_date:"
 msgid "Write Date"
-msgstr "Променено на"
+msgstr "Fecha de Modificación"
 
 msgctxt "field:ir.action.wizard,write_uid:"
 msgid "Write User"
-msgstr "Променено от"
+msgstr "Modificado por Usuario"
 
 msgctxt "field:ir.attachment,collision:"
 msgid "Collision"
-msgstr "Конфликт"
+msgstr "Colisión"
 
 msgctxt "field:ir.attachment,create_date:"
 msgid "Create Date"
-msgstr "Създадено на"
+msgstr "Fecha de Creación"
 
 msgctxt "field:ir.attachment,create_uid:"
 msgid "Create User"
-msgstr "Създадено от"
+msgstr "Creado por Usuario"
 
 msgctxt "field:ir.attachment,data:"
 msgid "Data"
-msgstr "Данни"
+msgstr "Datos"
 
 msgctxt "field:ir.attachment,data_size:"
 msgid "Data size"
-msgstr "Размер на данни"
+msgstr "Tamaño de datos"
 
 msgctxt "field:ir.attachment,description:"
 msgid "Description"
-msgstr "Описание"
+msgstr "Descripción"
 
 msgctxt "field:ir.attachment,digest:"
 msgid "Digest"
-msgstr "Резюме"
+msgstr "Resumen"
 
 msgctxt "field:ir.attachment,id:"
 msgid "ID"
@@ -947,51 +941,51 @@ msgstr "ID"
 
 msgctxt "field:ir.attachment,last_modification:"
 msgid "Last Modification"
-msgstr "Последна промяна"
+msgstr "Última Modificación"
 
 msgctxt "field:ir.attachment,last_user:"
 msgid "Last User"
-msgstr "Последен потребител"
+msgstr "Último Usuario"
 
 msgctxt "field:ir.attachment,link:"
 msgid "Link"
-msgstr "Препратка"
+msgstr "Enlace"
 
 msgctxt "field:ir.attachment,name:"
 msgid "Name"
-msgstr "Име на прикачен файл"
+msgstr "Nombre"
 
 msgctxt "field:ir.attachment,rec_name:"
 msgid "Name"
-msgstr "Име"
+msgstr "Nombre"
 
 msgctxt "field:ir.attachment,resource:"
 msgid "Resource"
-msgstr "Ресурс"
+msgstr "Recurso"
 
 msgctxt "field:ir.attachment,summary:"
 msgid "Summary"
-msgstr "Обобщено"
+msgstr "Resumen"
 
 msgctxt "field:ir.attachment,type:"
 msgid "Type"
-msgstr "Вид"
+msgstr "Tipo"
 
 msgctxt "field:ir.attachment,write_date:"
 msgid "Write Date"
-msgstr "Променено на"
+msgstr "Fecha de Modificación"
 
 msgctxt "field:ir.attachment,write_uid:"
 msgid "Write User"
-msgstr "Променено от"
+msgstr "Modificado por Usuario"
 
 msgctxt "field:ir.cache,create_date:"
 msgid "Create Date"
-msgstr "Създадено на"
+msgstr "Fecha de Creación"
 
 msgctxt "field:ir.cache,create_uid:"
 msgid "Create User"
-msgstr "Създадено от"
+msgstr "Creado por Usuario"
 
 msgctxt "field:ir.cache,id:"
 msgid "ID"
@@ -999,77 +993,71 @@ msgstr "ID"
 
 msgctxt "field:ir.cache,name:"
 msgid "Name"
-msgstr "Име"
+msgstr "Nombre"
 
 msgctxt "field:ir.cache,rec_name:"
 msgid "Name"
-msgstr "Име"
+msgstr "Nombre"
 
 msgctxt "field:ir.cache,timestamp:"
 msgid "Timestamp"
-msgstr "Дата"
+msgstr "Marca de tiempo"
 
 msgctxt "field:ir.cache,write_date:"
 msgid "Write Date"
-msgstr "Променено на"
+msgstr "Fecha de Modificación"
 
 msgctxt "field:ir.cache,write_uid:"
 msgid "Write User"
-msgstr "Променено от"
+msgstr "Modificado por Usuario"
 
-#, fuzzy
 msgctxt "field:ir.configuration,create_date:"
 msgid "Create Date"
-msgstr "Създадено на"
+msgstr "Fecha de Creación"
 
-#, fuzzy
 msgctxt "field:ir.configuration,create_uid:"
 msgid "Create User"
-msgstr "Създадено от"
+msgstr "Creado por Usuario"
 
-#, fuzzy
 msgctxt "field:ir.configuration,id:"
 msgid "ID"
 msgstr "ID"
 
 msgctxt "field:ir.configuration,language:"
 msgid "language"
-msgstr ""
+msgstr "Lenguaje"
 
-#, fuzzy
 msgctxt "field:ir.configuration,rec_name:"
 msgid "Name"
-msgstr "Име на прикачен файл"
+msgstr "Nombre"
 
-#, fuzzy
 msgctxt "field:ir.configuration,write_date:"
 msgid "Write Date"
-msgstr "Променено на"
+msgstr "Fecha de Modificación"
 
-#, fuzzy
 msgctxt "field:ir.configuration,write_uid:"
 msgid "Write User"
-msgstr "Променено от"
+msgstr "Modificado por Usuario"
 
 msgctxt "field:ir.cron,active:"
 msgid "Active"
-msgstr "Активен"
+msgstr "Activo"
 
 msgctxt "field:ir.cron,args:"
 msgid "Arguments"
-msgstr "Аргументи"
+msgstr "Argumentos"
 
 msgctxt "field:ir.cron,create_date:"
 msgid "Create Date"
-msgstr "Създадено на"
+msgstr "Fecha de Creación"
 
 msgctxt "field:ir.cron,create_uid:"
 msgid "Create User"
-msgstr "Създадено от"
+msgstr "Creado por Usuario"
 
 msgctxt "field:ir.cron,function:"
 msgid "Function"
-msgstr "Функция"
+msgstr "Función"
 
 msgctxt "field:ir.cron,id:"
 msgid "ID"
@@ -1077,51 +1065,51 @@ msgstr "ID"
 
 msgctxt "field:ir.cron,interval_number:"
 msgid "Interval Number"
-msgstr "Номер на интервал"
+msgstr "Número de Intervalos"
 
 msgctxt "field:ir.cron,interval_type:"
 msgid "Interval Unit"
-msgstr "Единица за интервал"
+msgstr "Unidad de Intervalo"
 
 msgctxt "field:ir.cron,model:"
 msgid "Model"
-msgstr "Модел"
+msgstr "Modelo"
 
 msgctxt "field:ir.cron,name:"
 msgid "Name"
-msgstr "Име"
+msgstr "Nombre"
 
 msgctxt "field:ir.cron,next_call:"
 msgid "Next Call"
-msgstr "Следващ тел. разговор"
+msgstr "Siguiente Llamada"
 
 msgctxt "field:ir.cron,number_calls:"
 msgid "Number of Calls"
-msgstr "Брой обаждания"
+msgstr "Número de Llamadas"
 
 msgctxt "field:ir.cron,rec_name:"
 msgid "Name"
-msgstr "Име"
+msgstr "Nombre"
 
 msgctxt "field:ir.cron,repeat_missed:"
 msgid "Repeat Missed"
-msgstr "Поватряне на пропуснати"
+msgstr "Repetir Fallidos"
 
 msgctxt "field:ir.cron,request_user:"
 msgid "Request User"
-msgstr "Заявил потребител"
+msgstr "Solicitud de Usuario"
 
 msgctxt "field:ir.cron,user:"
 msgid "Execution User"
-msgstr "Изпълняващ потребител"
+msgstr "Ejecutado por"
 
 msgctxt "field:ir.cron,write_date:"
 msgid "Write Date"
-msgstr "Променено на"
+msgstr "Fecha de Modificación"
 
 msgctxt "field:ir.cron,write_uid:"
 msgid "Write User"
-msgstr "Променено от"
+msgstr "Modificado por Usuario"
 
 msgctxt "field:ir.date,id:"
 msgid "ID"
@@ -1129,15 +1117,15 @@ msgstr "ID"
 
 msgctxt "field:ir.export,create_date:"
 msgid "Create Date"
-msgstr "Създадено на"
+msgstr "Fecha de Creación"
 
 msgctxt "field:ir.export,create_uid:"
 msgid "Create User"
-msgstr "Създадено от"
+msgstr "Creado por Usuario"
 
 msgctxt "field:ir.export,export_fields:"
 msgid "Fields"
-msgstr "Полета"
+msgstr "Campos"
 
 msgctxt "field:ir.export,id:"
 msgid "ID"
@@ -1145,35 +1133,35 @@ msgstr "ID"
 
 msgctxt "field:ir.export,name:"
 msgid "Name"
-msgstr "Име"
+msgstr "Nombre"
 
 msgctxt "field:ir.export,rec_name:"
 msgid "Name"
-msgstr "Име"
+msgstr "Nombre"
 
 msgctxt "field:ir.export,resource:"
 msgid "Resource"
-msgstr "Ресурс"
+msgstr "Recurso"
 
 msgctxt "field:ir.export,write_date:"
 msgid "Write Date"
-msgstr "Променено на"
+msgstr "Fecha de Modificación"
 
 msgctxt "field:ir.export,write_uid:"
 msgid "Write User"
-msgstr "Променено от"
+msgstr "Modificado por Usuario"
 
 msgctxt "field:ir.export.line,create_date:"
 msgid "Create Date"
-msgstr "Създадено на"
+msgstr "Fecha de Creación"
 
 msgctxt "field:ir.export.line,create_uid:"
 msgid "Create User"
-msgstr "Създадено от"
+msgstr "Creado por Usuario"
 
 msgctxt "field:ir.export.line,export:"
 msgid "Export"
-msgstr "Извличане"
+msgstr "Exportar"
 
 msgctxt "field:ir.export.line,id:"
 msgid "ID"
@@ -1181,51 +1169,51 @@ msgstr "ID"
 
 msgctxt "field:ir.export.line,name:"
 msgid "Name"
-msgstr "Име"
+msgstr "Nombre"
 
 msgctxt "field:ir.export.line,rec_name:"
 msgid "Name"
-msgstr "Име"
+msgstr "Nombre"
 
 msgctxt "field:ir.export.line,write_date:"
 msgid "Write Date"
-msgstr "Променено на"
+msgstr "Fecha de Modificación"
 
 msgctxt "field:ir.export.line,write_uid:"
 msgid "Write User"
-msgstr "Променено от"
+msgstr "Modificado por Usuario"
 
 msgctxt "field:ir.lang,active:"
 msgid "Active"
-msgstr "Активен"
+msgstr "Activo"
 
 msgctxt "field:ir.lang,code:"
 msgid "Code"
-msgstr "Код"
+msgstr "Código"
 
 msgctxt "field:ir.lang,create_date:"
 msgid "Create Date"
-msgstr "Създадено на"
+msgstr "Fecha de Creación"
 
 msgctxt "field:ir.lang,create_uid:"
 msgid "Create User"
-msgstr "Създадено от"
+msgstr "Creado por Usuario"
 
 msgctxt "field:ir.lang,date:"
 msgid "Date"
-msgstr "Дата"
+msgstr "Fecha"
 
 msgctxt "field:ir.lang,decimal_point:"
 msgid "Decimal Separator"
-msgstr "Десетичен разделител"
+msgstr "Separador Decimal"
 
 msgctxt "field:ir.lang,direction:"
 msgid "Direction"
-msgstr "Посока"
+msgstr "Dirección"
 
 msgctxt "field:ir.lang,grouping:"
 msgid "Grouping"
-msgstr "Групиране"
+msgstr "Agrupación"
 
 msgctxt "field:ir.lang,id:"
 msgid "ID"
@@ -1233,43 +1221,43 @@ msgstr "ID"
 
 msgctxt "field:ir.lang,name:"
 msgid "Name"
-msgstr "Име"
+msgstr "Nombre"
 
 msgctxt "field:ir.lang,rec_name:"
 msgid "Name"
-msgstr "Име"
+msgstr "Nombre"
 
 msgctxt "field:ir.lang,thousands_sep:"
 msgid "Thousands Separator"
-msgstr "Разделител за хиляди"
+msgstr "Separador de Miles"
 
 msgctxt "field:ir.lang,translatable:"
 msgid "Translatable"
-msgstr "За превод"
+msgstr "Traducible"
 
 msgctxt "field:ir.lang,write_date:"
 msgid "Write Date"
-msgstr "Променено на"
+msgstr "Fecha de Modificación"
 
 msgctxt "field:ir.lang,write_uid:"
 msgid "Write User"
-msgstr "Променено от"
+msgstr "Modificado por Usuario"
 
 msgctxt "field:ir.model,create_date:"
 msgid "Create Date"
-msgstr "Създадено на"
+msgstr "Fecha de Creación"
 
 msgctxt "field:ir.model,create_uid:"
 msgid "Create User"
-msgstr "Създадено от"
+msgstr "Creado por Usuario"
 
 msgctxt "field:ir.model,fields:"
 msgid "Fields"
-msgstr "Полета"
+msgstr "Campos"
 
 msgctxt "field:ir.model,global_search_p:"
 msgid "Global Search"
-msgstr ""
+msgstr "Busqueda Global"
 
 msgctxt "field:ir.model,id:"
 msgid "ID"
@@ -1277,47 +1265,47 @@ msgstr "ID"
 
 msgctxt "field:ir.model,info:"
 msgid "Information"
-msgstr "Информация"
+msgstr "Información"
 
 msgctxt "field:ir.model,model:"
 msgid "Model Name"
-msgstr "Име на модел"
+msgstr "Nombre del Modelo"
 
 msgctxt "field:ir.model,module:"
 msgid "Module"
-msgstr "Модул"
+msgstr "Módulo"
 
 msgctxt "field:ir.model,name:"
 msgid "Model Description"
-msgstr "Описание на модел"
+msgstr "Descripción del modelo"
 
 msgctxt "field:ir.model,rec_name:"
 msgid "Name"
-msgstr "Име"
+msgstr "Nombre"
 
 msgctxt "field:ir.model,write_date:"
 msgid "Write Date"
-msgstr "Променено на"
+msgstr "Fecha de Modificación"
 
 msgctxt "field:ir.model,write_uid:"
 msgid "Write User"
-msgstr "Променено от"
+msgstr "Modificado por Usuario"
 
 msgctxt "field:ir.model.access,create_date:"
 msgid "Create Date"
-msgstr "Създадено на"
+msgstr "Fecha de Creación"
 
 msgctxt "field:ir.model.access,create_uid:"
 msgid "Create User"
-msgstr "Създадено от"
+msgstr "Creado por Usuario"
 
 msgctxt "field:ir.model.access,description:"
 msgid "Description"
-msgstr "Описание"
+msgstr "Descripción"
 
 msgctxt "field:ir.model.access,group:"
 msgid "Group"
-msgstr "Група"
+msgstr "Grupo"
 
 msgctxt "field:ir.model.access,id:"
 msgid "ID"
@@ -1325,47 +1313,47 @@ msgstr "ID"
 
 msgctxt "field:ir.model.access,model:"
 msgid "Model"
-msgstr "Модел"
+msgstr "Modelo"
 
 msgctxt "field:ir.model.access,perm_create:"
 msgid "Create Access"
-msgstr "Права за създаване"
+msgstr "Permiso para Crear"
 
 msgctxt "field:ir.model.access,perm_delete:"
 msgid "Delete Access"
-msgstr "Права за изтриване"
+msgstr "Permiso para Borrar"
 
 msgctxt "field:ir.model.access,perm_read:"
 msgid "Read Access"
-msgstr "Права за четене"
+msgstr "Permiso para Leer"
 
 msgctxt "field:ir.model.access,perm_write:"
 msgid "Write Access"
-msgstr "Права за писане"
+msgstr "Permiso para Modificar"
 
 msgctxt "field:ir.model.access,rec_name:"
 msgid "Name"
-msgstr "Име"
+msgstr "Nombre"
 
 msgctxt "field:ir.model.access,write_date:"
 msgid "Write Date"
-msgstr "Променено на"
+msgstr "Fecha de Modificación"
 
 msgctxt "field:ir.model.access,write_uid:"
 msgid "Write User"
-msgstr "Променено от"
+msgstr "Modificado por Usuario"
 
 msgctxt "field:ir.model.button,create_date:"
 msgid "Create Date"
-msgstr "Създадено на"
+msgstr "Fecha de Creación"
 
 msgctxt "field:ir.model.button,create_uid:"
 msgid "Create User"
-msgstr "Създадено от"
+msgstr "Creado por Usuario"
 
 msgctxt "field:ir.model.button,groups:"
 msgid "Groups"
-msgstr "Групи"
+msgstr "Grupos"
 
 msgctxt "field:ir.model.button,id:"
 msgid "ID"
@@ -1373,43 +1361,43 @@ msgstr "ID"
 
 msgctxt "field:ir.model.button,model:"
 msgid "Model"
-msgstr "Модел"
+msgstr "Modelo"
 
 msgctxt "field:ir.model.button,name:"
 msgid "Name"
-msgstr "Име на прикачен файл"
+msgstr "Nombre"
 
 msgctxt "field:ir.model.button,rec_name:"
 msgid "Name"
-msgstr "Име на прикачен файл"
+msgstr "Nombre"
 
 msgctxt "field:ir.model.button,write_date:"
 msgid "Write Date"
-msgstr "Променено на"
+msgstr "Fecha de Modificación"
 
 msgctxt "field:ir.model.button,write_uid:"
 msgid "Write User"
-msgstr "Променено от"
+msgstr "Modificado por Usuario"
 
 msgctxt "field:ir.model.data,create_date:"
 msgid "Create Date"
-msgstr "Създадено на"
+msgstr "Fecha de Creación"
 
 msgctxt "field:ir.model.data,create_uid:"
 msgid "Create User"
-msgstr "Създадено от"
+msgstr "Creado por Usuario"
 
 msgctxt "field:ir.model.data,db_id:"
 msgid "Resource ID"
-msgstr "ID на ресурс"
+msgstr "ID del recurso"
 
 msgctxt "field:ir.model.data,fs_id:"
 msgid "Identifier on File System"
-msgstr "Идентификатор от файлова система"
+msgstr "Identificador en el Sistema de Archivos"
 
 msgctxt "field:ir.model.data,fs_values:"
 msgid "Values on File System"
-msgstr ""
+msgstr "Valores del Sistema de Archivos"
 
 msgctxt "field:ir.model.data,id:"
 msgid "ID"
@@ -1417,55 +1405,55 @@ msgstr "ID"
 
 msgctxt "field:ir.model.data,model:"
 msgid "Model"
-msgstr "Модел"
+msgstr "Modelo"
 
 msgctxt "field:ir.model.data,module:"
 msgid "Module"
-msgstr "Модул"
+msgstr "Módulo"
 
 msgctxt "field:ir.model.data,noupdate:"
 msgid "No Update"
-msgstr "Без обновяване"
+msgstr "No Actualizar"
 
 msgctxt "field:ir.model.data,out_of_sync:"
 msgid "Out of Sync"
-msgstr ""
+msgstr "Fuera de Sincronización"
 
 msgctxt "field:ir.model.data,rec_name:"
 msgid "Name"
-msgstr "Име"
+msgstr "Nombre"
 
 msgctxt "field:ir.model.data,values:"
 msgid "Values"
-msgstr "Стойности"
+msgstr "Valores"
 
 msgctxt "field:ir.model.data,write_date:"
 msgid "Write Date"
-msgstr "Променено на"
+msgstr "Fecha de Modificación"
 
 msgctxt "field:ir.model.data,write_uid:"
 msgid "Write User"
-msgstr "Променено от"
+msgstr "Modificado por Usuario"
 
 msgctxt "field:ir.model.field,create_date:"
 msgid "Create Date"
-msgstr "Създадено на"
+msgstr "Fecha de Creación"
 
 msgctxt "field:ir.model.field,create_uid:"
 msgid "Create User"
-msgstr "Създадено от"
+msgstr "Creado por Usuario"
 
 msgctxt "field:ir.model.field,field_description:"
 msgid "Field Description"
-msgstr "Описание на поле"
+msgstr "Descripción del Campo"
 
 msgctxt "field:ir.model.field,groups:"
 msgid "Groups"
-msgstr "Групи"
+msgstr "Grupos"
 
 msgctxt "field:ir.model.field,help:"
 msgid "Help"
-msgstr "Помощ"
+msgstr "Ayuda"
 
 msgctxt "field:ir.model.field,id:"
 msgid "ID"
@@ -1473,93 +1461,91 @@ msgstr "ID"
 
 msgctxt "field:ir.model.field,model:"
 msgid "Model"
-msgstr "Модел"
+msgstr "Modelo"
 
 msgctxt "field:ir.model.field,module:"
 msgid "Module"
-msgstr "Модул"
+msgstr "Módulo"
 
 msgctxt "field:ir.model.field,name:"
 msgid "Name"
-msgstr "Име"
+msgstr "Nombre"
 
 msgctxt "field:ir.model.field,rec_name:"
 msgid "Name"
-msgstr "Име"
+msgstr "Nombre"
 
 msgctxt "field:ir.model.field,relation:"
 msgid "Model Relation"
-msgstr "Модел на връзка"
+msgstr "Relación del Modelo"
 
 msgctxt "field:ir.model.field,ttype:"
 msgid "Field Type"
-msgstr "Вид на поле"
+msgstr "Tipo de Campo"
 
 msgctxt "field:ir.model.field,write_date:"
 msgid "Write Date"
-msgstr "Променено на"
+msgstr "Fecha de Modificación"
 
 msgctxt "field:ir.model.field,write_uid:"
 msgid "Write User"
-msgstr "Променено от"
+msgstr "Modificado por Usuario"
 
 msgctxt "field:ir.model.field.access,create_date:"
 msgid "Create Date"
-msgstr "Създадено на"
+msgstr "Fecha de Creación"
 
 msgctxt "field:ir.model.field.access,create_uid:"
 msgid "Create User"
-msgstr "Създадено от"
+msgstr "Creado por Usuario"
 
 msgctxt "field:ir.model.field.access,description:"
 msgid "Description"
-msgstr "Описание"
+msgstr "Descripción"
 
 msgctxt "field:ir.model.field.access,field:"
 msgid "Field"
-msgstr "Поле"
+msgstr "Campo"
 
 msgctxt "field:ir.model.field.access,group:"
 msgid "Group"
-msgstr "Група"
+msgstr "Grupo"
 
 msgctxt "field:ir.model.field.access,id:"
 msgid "ID"
 msgstr "ID"
 
-#, fuzzy
 msgctxt "field:ir.model.field.access,perm_create:"
 msgid "Create Access"
-msgstr "Права за създаване"
+msgstr "Permiso para Crear"
 
-#, fuzzy
 msgctxt "field:ir.model.field.access,perm_delete:"
 msgid "Delete Access"
-msgstr "Права за изтриване"
+msgstr "Permiso para Eliminar"
 
 msgctxt "field:ir.model.field.access,perm_read:"
 msgid "Read Access"
-msgstr "Права за четене"
+msgstr "Permiso para Leer"
 
 msgctxt "field:ir.model.field.access,perm_write:"
 msgid "Write Access"
-msgstr "Права за писане"
+msgstr "Permiso para Modificar"
 
 msgctxt "field:ir.model.field.access,rec_name:"
 msgid "Name"
-msgstr "Име на прикачен файл"
+msgstr "Nombre"
 
 msgctxt "field:ir.model.field.access,write_date:"
 msgid "Write Date"
-msgstr "Променено на"
+msgstr "Fecha de Modificación"
 
 msgctxt "field:ir.model.field.access,write_uid:"
 msgid "Write User"
-msgstr "Променено от"
+msgstr "Modificado por Usuario"
 
 msgctxt "field:ir.model.print_model_graph.start,filter:"
 msgid "Filter"
-msgstr "Филтър"
+msgstr "Filtro"
 
 msgctxt "field:ir.model.print_model_graph.start,id:"
 msgid "ID"
@@ -1567,23 +1553,23 @@ msgstr "ID"
 
 msgctxt "field:ir.model.print_model_graph.start,level:"
 msgid "Level"
-msgstr "Ниво"
+msgstr "Nivel"
 
 msgctxt "field:ir.module.module,childs:"
 msgid "Childs"
-msgstr "Деца"
+msgstr "Hijos"
 
 msgctxt "field:ir.module.module,create_date:"
 msgid "Create Date"
-msgstr "Създадено на"
+msgstr "Fecha de Creación"
 
 msgctxt "field:ir.module.module,create_uid:"
 msgid "Create User"
-msgstr "Създадено от"
+msgstr "Creado por Usuario"
 
 msgctxt "field:ir.module.module,dependencies:"
 msgid "Dependencies"
-msgstr "Зависимости"
+msgstr "Dependencias"
 
 msgctxt "field:ir.module.module,id:"
 msgid "ID"
@@ -1591,33 +1577,32 @@ msgstr "ID"
 
 msgctxt "field:ir.module.module,name:"
 msgid "Name"
-msgstr "Име"
+msgstr "Nombre"
 
 msgctxt "field:ir.module.module,parents:"
 msgid "Parents"
-msgstr "Родители"
+msgstr "Padres"
 
 msgctxt "field:ir.module.module,rec_name:"
 msgid "Name"
-msgstr "Име"
+msgstr "Nombre"
 
 msgctxt "field:ir.module.module,state:"
 msgid "State"
-msgstr "Състояние"
+msgstr "Estado"
 
 msgctxt "field:ir.module.module,version:"
 msgid "Version"
-msgstr "Версия"
+msgstr "Versión"
 
 msgctxt "field:ir.module.module,write_date:"
 msgid "Write Date"
-msgstr "Променено на"
+msgstr "Fecha de Modificación"
 
 msgctxt "field:ir.module.module,write_uid:"
 msgid "Write User"
-msgstr "Променено от"
+msgstr "Modificado por Usuario"
 
-#, fuzzy
 msgctxt "field:ir.module.module.config_wizard.done,id:"
 msgid "ID"
 msgstr "ID"
@@ -1628,15 +1613,15 @@ msgstr "ID"
 
 msgctxt "field:ir.module.module.config_wizard.item,action:"
 msgid "Action"
-msgstr "Действие"
+msgstr "Acción"
 
 msgctxt "field:ir.module.module.config_wizard.item,create_date:"
 msgid "Create Date"
-msgstr "Създадено на"
+msgstr "Fecha de Creación"
 
 msgctxt "field:ir.module.module.config_wizard.item,create_uid:"
 msgid "Create User"
-msgstr "Създадено от"
+msgstr "Creado por Usuario"
 
 msgctxt "field:ir.module.module.config_wizard.item,id:"
 msgid "ID"
@@ -1644,23 +1629,23 @@ msgstr "ID"
 
 msgctxt "field:ir.module.module.config_wizard.item,rec_name:"
 msgid "Name"
-msgstr "Име"
+msgstr "Nombre"
 
 msgctxt "field:ir.module.module.config_wizard.item,sequence:"
 msgid "Sequence"
-msgstr "Последователност"
+msgstr "Secuencia"
 
 msgctxt "field:ir.module.module.config_wizard.item,state:"
 msgid "State"
-msgstr "Състояние"
+msgstr "Estado"
 
 msgctxt "field:ir.module.module.config_wizard.item,write_date:"
 msgid "Write Date"
-msgstr "Променено на"
+msgstr "Fecha de Modificación"
 
 msgctxt "field:ir.module.module.config_wizard.item,write_uid:"
 msgid "Write User"
-msgstr "Променено от"
+msgstr "Modificado por Usuario"
 
 msgctxt "field:ir.module.module.config_wizard.other,id:"
 msgid "ID"
@@ -1668,15 +1653,15 @@ msgstr "ID"
 
 msgctxt "field:ir.module.module.config_wizard.other,percentage:"
 msgid "Percentage"
-msgstr "Процент"
+msgstr "Porcentaje"
 
 msgctxt "field:ir.module.module.dependency,create_date:"
 msgid "Create Date"
-msgstr "Създадено на"
+msgstr "Fecha de Creación"
 
 msgctxt "field:ir.module.module.dependency,create_uid:"
 msgid "Create User"
-msgstr "Създадено от"
+msgstr "Creado por Usuario"
 
 msgctxt "field:ir.module.module.dependency,id:"
 msgid "ID"
@@ -1684,27 +1669,27 @@ msgstr "ID"
 
 msgctxt "field:ir.module.module.dependency,module:"
 msgid "Module"
-msgstr "Модул"
+msgstr "Módulo"
 
 msgctxt "field:ir.module.module.dependency,name:"
 msgid "Name"
-msgstr "Име"
+msgstr "Nombre"
 
 msgctxt "field:ir.module.module.dependency,rec_name:"
 msgid "Name"
-msgstr "Име"
+msgstr "Nombre"
 
 msgctxt "field:ir.module.module.dependency,state:"
 msgid "State"
-msgstr "Състояние"
+msgstr "Estado"
 
 msgctxt "field:ir.module.module.dependency,write_date:"
 msgid "Write Date"
-msgstr "Променено на"
+msgstr "Fecha de Modificación"
 
 msgctxt "field:ir.module.module.dependency,write_uid:"
 msgid "Write User"
-msgstr "Променено от"
+msgstr "Modificado por Usuario"
 
 msgctxt "field:ir.module.module.install_upgrade.done,id:"
 msgid "ID"
@@ -1716,19 +1701,19 @@ msgstr "ID"
 
 msgctxt "field:ir.module.module.install_upgrade.start,module_info:"
 msgid "Modules to update"
-msgstr "Модули за обновяване"
+msgstr "Módulos a actualizar"
 
 msgctxt "field:ir.property,create_date:"
 msgid "Create Date"
-msgstr "Създадено на"
+msgstr "Fecha de Creación"
 
 msgctxt "field:ir.property,create_uid:"
 msgid "Create User"
-msgstr "Създадено от"
+msgstr "Creado por Usuario"
 
 msgctxt "field:ir.property,field:"
 msgid "Field"
-msgstr "Поле"
+msgstr "Campo"
 
 msgctxt "field:ir.property,id:"
 msgid "ID"
@@ -1736,36 +1721,35 @@ msgstr "ID"
 
 msgctxt "field:ir.property,rec_name:"
 msgid "Name"
-msgstr "Име"
+msgstr "Nombre"
 
 msgctxt "field:ir.property,res:"
 msgid "Resource"
-msgstr "Ресурс"
+msgstr "Recurso"
 
 msgctxt "field:ir.property,value:"
 msgid "Value"
-msgstr "Стойност"
+msgstr "Valor"
 
 msgctxt "field:ir.property,write_date:"
 msgid "Write Date"
-msgstr "Променено на"
+msgstr "Fecha de Modificación"
 
 msgctxt "field:ir.property,write_uid:"
 msgid "Write User"
-msgstr "Променено от"
+msgstr "Modificado por Usuario"
 
 msgctxt "field:ir.rule,create_date:"
 msgid "Create Date"
-msgstr "Създадено на"
+msgstr "Fecha de Creación"
 
 msgctxt "field:ir.rule,create_uid:"
 msgid "Create User"
-msgstr "Създадено от"
+msgstr "Creado por Usuario"
 
-#, fuzzy
 msgctxt "field:ir.rule,domain:"
 msgid "Domain"
-msgstr "Домейн"
+msgstr "Dominio"
 
 msgctxt "field:ir.rule,id:"
 msgid "ID"
@@ -1773,39 +1757,39 @@ msgstr "ID"
 
 msgctxt "field:ir.rule,rec_name:"
 msgid "Name"
-msgstr "Име"
+msgstr "Nombre"
 
 msgctxt "field:ir.rule,rule_group:"
 msgid "Group"
-msgstr "Група"
+msgstr "Grupo"
 
 msgctxt "field:ir.rule,write_date:"
 msgid "Write Date"
-msgstr "Променено на"
+msgstr "Fecha de Modificación"
 
 msgctxt "field:ir.rule,write_uid:"
 msgid "Write User"
-msgstr "Променено от"
+msgstr "Modificado por Usuario"
 
 msgctxt "field:ir.rule.group,create_date:"
 msgid "Create Date"
-msgstr "Създадено на"
+msgstr "Fecha de Creación"
 
 msgctxt "field:ir.rule.group,create_uid:"
 msgid "Create User"
-msgstr "Създадено от"
+msgstr "Creado por Usuario"
 
 msgctxt "field:ir.rule.group,default_p:"
 msgid "Default"
-msgstr "По подразбиране"
+msgstr "Predeterminado"
 
 msgctxt "field:ir.rule.group,global_p:"
 msgid "Global"
-msgstr "Глобален"
+msgstr "Global"
 
 msgctxt "field:ir.rule.group,groups:"
 msgid "Groups"
-msgstr "Групи"
+msgstr "Grupos"
 
 msgctxt "field:ir.rule.group,id:"
 msgid "ID"
@@ -1813,63 +1797,63 @@ msgstr "ID"
 
 msgctxt "field:ir.rule.group,model:"
 msgid "Model"
-msgstr "Модел"
+msgstr "Modelo"
 
 msgctxt "field:ir.rule.group,name:"
 msgid "Name"
-msgstr "Име"
+msgstr "Nombre"
 
 msgctxt "field:ir.rule.group,perm_create:"
 msgid "Create Access"
-msgstr "Права за създаване"
+msgstr "Permiso para Crear"
 
 msgctxt "field:ir.rule.group,perm_delete:"
 msgid "Delete Access"
-msgstr "Изтриване на достъп"
+msgstr "Permiso para Eliminar"
 
 msgctxt "field:ir.rule.group,perm_read:"
 msgid "Read Access"
-msgstr "Права за четене"
+msgstr "Permiso para Leer"
 
 msgctxt "field:ir.rule.group,perm_write:"
 msgid "Write Access"
-msgstr "Права за писане"
+msgstr "Permiso para Modificar"
 
 msgctxt "field:ir.rule.group,rec_name:"
 msgid "Name"
-msgstr "Име"
+msgstr "Nombre"
 
 msgctxt "field:ir.rule.group,rules:"
 msgid "Tests"
-msgstr "Тестове"
+msgstr "Pruebas"
 
 msgctxt "field:ir.rule.group,users:"
 msgid "Users"
-msgstr "Потребители"
+msgstr "Usuarios"
 
 msgctxt "field:ir.rule.group,write_date:"
 msgid "Write Date"
-msgstr "Променено на"
+msgstr "Fecha de Modificación"
 
 msgctxt "field:ir.rule.group,write_uid:"
 msgid "Write User"
-msgstr "Променено от"
+msgstr "Modificado por Usuario"
 
 msgctxt "field:ir.sequence,active:"
 msgid "Active"
-msgstr "Активен"
+msgstr "Activo"
 
 msgctxt "field:ir.sequence,code:"
 msgid "Sequence Code"
-msgstr "Вид последователност"
+msgstr "Código de Secuencia"
 
 msgctxt "field:ir.sequence,create_date:"
 msgid "Create Date"
-msgstr "Създадено на"
+msgstr "Fecha de Creación"
 
 msgctxt "field:ir.sequence,create_uid:"
 msgid "Create User"
-msgstr "Създадено от"
+msgstr "Creado por Usuario"
 
 msgctxt "field:ir.sequence,id:"
 msgid "ID"
@@ -1877,75 +1861,75 @@ msgstr "ID"
 
 msgctxt "field:ir.sequence,last_timestamp:"
 msgid "Last Timestamp"
-msgstr "Последен времеви маркер"
+msgstr "Última Fecha-hora"
 
 msgctxt "field:ir.sequence,name:"
 msgid "Sequence Name"
-msgstr "Име на последователност"
+msgstr "Nombre de Secuencia"
 
 msgctxt "field:ir.sequence,number_increment:"
 msgid "Increment Number"
-msgstr "Стойност на увеличаване"
+msgstr "Número de Incremento"
 
 msgctxt "field:ir.sequence,number_next:"
 msgid "Next Number"
-msgstr "Следващо число"
+msgstr "Siguiente Número"
 
 msgctxt "field:ir.sequence,number_next_internal:"
 msgid "Next Number"
-msgstr "Следващо число"
+msgstr "Siguiente Número"
 
 msgctxt "field:ir.sequence,padding:"
 msgid "Number padding"
-msgstr "Фиксирана дължина (нули)"
+msgstr "Dígitos de relleno"
 
 msgctxt "field:ir.sequence,prefix:"
 msgid "Prefix"
-msgstr "Префикс"
+msgstr "Prefijo"
 
 msgctxt "field:ir.sequence,rec_name:"
 msgid "Name"
-msgstr "Име"
+msgstr "Nombre"
 
 msgctxt "field:ir.sequence,suffix:"
 msgid "Suffix"
-msgstr "Суфикс"
+msgstr "Sufijo"
 
 msgctxt "field:ir.sequence,timestamp_offset:"
 msgid "Timestamp Offset"
-msgstr "Отместване на времеви маркер"
+msgstr "Desfase de Fecha-hora"
 
 msgctxt "field:ir.sequence,timestamp_rounding:"
 msgid "Timestamp Rounding"
-msgstr "Закръгление на времеви маркер"
+msgstr "Redondeo de Fecha-hora"
 
 msgctxt "field:ir.sequence,type:"
 msgid "Type"
-msgstr "Вид"
+msgstr "Tipo"
 
 msgctxt "field:ir.sequence,write_date:"
 msgid "Write Date"
-msgstr "Променено на"
+msgstr "Fecha de Modificación"
 
 msgctxt "field:ir.sequence,write_uid:"
 msgid "Write User"
-msgstr "Променено от"
+msgstr "Modificado por Usuario"
 
 msgctxt "field:ir.sequence.strict,active:"
 msgid "Active"
-msgstr "Активен"
+msgstr "Activo"
 
 msgctxt "field:ir.sequence.strict,code:"
 msgid "Sequence Code"
-msgstr "Вид последователност"
+msgstr "Código de Secuencia"
 
 msgctxt "field:ir.sequence.strict,create_date:"
 msgid "Create Date"
-msgstr "Създадено на"
+msgstr "Fecha de Creación"
 
 msgctxt "field:ir.sequence.strict,create_uid:"
 msgid "Create User"
-msgstr "Създадено от"
+msgstr "Creado por Usuario"
 
 msgctxt "field:ir.sequence.strict,id:"
 msgid "ID"
@@ -1953,71 +1937,71 @@ msgstr "ID"
 
 msgctxt "field:ir.sequence.strict,last_timestamp:"
 msgid "Last Timestamp"
-msgstr "Последен времеви маркер"
+msgstr "Última Fecha-hora"
 
 msgctxt "field:ir.sequence.strict,name:"
 msgid "Sequence Name"
-msgstr "Име на последователност"
+msgstr "Nombre de Secuencia"
 
 msgctxt "field:ir.sequence.strict,number_increment:"
 msgid "Increment Number"
-msgstr "Стойност на увеличаване"
+msgstr "Número de Incremento"
 
 msgctxt "field:ir.sequence.strict,number_next:"
 msgid "Next Number"
-msgstr "Следващо число"
+msgstr "Siguiente Número"
 
 msgctxt "field:ir.sequence.strict,number_next_internal:"
 msgid "Next Number"
-msgstr "Следващо число"
+msgstr "Siguiente Número"
 
 msgctxt "field:ir.sequence.strict,padding:"
 msgid "Number padding"
-msgstr "Фиксирана дължина (нули)"
+msgstr "Dígitos de relleno"
 
 msgctxt "field:ir.sequence.strict,prefix:"
 msgid "Prefix"
-msgstr "Префикс"
+msgstr "Prefijo"
 
 msgctxt "field:ir.sequence.strict,rec_name:"
 msgid "Name"
-msgstr "Име"
+msgstr "Nombre"
 
 msgctxt "field:ir.sequence.strict,suffix:"
 msgid "Suffix"
-msgstr "Суфикс"
+msgstr "Sufijo"
 
 msgctxt "field:ir.sequence.strict,timestamp_offset:"
 msgid "Timestamp Offset"
-msgstr "Отместване на времеви маркер"
+msgstr "Desfase de Fecha-hora"
 
 msgctxt "field:ir.sequence.strict,timestamp_rounding:"
 msgid "Timestamp Rounding"
-msgstr "Закръгление на времеви маркер"
+msgstr "Redondeo de Fecha-hora"
 
 msgctxt "field:ir.sequence.strict,type:"
 msgid "Type"
-msgstr "Вид"
+msgstr "Tipo"
 
 msgctxt "field:ir.sequence.strict,write_date:"
 msgid "Write Date"
-msgstr "Променено на"
+msgstr "Fecha de Modificación"
 
 msgctxt "field:ir.sequence.strict,write_uid:"
 msgid "Write User"
-msgstr "Променено от"
+msgstr "Modificado por Usuario"
 
 msgctxt "field:ir.sequence.type,code:"
 msgid "Sequence Code"
-msgstr "Код на последователност"
+msgstr "Código de Secuencia"
 
 msgctxt "field:ir.sequence.type,create_date:"
 msgid "Create Date"
-msgstr "Създадено на"
+msgstr "Fecha de Creación"
 
 msgctxt "field:ir.sequence.type,create_uid:"
 msgid "Create User"
-msgstr "Създадено от"
+msgstr "Creado por Usuario"
 
 msgctxt "field:ir.sequence.type,id:"
 msgid "ID"
@@ -2025,27 +2009,27 @@ msgstr "ID"
 
 msgctxt "field:ir.sequence.type,name:"
 msgid "Sequence Name"
-msgstr "Име на последователност"
+msgstr "Nombre de Secuencia"
 
 msgctxt "field:ir.sequence.type,rec_name:"
 msgid "Name"
-msgstr "Име"
+msgstr "Nombre"
 
 msgctxt "field:ir.sequence.type,write_date:"
 msgid "Write Date"
-msgstr "Променено на"
+msgstr "Fecha de Modificación"
 
 msgctxt "field:ir.sequence.type,write_uid:"
 msgid "Write User"
-msgstr "Променено от"
+msgstr "Modificado por Usuario"
 
 msgctxt "field:ir.session,create_date:"
 msgid "Create Date"
-msgstr "Създадено на"
+msgstr "Fecha de Creación"
 
 msgctxt "field:ir.session,create_uid:"
 msgid "Create User"
-msgstr "Създадено от"
+msgstr "Creado por Usuario"
 
 msgctxt "field:ir.session,id:"
 msgid "ID"
@@ -2053,31 +2037,31 @@ msgstr "ID"
 
 msgctxt "field:ir.session,key:"
 msgid "Key"
-msgstr "Ключ"
+msgstr "Clave"
 
 msgctxt "field:ir.session,rec_name:"
 msgid "Name"
-msgstr "Име"
+msgstr "Nombre"
 
 msgctxt "field:ir.session,write_date:"
 msgid "Write Date"
-msgstr "Променено на"
+msgstr "Fecha de Modificación"
 
 msgctxt "field:ir.session,write_uid:"
 msgid "Write User"
-msgstr "Променено от"
+msgstr "Modificado por Usuario"
 
 msgctxt "field:ir.session.wizard,create_date:"
 msgid "Create Date"
-msgstr "Създадено на"
+msgstr "Fecha de Creación"
 
 msgctxt "field:ir.session.wizard,create_uid:"
 msgid "Create User"
-msgstr "Създадено от"
+msgstr "Creado por Usuario"
 
 msgctxt "field:ir.session.wizard,data:"
 msgid "Data"
-msgstr "Данни"
+msgstr "Datos"
 
 msgctxt "field:ir.session.wizard,id:"
 msgid "ID"
@@ -2085,27 +2069,27 @@ msgstr "ID"
 
 msgctxt "field:ir.session.wizard,rec_name:"
 msgid "Name"
-msgstr "Име"
+msgstr "Nombre"
 
 msgctxt "field:ir.session.wizard,write_date:"
 msgid "Write Date"
-msgstr "Променено на"
+msgstr "Fecha de Modificación"
 
 msgctxt "field:ir.session.wizard,write_uid:"
 msgid "Write User"
-msgstr "Променено от"
+msgstr "Modificado por Usuario"
 
 msgctxt "field:ir.translation,create_date:"
 msgid "Create Date"
-msgstr "Създадено на"
+msgstr "Fecha de Creación"
 
 msgctxt "field:ir.translation,create_uid:"
 msgid "Create User"
-msgstr "Създадено от"
+msgstr "Creado por Usuario"
 
 msgctxt "field:ir.translation,fuzzy:"
 msgid "Fuzzy"
-msgstr "Неясен"
+msgstr "Confuso"
 
 msgctxt "field:ir.translation,id:"
 msgid "ID"
@@ -2113,55 +2097,55 @@ msgstr "ID"
 
 msgctxt "field:ir.translation,lang:"
 msgid "Language"
-msgstr "Език"
+msgstr "Idioma"
 
 msgctxt "field:ir.translation,model:"
 msgid "Model"
-msgstr "Модел"
+msgstr "Modelo"
 
 msgctxt "field:ir.translation,module:"
 msgid "Module"
-msgstr "Модул"
+msgstr "Módulo"
 
 msgctxt "field:ir.translation,name:"
 msgid "Field Name"
-msgstr "Име на поле"
+msgstr "Nombre de Campo"
 
 msgctxt "field:ir.translation,overriding_module:"
 msgid "Overriding Module"
-msgstr ""
+msgstr "Sobreescritura del Módulo"
 
 msgctxt "field:ir.translation,rec_name:"
 msgid "Name"
-msgstr "Име"
+msgstr "Nombre"
 
 msgctxt "field:ir.translation,res_id:"
 msgid "Resource ID"
-msgstr "ID на ресурс"
+msgstr "ID del recurso"
 
 msgctxt "field:ir.translation,src:"
 msgid "Source"
-msgstr "Източник"
+msgstr "Fuente"
 
 msgctxt "field:ir.translation,src_md5:"
 msgid "Source MD5"
-msgstr "MD5 на източник"
+msgstr "Origen MD5"
 
 msgctxt "field:ir.translation,type:"
 msgid "Type"
-msgstr "Вид"
+msgstr "Tipo"
 
 msgctxt "field:ir.translation,value:"
 msgid "Translation Value"
-msgstr "Преведено значение"
+msgstr "Valor de la Traducción"
 
 msgctxt "field:ir.translation,write_date:"
 msgid "Write Date"
-msgstr "Променено на"
+msgstr "Fecha de Modificación"
 
 msgctxt "field:ir.translation,write_uid:"
 msgid "Write User"
-msgstr "Променено от"
+msgstr "Modificado por Usuario"
 
 msgctxt "field:ir.translation.clean.start,id:"
 msgid "ID"
@@ -2173,7 +2157,7 @@ msgstr "ID"
 
 msgctxt "field:ir.translation.export.result,file:"
 msgid "File"
-msgstr "Файл"
+msgstr "Archivo"
 
 msgctxt "field:ir.translation.export.result,id:"
 msgid "ID"
@@ -2185,18 +2169,16 @@ msgstr "ID"
 
 msgctxt "field:ir.translation.export.start,language:"
 msgid "Language"
-msgstr "Език"
+msgstr "Idioma"
 
 msgctxt "field:ir.translation.export.start,module:"
 msgid "Module"
-msgstr "Модул"
+msgstr "Módulo"
 
-#, fuzzy
 msgctxt "field:ir.translation.set.start,id:"
 msgid "ID"
 msgstr "ID"
 
-#, fuzzy
 msgctxt "field:ir.translation.set.succeed,id:"
 msgid "ID"
 msgstr "ID"
@@ -2207,31 +2189,31 @@ msgstr "ID"
 
 msgctxt "field:ir.translation.update.start,language:"
 msgid "Language"
-msgstr "Език"
+msgstr "Idioma"
 
 msgctxt "field:ir.trigger,action_function:"
 msgid "Action Function"
-msgstr "Функция на действие"
+msgstr "Función de la Acción"
 
 msgctxt "field:ir.trigger,action_model:"
 msgid "Action Model"
-msgstr "Модел на действие"
+msgstr "Acción de Modelo"
 
 msgctxt "field:ir.trigger,active:"
 msgid "Active"
-msgstr "Активен"
+msgstr "Activo"
 
 msgctxt "field:ir.trigger,condition:"
 msgid "Condition"
-msgstr "Условие"
+msgstr "Condición"
 
 msgctxt "field:ir.trigger,create_date:"
 msgid "Create Date"
-msgstr "Създадено на"
+msgstr "Fecha de Creación"
 
 msgctxt "field:ir.trigger,create_uid:"
 msgid "Create User"
-msgstr "Създадено от"
+msgstr "Creado por Usuario"
 
 msgctxt "field:ir.trigger,id:"
 msgid "ID"
@@ -2239,55 +2221,55 @@ msgstr "ID"
 
 msgctxt "field:ir.trigger,limit_number:"
 msgid "Limit Number"
-msgstr "Макс брой редове"
+msgstr "Número Límite"
 
 msgctxt "field:ir.trigger,minimum_delay:"
 msgid "Minimum Delay"
-msgstr "Минимално забавяне"
+msgstr "Retardo Mínimo"
 
 msgctxt "field:ir.trigger,model:"
 msgid "Model"
-msgstr "Модел"
+msgstr "Modelo"
 
 msgctxt "field:ir.trigger,name:"
 msgid "Name"
-msgstr "Име"
+msgstr "Nombre"
 
 msgctxt "field:ir.trigger,on_create:"
 msgid "On Create"
-msgstr "При създаване"
+msgstr "Al Crearse"
 
 msgctxt "field:ir.trigger,on_delete:"
 msgid "On Delete"
-msgstr "При изтриване"
+msgstr "Al Borrar"
 
 msgctxt "field:ir.trigger,on_time:"
 msgid "On Time"
-msgstr "В даден момент"
+msgstr "Al Tiempo"
 
 msgctxt "field:ir.trigger,on_write:"
 msgid "On Write"
-msgstr "При запис"
+msgstr "Al Modificar"
 
 msgctxt "field:ir.trigger,rec_name:"
 msgid "Name"
-msgstr "Име"
+msgstr "Nombre"
 
 msgctxt "field:ir.trigger,write_date:"
 msgid "Write Date"
-msgstr "Променено на"
+msgstr "Fecha de Modificación"
 
 msgctxt "field:ir.trigger,write_uid:"
 msgid "Write User"
-msgstr "Променено от"
+msgstr "Modificado por Usuario"
 
 msgctxt "field:ir.trigger.log,create_date:"
 msgid "Create Date"
-msgstr "Създадено на"
+msgstr "Fecha de Creación"
 
 msgctxt "field:ir.trigger.log,create_uid:"
 msgid "Create User"
-msgstr "Създадено от"
+msgstr "Creado por Usuario"
 
 msgctxt "field:ir.trigger.log,id:"
 msgid "ID"
@@ -2295,35 +2277,35 @@ msgstr "ID"
 
 msgctxt "field:ir.trigger.log,rec_name:"
 msgid "Name"
-msgstr "Име"
+msgstr "Nombre"
 
 msgctxt "field:ir.trigger.log,record_id:"
 msgid "Record ID"
-msgstr "ID на запис"
+msgstr "ID del registro"
 
 msgctxt "field:ir.trigger.log,trigger:"
 msgid "Trigger"
-msgstr "Превключвател"
+msgstr "Disparador"
 
 msgctxt "field:ir.trigger.log,write_date:"
 msgid "Write Date"
-msgstr "Променено на"
+msgstr "Fecha de Modificación"
 
 msgctxt "field:ir.trigger.log,write_uid:"
 msgid "Write User"
-msgstr "Променено от"
+msgstr "Modificado por Usuario"
 
 msgctxt "field:ir.ui.icon,create_date:"
 msgid "Create Date"
-msgstr "Създадено на"
+msgstr "Fecha de Creación"
 
 msgctxt "field:ir.ui.icon,create_uid:"
 msgid "Create User"
-msgstr "Създадено от"
+msgstr "Creado por Usuario"
 
 msgctxt "field:ir.ui.icon,icon:"
 msgid "Icon"
-msgstr "Икона"
+msgstr "Icono"
 
 msgctxt "field:ir.ui.icon,id:"
 msgid "ID"
@@ -2331,71 +2313,71 @@ msgstr "ID"
 
 msgctxt "field:ir.ui.icon,module:"
 msgid "Module"
-msgstr "Модул"
+msgstr "Módulo"
 
 msgctxt "field:ir.ui.icon,name:"
 msgid "Name"
-msgstr "Име на прикачен файл"
+msgstr "Nombre"
 
 msgctxt "field:ir.ui.icon,path:"
 msgid "SVG Path"
-msgstr "Път към SVG файл"
+msgstr "Ruta al SVG"
 
 msgctxt "field:ir.ui.icon,rec_name:"
 msgid "Name"
-msgstr "Име на прикачен файл"
+msgstr "Nombre"
 
 msgctxt "field:ir.ui.icon,sequence:"
 msgid "Sequence"
-msgstr "Последователност"
+msgstr "Secuencia"
 
 msgctxt "field:ir.ui.icon,write_date:"
 msgid "Write Date"
-msgstr "Променено на"
+msgstr "Fecha de Modificación"
 
 msgctxt "field:ir.ui.icon,write_uid:"
 msgid "Write User"
-msgstr "Променено от"
+msgstr "Modificado por Usuario"
 
 msgctxt "field:ir.ui.menu,action:"
 msgid "Action"
-msgstr "Действие"
+msgstr "Acción"
 
 msgctxt "field:ir.ui.menu,action_keywords:"
 msgid "Action Keywords"
-msgstr ""
+msgstr "Teclas de Acción"
 
 msgctxt "field:ir.ui.menu,active:"
 msgid "Active"
-msgstr "Активен"
+msgstr "Activo"
 
 msgctxt "field:ir.ui.menu,childs:"
 msgid "Children"
-msgstr "Наследници"
+msgstr "Hijos"
 
 msgctxt "field:ir.ui.menu,complete_name:"
 msgid "Complete Name"
-msgstr "Пълно име"
+msgstr "Nombre Completo"
 
 msgctxt "field:ir.ui.menu,create_date:"
 msgid "Create Date"
-msgstr "Създадено на"
+msgstr "Fecha de Creación"
 
 msgctxt "field:ir.ui.menu,create_uid:"
 msgid "Create User"
-msgstr "Създадено от"
+msgstr "Creado por Usuario"
 
 msgctxt "field:ir.ui.menu,favorite:"
 msgid "Favorite"
-msgstr ""
+msgstr "Favorito"
 
 msgctxt "field:ir.ui.menu,groups:"
 msgid "Groups"
-msgstr "Групи"
+msgstr "Grupos"
 
 msgctxt "field:ir.ui.menu,icon:"
 msgid "Icon"
-msgstr "Икона"
+msgstr "Icono"
 
 msgctxt "field:ir.ui.menu,id:"
 msgid "ID"
@@ -2403,97 +2385,87 @@ msgstr "ID"
 
 msgctxt "field:ir.ui.menu,name:"
 msgid "Menu"
-msgstr "Меню"
+msgstr "Menú"
 
 msgctxt "field:ir.ui.menu,parent:"
 msgid "Parent Menu"
-msgstr "Родителско меню"
+msgstr "Menú padre"
 
 msgctxt "field:ir.ui.menu,rec_name:"
 msgid "Name"
-msgstr "Име"
+msgstr "Nombre"
 
 msgctxt "field:ir.ui.menu,sequence:"
 msgid "Sequence"
-msgstr "Последователност"
+msgstr "Secuencia"
 
 msgctxt "field:ir.ui.menu,write_date:"
 msgid "Write Date"
-msgstr "Променено на"
+msgstr "Fecha de Modificación"
 
 msgctxt "field:ir.ui.menu,write_uid:"
 msgid "Write User"
-msgstr "Променено от"
+msgstr "Modificado por Usuario"
 
-#, fuzzy
 msgctxt "field:ir.ui.menu.favorite,create_date:"
 msgid "Create Date"
-msgstr "Създадено на"
+msgstr "Fecha de Creación"
 
-#, fuzzy
 msgctxt "field:ir.ui.menu.favorite,create_uid:"
 msgid "Create User"
-msgstr "Създадено от"
+msgstr "Creado por Usuario"
 
-#, fuzzy
 msgctxt "field:ir.ui.menu.favorite,id:"
 msgid "ID"
 msgstr "ID"
 
-#, fuzzy
 msgctxt "field:ir.ui.menu.favorite,menu:"
 msgid "Menu"
-msgstr "Меню"
+msgstr "Menú"
 
-#, fuzzy
 msgctxt "field:ir.ui.menu.favorite,rec_name:"
 msgid "Name"
-msgstr "Име на прикачен файл"
+msgstr "Nombre"
 
-#, fuzzy
 msgctxt "field:ir.ui.menu.favorite,sequence:"
 msgid "Sequence"
-msgstr "Последователност"
+msgstr "Secuencia"
 
-#, fuzzy
 msgctxt "field:ir.ui.menu.favorite,user:"
 msgid "User"
-msgstr "Потребител"
+msgstr "Usuario"
 
-#, fuzzy
 msgctxt "field:ir.ui.menu.favorite,write_date:"
 msgid "Write Date"
-msgstr "Променено на"
+msgstr "Fecha de Modificación"
 
-#, fuzzy
 msgctxt "field:ir.ui.menu.favorite,write_uid:"
 msgid "Write User"
-msgstr "Променено от"
+msgstr "Modificado por Usuario"
 
 msgctxt "field:ir.ui.view,arch:"
 msgid "View Architecture"
-msgstr "Архитектура на изгледа"
+msgstr "Ver Arquitectura"
 
 msgctxt "field:ir.ui.view,create_date:"
 msgid "Create Date"
-msgstr "Създадено на"
+msgstr "Fecha de Creación"
 
 msgctxt "field:ir.ui.view,create_uid:"
 msgid "Create User"
-msgstr "Създадено от"
+msgstr "Creado por Usuario"
 
-#, fuzzy
 msgctxt "field:ir.ui.view,data:"
 msgid "Data"
-msgstr "Данни"
+msgstr "Datos"
 
 msgctxt "field:ir.ui.view,domain:"
 msgid "Domain"
-msgstr "Домейн"
+msgstr "Dominio"
 
 msgctxt "field:ir.ui.view,field_childs:"
 msgid "Children Field"
-msgstr "Наследено поле"
+msgstr "Campo hijos"
 
 msgctxt "field:ir.ui.view,id:"
 msgid "ID"
@@ -2501,163 +2473,143 @@ msgstr "ID"
 
 msgctxt "field:ir.ui.view,inherit:"
 msgid "Inherited View"
-msgstr "Наследен изглед"
+msgstr "Vista Heredada"
 
 msgctxt "field:ir.ui.view,model:"
 msgid "Model"
-msgstr "Модел"
+msgstr "Modelo"
 
 msgctxt "field:ir.ui.view,module:"
 msgid "Module"
-msgstr "Модул"
+msgstr "Módulo"
 
-#, fuzzy
 msgctxt "field:ir.ui.view,name:"
 msgid "Name"
-msgstr "Име на прикачен файл"
+msgstr "Nombre"
 
 msgctxt "field:ir.ui.view,priority:"
 msgid "Priority"
-msgstr "Важност"
+msgstr "Prioridad"
 
 msgctxt "field:ir.ui.view,rec_name:"
 msgid "Name"
-msgstr "Име"
+msgstr "Nombre"
 
 msgctxt "field:ir.ui.view,type:"
 msgid "View Type"
-msgstr "Вид изглед"
+msgstr "Tipo de Vista"
 
 msgctxt "field:ir.ui.view,write_date:"
 msgid "Write Date"
-msgstr "Променено на"
+msgstr "Fecha de Modificación"
 
 msgctxt "field:ir.ui.view,write_uid:"
 msgid "Write User"
-msgstr "Променено от"
+msgstr "Modificado por Usuario"
 
 msgctxt "field:ir.ui.view.show.start,id:"
 msgid "ID"
 msgstr "ID"
 
-#, fuzzy
 msgctxt "field:ir.ui.view_search,create_date:"
 msgid "Create Date"
-msgstr "Създадено на"
+msgstr "Fecha de Creación"
 
-#, fuzzy
 msgctxt "field:ir.ui.view_search,create_uid:"
 msgid "Create User"
-msgstr "Създадено от"
+msgstr "Creado por Usuario"
 
-#, fuzzy
 msgctxt "field:ir.ui.view_search,domain:"
 msgid "Domain"
-msgstr "Домейн"
+msgstr "Dominio"
 
-#, fuzzy
 msgctxt "field:ir.ui.view_search,id:"
 msgid "ID"
 msgstr "ID"
 
-#, fuzzy
 msgctxt "field:ir.ui.view_search,model:"
 msgid "Model"
-msgstr "Модел"
+msgstr "Modelo"
 
-#, fuzzy
 msgctxt "field:ir.ui.view_search,name:"
 msgid "Name"
-msgstr "Име на прикачен файл"
+msgstr "Nombre"
 
-#, fuzzy
 msgctxt "field:ir.ui.view_search,rec_name:"
 msgid "Name"
-msgstr "Име на прикачен файл"
+msgstr "Nombre"
 
-#, fuzzy
 msgctxt "field:ir.ui.view_search,user:"
 msgid "User"
-msgstr "Потребител"
+msgstr "Usuario"
 
-#, fuzzy
 msgctxt "field:ir.ui.view_search,write_date:"
 msgid "Write Date"
-msgstr "Променено на"
+msgstr "Fecha de Modificación"
 
-#, fuzzy
 msgctxt "field:ir.ui.view_search,write_uid:"
 msgid "Write User"
-msgstr "Променено от"
+msgstr "Modificado por Usuario"
 
 msgctxt "field:ir.ui.view_tree_state,child_name:"
 msgid "Child Name"
-msgstr ""
+msgstr "Nombre del Hijo"
 
-#, fuzzy
 msgctxt "field:ir.ui.view_tree_state,create_date:"
 msgid "Create Date"
-msgstr "Създадено на"
+msgstr "Fecha de Creación"
 
-#, fuzzy
 msgctxt "field:ir.ui.view_tree_state,create_uid:"
 msgid "Create User"
-msgstr "Създадено от"
+msgstr "Creado por Usuario"
 
-#, fuzzy
 msgctxt "field:ir.ui.view_tree_state,domain:"
 msgid "Domain"
-msgstr "Домейн"
+msgstr "Dominio"
 
-#, fuzzy
 msgctxt "field:ir.ui.view_tree_state,id:"
 msgid "ID"
 msgstr "ID"
 
-#, fuzzy
 msgctxt "field:ir.ui.view_tree_state,model:"
 msgid "Model"
-msgstr "Модел"
+msgstr "Modelo"
 
 msgctxt "field:ir.ui.view_tree_state,nodes:"
 msgid "Expanded Nodes"
-msgstr ""
+msgstr "Nodos Expandidos"
 
-#, fuzzy
 msgctxt "field:ir.ui.view_tree_state,rec_name:"
 msgid "Name"
-msgstr "Име на прикачен файл"
+msgstr "Nombre"
 
 msgctxt "field:ir.ui.view_tree_state,selected_nodes:"
 msgid "Selected Nodes"
-msgstr ""
+msgstr "Nodos Seleccionados"
 
-#, fuzzy
 msgctxt "field:ir.ui.view_tree_state,user:"
 msgid "User"
-msgstr "Потребител"
+msgstr "Usuario"
 
-#, fuzzy
 msgctxt "field:ir.ui.view_tree_state,write_date:"
 msgid "Write Date"
-msgstr "Променено на"
+msgstr "Fecha de Modificación"
 
-#, fuzzy
 msgctxt "field:ir.ui.view_tree_state,write_uid:"
 msgid "Write User"
-msgstr "Променено от"
+msgstr "Modificado por Usuario"
 
 msgctxt "field:ir.ui.view_tree_width,create_date:"
 msgid "Create Date"
-msgstr "Създадено на"
+msgstr "Fecha de Creación"
 
 msgctxt "field:ir.ui.view_tree_width,create_uid:"
 msgid "Create User"
-msgstr "Създадено от"
+msgstr "Creado por Usuario"
 
 msgctxt "field:ir.ui.view_tree_width,field:"
 msgid "Field"
-msgstr "Поле"
+msgstr "Campo"
 
 msgctxt "field:ir.ui.view_tree_width,id:"
 msgid "ID"
@@ -2665,948 +2617,948 @@ msgstr "ID"
 
 msgctxt "field:ir.ui.view_tree_width,model:"
 msgid "Model"
-msgstr "Модел"
+msgstr "Modelo"
 
 msgctxt "field:ir.ui.view_tree_width,rec_name:"
 msgid "Name"
-msgstr "Име"
+msgstr "Nombre"
 
 msgctxt "field:ir.ui.view_tree_width,user:"
 msgid "User"
-msgstr "Потребител"
+msgstr "Usuario"
 
 msgctxt "field:ir.ui.view_tree_width,width:"
 msgid "Width"
-msgstr "Ширина"
+msgstr "Ancho"
 
 msgctxt "field:ir.ui.view_tree_width,write_date:"
 msgid "Write Date"
-msgstr "Променено на"
+msgstr "Fecha de Modificación"
 
 msgctxt "field:ir.ui.view_tree_width,write_uid:"
 msgid "Write User"
-msgstr "Променено от"
+msgstr "Modificado por Usuario"
 
 msgctxt "help:ir.action.act_window,limit:"
 msgid "Default limit for the list view"
-msgstr "Ограничение по подразбиране за изглед със списък"
+msgstr "Límite predeterminado para la vista de lista"
 
 msgctxt "help:ir.action.act_window,search_value:"
 msgid "Default search criteria for the list view"
-msgstr "Условие за търсене по подразбиране върху изглед със списък "
+msgstr "Criterio de búsqueda por defecto para la vista de lista"
 
 msgctxt "help:ir.action.act_window,window_name:"
 msgid "Use the action name as window name"
-msgstr "Използване на името на действие като име на прозорец"
+msgstr "Usar el nombre de la acción como el nombre de la ventana"
 
 msgctxt "help:ir.action.report,email:"
 msgid ""
 "Python dictonary where keys define \"to\" \"cc\" \"subject\"\n"
 "Example: {'to': 'test@example.com', 'cc': 'user@example.com'}"
 msgstr ""
-"Python речник където ключове са \"до\", \"копие\", \"относно\"\n"
-"Пример: {'до': 'test@example.com', 'копие': 'user@example.com'}"
+"Diccionario de Python donde las claves definen \"to\" \"cc\" \"subject\"\n"
+"Ejemplo: {'to': 'test@ejemplo.com', 'cc': 'usuario@ejemplo.com'}"
 
 msgctxt "help:ir.action.report,extension:"
 msgid ""
 "Leave empty for the same as template, see unoconv documentation for "
 "compatible format"
 msgstr ""
-"Оставете празно за същото като шаблона, вижте документацията на unoconv за "
-"съвместими формати"
+"Dejar vacío para el mismo como plantilla, consulte la documentación de "
+"unoconv sobre formatos compatibles."
 
 msgctxt "help:ir.action.report,style:"
 msgid "Define the style to apply on the report."
-msgstr "Задайте стила който да се приложа на тази справка."
+msgstr "Define el estilo a aplicar en el informe."
 
 msgctxt "help:ir.action.wizard,window:"
 msgid "Run wizard in a new window"
-msgstr "Стартиране на помощник в нов прозорец"
+msgstr "Ejecutar el asistente en una nueva ventana"
 
 msgctxt "help:ir.cron,number_calls:"
 msgid ""
 "Number of times the function is called, a negative number indicates that the"
 " function will always be called"
 msgstr ""
-"Брой извиквания на функцията, отрицателна стойност показва че фунцията ще "
-"бъде извиквана винаги"
+"Número de veces que se llama la función, un número negativo indica que la "
+"función siempre se llamará"
 
 msgctxt "help:ir.cron,request_user:"
 msgid "The user who will receive requests in case of failure"
-msgstr "Потребителя който получава заявки в случай на проблем"
+msgstr "El usuario que recibirá peticiones en caso de error"
 
 msgctxt "help:ir.cron,user:"
 msgid "The user used to execute this action"
-msgstr "Потребителя от чието име се изпълнява действието"
+msgstr "El usuario que se utilizará para ejecutar esta acción"
 
 msgctxt "help:ir.lang,code:"
 msgid "RFC 4646 tag: http://tools.ietf.org/html/rfc4646"
-msgstr ""
+msgstr "Etiqueta RFC 4646: http://tools.ietf.org/html/rfc4646"
 
 msgctxt "help:ir.model,module:"
 msgid "Module in which this model is defined"
-msgstr "Модула в който този модел е зададен"
+msgstr "El módulo en el que este modelo está definido"
 
 msgctxt "help:ir.model.data,db_id:"
 msgid "The id of the record in the database."
-msgstr "ID на записа в базата данни."
+msgstr "El id del registro en la base de datos."
 
 msgctxt "help:ir.model.data,fs_id:"
 msgid "The id of the record as known on the file system."
-msgstr "ID на записа както е записан в файловата система"
+msgstr "El id del registro tal y como se conoce en el sistema de archivos."
 
 msgctxt "help:ir.model.field,module:"
 msgid "Module in which this field is defined"
-msgstr "Модул в който този модел е зададен"
+msgstr "El módulo en el que este campo está definido"
 
 msgctxt "help:ir.model.print_model_graph.start,filter:"
 msgid ""
 "Entering a Python Regular Expression will exclude matching models from the "
 "graph."
 msgstr ""
-"Въвеждането на регулярен израз на python ще изключи пасващия модел от "
-"диаграмата."
+"Ingresando una Expresión Regular de Python se excluirán del gráfico modelos "
+"que concuerden."
 
 msgctxt "help:ir.rule,domain:"
 msgid "Domain is evaluated with \"user\" as the current user"
-msgstr ""
+msgstr "El dominio es evaluado con el \"usuario\" como el usuario actual"
 
 msgctxt "help:ir.rule.group,default_p:"
 msgid "Add this rule to all users by default"
-msgstr "По подразбиране добавете това правило за всички потребители"
+msgstr "Añadir esta regla a todos los usuarios por defecto"
 
 msgctxt "help:ir.rule.group,global_p:"
 msgid ""
 "Make the rule global \n"
 "so every users must follow this rule"
 msgstr ""
-"Направете правилото глобално\n"
-"така че всеки потребител да го прилага"
+"Hacer la regla global\n"
+"de forma que todos los usuarios deban seguirla"
 
 msgctxt "help:ir.rule.group,rules:"
 msgid "The rule is satisfied if at least one test is True"
-msgstr "Правилото е удовлетворено ако поне един тест е успешен"
+msgstr "La regla se satisface si al menos una condición es verdadera"
 
 msgctxt "help:ir.trigger,condition:"
 msgid ""
 "A Python statement evaluated with record represented by \"self\"\n"
 "It triggers the action if true."
 msgstr ""
-"Python израз изчислен със запис представен със \"self\"\n"
-"Извиква действието ако е истина."
+"Una instrucción Python evaluada con el registro representado por \"self\"\n"
+"Se dispara la acción si es verdadera."
 
 msgctxt "help:ir.trigger,limit_number:"
 msgid ""
 "Limit the number of call to \"Action Function\" by records.\n"
 "0 for no limit."
 msgstr ""
-"Ограничаване на броя извиквания на \"Действие на фунция\" по записи.\n"
-"0 - няма ограничение"
+"Limitar el número de llamada a la \"Función de Acción\" por registros.\n"
+"0 para ningún límite."
 
 msgctxt "help:ir.trigger,minimum_delay:"
 msgid ""
 "Set a minimum delay in minutes between call to \"Action Function\" for the same record.\n"
 "0 for no delay."
 msgstr ""
-"Минимално забавяне в минути между извикването на \"Действие на функция\" за този запис.\n"
-"0 за да няма забавяне"
+"Establecer un retraso mínimo en minutos entre llamadas a la \"Función de Acción\" para el mismo registro.\n"
+"0 para ningún retraso."
 
 msgctxt "help:ir.ui.view_search,domain:"
 msgid "The PYSON domain"
-msgstr ""
+msgstr "El dominio PYSON"
 
 msgctxt "model:ir.action,name:"
 msgid "Action"
-msgstr "Действие"
+msgstr "Acción"
 
 msgctxt "model:ir.action,name:act_action_act_window_form"
 msgid "Window Actions"
-msgstr "Действия на прозорец"
+msgstr "Ventana de Acciones"
 
 msgctxt "model:ir.action,name:act_action_form"
 msgid "Actions"
-msgstr "Действия"
+msgstr "Acciones"
 
 msgctxt "model:ir.action,name:act_action_report_form"
 msgid "Reports"
-msgstr "Справки"
+msgstr "Informes"
 
 msgctxt "model:ir.action,name:act_action_url_form"
 msgid "URLs"
-msgstr "URL-и"
+msgstr "URLs"
 
 msgctxt "model:ir.action,name:act_action_wizard_form"
 msgid "Wizards"
-msgstr "Помощници"
+msgstr "Asistentes"
 
 msgctxt "model:ir.action,name:act_attachment_form"
 msgid "Attachments"
-msgstr "Прикачени файлове"
+msgstr "Adjuntos"
 
 msgctxt "model:ir.action,name:act_config_wizard_item_form"
 msgid "Config Wizard Items"
-msgstr "Елементи на помощника за конфигуриране"
+msgstr "Elementos del Asistente de Configuración"
 
 msgctxt "model:ir.action,name:act_cron_form"
 msgid "Scheduled Actions"
-msgstr "Планирани действия"
+msgstr "Acciones Programadas"
 
 msgctxt "model:ir.action,name:act_export_form"
 msgid "Exports"
-msgstr "Извличания"
+msgstr "Exportaciones"
 
 msgctxt "model:ir.action,name:act_icon_form"
 msgid "Icons"
-msgstr "Икони"
+msgstr "Iconos"
 
 msgctxt "model:ir.action,name:act_lang_form"
 msgid "Languages"
-msgstr "Езици"
+msgstr "Idiomas"
 
 msgctxt "model:ir.action,name:act_menu_list"
 msgid "Menu"
-msgstr "Меню"
+msgstr "Menú"
 
 msgctxt "model:ir.action,name:act_menu_tree"
 msgid "Menu"
-msgstr "Меню"
+msgstr "Menú"
 
 msgctxt "model:ir.action,name:act_model_access_form"
 msgid "Models Access"
-msgstr "Модел на достъп"
+msgstr "Permisos de Modelos"
 
 msgctxt "model:ir.action,name:act_model_button_form"
 msgid "Buttons"
-msgstr "Бутони"
+msgstr "Botones"
 
 #, fuzzy
 msgctxt "model:ir.action,name:act_model_data_form"
 msgid "Data"
-msgstr "Данни"
+msgstr "Datos"
 
 msgctxt "model:ir.action,name:act_model_field_access_form"
 msgid "Fields Access"
-msgstr "Достъп до полета"
+msgstr "Permisos de los Campos"
 
 msgctxt "model:ir.action,name:act_model_fields_form"
 msgid "Fields"
-msgstr "Полета"
+msgstr "Campos"
 
 msgctxt "model:ir.action,name:act_model_form"
 msgid "Models"
-msgstr "Модели"
+msgstr "Modelos"
 
 msgctxt "model:ir.action,name:act_module_config"
 msgid "Configure Modules"
-msgstr "Настройване на модули"
+msgstr "Configuración de Módulos"
 
 msgctxt "model:ir.action,name:act_module_config_wizard"
 msgid "Module Configuration"
-msgstr "Конфицурация на модул"
+msgstr "Configuración de Módulo"
 
 msgctxt "model:ir.action,name:act_module_form"
 msgid "Modules"
-msgstr "Модули"
+msgstr "Módulos"
 
 msgctxt "model:ir.action,name:act_module_install_upgrade"
 msgid "Perform Pending Installation/Upgrade"
-msgstr "Започване на изчакващите инталации/обновявания"
+msgstr "Realizar Instalaciones/Actualizaciones Pendientes"
 
 msgctxt "model:ir.action,name:act_property_form"
 msgid "Properties"
-msgstr "Свойства"
+msgstr "Propiedades"
 
 msgctxt "model:ir.action,name:act_property_form_default"
 msgid "Default Properties"
-msgstr "Свойства по подразбиране"
+msgstr "Propiedades Predeterminadas"
 
 msgctxt "model:ir.action,name:act_rule_group_form"
 msgid "Record Rules"
-msgstr "Правила на запис"
+msgstr "Reglas de Registros"
 
 msgctxt "model:ir.action,name:act_sequence_form"
 msgid "Sequences"
-msgstr "Последователности"
+msgstr "Secuencias"
 
 msgctxt "model:ir.action,name:act_sequence_strict_form"
 msgid "Sequences Strict"
-msgstr "Точни последователности"
+msgstr "Secuencias Estrictas"
 
 msgctxt "model:ir.action,name:act_sequence_type_form"
 msgid "Sequence Types"
-msgstr "Видове последователности"
+msgstr "Tipos de Secuencia"
 
 msgctxt "model:ir.action,name:act_translation_clean"
 msgid "Clean Translations"
-msgstr "Изчистване на преводи"
+msgstr "Limpiar Traducciones"
 
 msgctxt "model:ir.action,name:act_translation_export"
 msgid "Export Translations"
-msgstr "Извличане на преводи"
+msgstr "Exportar Traducciones"
 
 msgctxt "model:ir.action,name:act_translation_form"
 msgid "Translations"
-msgstr "Преводи"
+msgstr "Traducciones"
 
 msgctxt "model:ir.action,name:act_translation_set"
 msgid "Set Report Translations"
-msgstr ""
+msgstr "Establecer Traducciones de los Informes"
 
 msgctxt "model:ir.action,name:act_translation_update"
 msgid "Synchronize Translations"
-msgstr "Синхронизиране на преводите"
+msgstr "Sincronizar Traducciones"
 
 msgctxt "model:ir.action,name:act_trigger_form"
 msgid "Triggers"
-msgstr "Превключватели"
+msgstr "Disparadores"
 
 msgctxt "model:ir.action,name:act_view_form"
 msgid "Views"
-msgstr "Изгледи"
+msgstr "Vistas"
 
 msgctxt "model:ir.action,name:act_view_search"
 msgid "View Search"
-msgstr ""
+msgstr "Buscar Vista"
 
 msgctxt "model:ir.action,name:act_view_show"
 msgid "Show View"
-msgstr "Показване на изглед"
+msgstr "Mostar Vista"
 
 msgctxt "model:ir.action,name:act_view_tree_state"
 msgid "Tree State"
-msgstr ""
+msgstr "Estado de Arbol"
 
 msgctxt "model:ir.action,name:act_view_tree_width_form"
 msgid "View Tree Width"
-msgstr "Ширина на дървовиден изглед"
+msgstr "Ancho de la Vista de Arbol"
 
 msgctxt "model:ir.action,name:print_model_graph"
 msgid "Graph"
-msgstr "Графика"
+msgstr "Gráfico"
 
 msgctxt "model:ir.action,name:report_model_graph"
 msgid "Graph"
-msgstr "Графика"
+msgstr "Gráfico"
 
 msgctxt "model:ir.action.act_window,name:"
 msgid "Action act window"
-msgstr "Действие на активния прозорец"
+msgstr "Acción ventana acción"
 
 msgctxt "model:ir.action.act_window.domain,name:"
 msgid "Action act window domain"
-msgstr ""
+msgstr "Accion en dominio de ventana de acción"
 
+#, fuzzy
 msgctxt ""
 "model:ir.action.act_window.domain,name:act_model_data_form_domain_all"
 msgid "All"
-msgstr ""
+msgstr "Todo"
 
 msgctxt ""
 "model:ir.action.act_window.domain,name:act_model_data_form_domain_out_of_sync"
 msgid "Out of Sync"
-msgstr ""
+msgstr "Fuera de Sincronización"
 
 msgctxt "model:ir.action.act_window.view,name:"
 msgid "Action act window view"
-msgstr "Изглед на действие на активния на прозорец"
+msgstr "Acción en vista de ventana de acción"
 
 msgctxt "model:ir.action.keyword,name:"
 msgid "Action keyword"
-msgstr "Бърз клавиш на действие"
+msgstr "Tecla de acción "
 
 msgctxt "model:ir.action.report,name:"
 msgid "Action report"
-msgstr "Справка за сметка"
+msgstr "Acción en Reporte"
 
 msgctxt "model:ir.action.url,name:"
 msgid "Action URL"
-msgstr "URL на действие"
+msgstr "URL de la acción"
 
 msgctxt "model:ir.action.wizard,name:"
 msgid "Action wizard"
-msgstr "Помощник за действие"
+msgstr "Asistente de la acción"
 
 msgctxt "model:ir.attachment,name:"
 msgid "Attachment"
-msgstr "Прикачен файл"
+msgstr "Adjunto"
 
 msgctxt "model:ir.cache,name:"
 msgid "Cache"
-msgstr "В брой"
+msgstr "Caché"
 
-#, fuzzy
 msgctxt "model:ir.configuration,name:"
 msgid "Configuration"
-msgstr "Настройки"
+msgstr "Configuración"
 
 msgctxt "model:ir.cron,name:"
 msgid "Cron"
-msgstr "Планировщик"
+msgstr "Programador de tareas"
 
 msgctxt "model:ir.date,name:"
 msgid "Date"
-msgstr "Дата"
+msgstr "Fecha"
 
 msgctxt "model:ir.export,name:"
 msgid "Export"
-msgstr "Извличане"
+msgstr "Exportar"
 
 msgctxt "model:ir.export.line,name:"
 msgid "Export line"
-msgstr "Ред от извличане"
+msgstr "Exportar línea"
 
 msgctxt "model:ir.lang,name:"
 msgid "Language"
-msgstr "Език"
+msgstr "Idioma"
 
 msgctxt "model:ir.lang,name:lang_ar"
 msgid "Spanish (Argentina)"
-msgstr "Испански (Аржентина)"
+msgstr "Español (Argentina)"
 
 msgctxt "model:ir.lang,name:lang_bg"
 msgid "Bulgarian"
-msgstr "Български"
+msgstr "Búlgaro"
 
 msgctxt "model:ir.lang,name:lang_ca"
 msgid "Català"
-msgstr ""
+msgstr "Catalán"
 
 msgctxt "model:ir.lang,name:lang_cs"
 msgid "Czech"
-msgstr "Чешки"
+msgstr "Checo"
 
 msgctxt "model:ir.lang,name:lang_de"
 msgid "German"
-msgstr "Немски"
+msgstr "Alemán"
 
 msgctxt "model:ir.lang,name:lang_ec"
 msgid "Spanish (Ecuador)"
-msgstr ""
+msgstr "Español (Ecuador)"
 
 msgctxt "model:ir.lang,name:lang_en"
 msgid "English"
-msgstr "Англииски"
+msgstr "Inglés"
 
 msgctxt "model:ir.lang,name:lang_es"
 msgid "Spanish (Spain)"
-msgstr "Испански"
+msgstr "Español (España)"
 
 msgctxt "model:ir.lang,name:lang_es_CO"
 msgid "Spanish (Colombia)"
-msgstr "Испански (Колумбия)"
+msgstr "Español (Colombia)"
 
 msgctxt "model:ir.lang,name:lang_fr"
 msgid "French"
-msgstr "Френски"
+msgstr "Francés"
 
 msgctxt "model:ir.lang,name:lang_lt"
 msgid "Lithuanian"
-msgstr ""
+msgstr "Lituano"
 
 msgctxt "model:ir.lang,name:lang_nl"
 msgid "Dutch"
-msgstr "Холандски"
+msgstr "Holandés"
 
 msgctxt "model:ir.lang,name:lang_ru"
 msgid "Russian"
-msgstr "Руски"
+msgstr "Ruso"
 
 msgctxt "model:ir.lang,name:lang_sl"
 msgid "Slovenian"
-msgstr ""
+msgstr "Eslovaco"
 
 msgctxt "model:ir.model,name:"
 msgid "Model"
-msgstr "Модел"
+msgstr "Modelo"
 
 msgctxt "model:ir.model.access,name:"
 msgid "Model access"
-msgstr "Модел на достъпа"
+msgstr "Permisos de modelo"
 
 msgctxt "model:ir.model.button,name:"
 msgid "Model Button"
-msgstr "Битон от модел"
+msgstr "Botón de Modelo"
 
 msgctxt "model:ir.model.data,name:"
 msgid "Model data"
-msgstr "Модел на данни"
+msgstr "Datos de modelo"
 
 msgctxt "model:ir.model.field,name:"
 msgid "Model field"
-msgstr "Поле на модел"
+msgstr "Campo de modelo"
 
 msgctxt "model:ir.model.field.access,name:"
 msgid "Model Field Access"
-msgstr "Модел на достъп до поле"
+msgstr "Permiso Campo de Modelo"
 
 msgctxt "model:ir.model.print_model_graph.start,name:"
 msgid "Print Model Graph"
-msgstr "Печат на графика на модел"
+msgstr "Imprimir Gráfico del Modelo"
 
 msgctxt "model:ir.module.module,name:"
 msgid "Module"
-msgstr "Модул"
+msgstr "Módulo"
 
 msgctxt "model:ir.module.module.config_wizard.done,name:"
 msgid "Module Config Wizard Done"
-msgstr ""
+msgstr "Asitente de Configuración del Módulo - Realizado"
 
 msgctxt "model:ir.module.module.config_wizard.first,name:"
 msgid "Module Config Wizard First"
-msgstr "Първи помощник на конфигуриране на модул"
+msgstr "Asistente de Configuración del Módulo - Primero"
 
 msgctxt "model:ir.module.module.config_wizard.item,name:"
 msgid "Config wizard to run after installing module"
-msgstr "Задаване на помощника да се стартира след инсталиране на модула"
+msgstr "Asistente de configuración a ejecutar después de instalar un módulo"
 
 msgctxt "model:ir.module.module.config_wizard.other,name:"
 msgid "Module Config Wizard Other"
-msgstr "Помощник за настройка на модук - други"
+msgstr "Asistente de Configuración del Módulo - Otro"
 
 msgctxt "model:ir.module.module.dependency,name:"
 msgid "Module dependency"
-msgstr "Зависимости на модула"
+msgstr "Dependencias del módulo"
 
 msgctxt "model:ir.module.module.install_upgrade.done,name:"
 msgid "Module Install Upgrade Done"
-msgstr "Приключи инсталиране/обновяване на модул"
+msgstr "Instalación / Actualización del Módulo - Realizada"
 
 msgctxt "model:ir.module.module.install_upgrade.start,name:"
 msgid "Module Install Upgrade Start"
-msgstr "Начало на инсталиране/обновяване на модул"
+msgstr "Instalación / Actualización del Módulo - Iniciar"
 
 msgctxt "model:ir.property,name:"
 msgid "Property"
-msgstr "Свойство"
+msgstr "Propiedad"
 
 msgctxt "model:ir.rule,name:"
 msgid "Rule"
-msgstr "Правило"
+msgstr "Regla"
 
 msgctxt "model:ir.rule.group,name:"
 msgid "Rule group"
-msgstr "Група правила"
+msgstr "Grupo de reglas"
 
 msgctxt "model:ir.sequence,name:"
 msgid "Sequence"
-msgstr "Последователност"
+msgstr "Secuencia"
 
 msgctxt "model:ir.sequence.strict,name:"
 msgid "Sequence Strict"
-msgstr "Точна последователност"
+msgstr "Secuencia Estricta"
 
 msgctxt "model:ir.sequence.type,name:"
 msgid "Sequence type"
-msgstr "Вид последователност"
+msgstr "Tipo de secuencia"
 
 msgctxt "model:ir.session,name:"
 msgid "Session"
-msgstr "Сесия"
+msgstr "Sesión"
 
 msgctxt "model:ir.session.wizard,name:"
 msgid "Session Wizard"
-msgstr "Помощник за сесия"
+msgstr "Asistente de Sesión"
 
 msgctxt "model:ir.translation,name:"
 msgid "Translation"
-msgstr "Превод"
+msgstr "Traducción"
 
 msgctxt "model:ir.translation.clean.start,name:"
 msgid "Clean translation"
-msgstr "Начало на изчистване на преводи"
+msgstr "Iniciar limpieza de traducciones"
 
 msgctxt "model:ir.translation.clean.succeed,name:"
 msgid "Clean translation"
-msgstr "Изчистване на преводи"
+msgstr "Iniciar limpieza de traducciones"
 
 msgctxt "model:ir.translation.export.result,name:"
 msgid "Export translation"
-msgstr "Извличане на превод - файл"
+msgstr "Exportar traducción - archivo"
 
 msgctxt "model:ir.translation.export.start,name:"
 msgid "Export translation"
-msgstr "Извличане на превод - файл"
+msgstr "Exportar traducción - archivo"
 
 msgctxt "model:ir.translation.set.start,name:"
 msgid "Set Translation"
-msgstr ""
+msgstr "Establecer Traducción"
 
 msgctxt "model:ir.translation.set.succeed,name:"
 msgid "Set Translation"
-msgstr ""
+msgstr "Establecer Traducción"
 
 msgctxt "model:ir.translation.update.start,name:"
 msgid "Update translation"
-msgstr "Обновяване на превод"
+msgstr "Actualizar traducción"
 
 msgctxt "model:ir.trigger,name:"
 msgid "Trigger"
-msgstr "Превключвател"
+msgstr "Disparador"
 
 msgctxt "model:ir.trigger.log,name:"
 msgid "Trigger Log"
-msgstr "Лог на превключвател"
+msgstr "Registro del Disparador"
 
 msgctxt "model:ir.ui.icon,name:"
 msgid "Icon"
-msgstr "Икона"
+msgstr "Icono"
 
 msgctxt "model:ir.ui.menu,name:"
 msgid "UI menu"
-msgstr "Потребителско меню"
+msgstr "Menú UI"
 
 msgctxt "model:ir.ui.menu,name:menu_act_action"
 msgid "Actions"
-msgstr "Действия"
+msgstr "Acciones"
 
 msgctxt "model:ir.ui.menu,name:menu_action"
 msgid "Actions"
-msgstr "Действия"
+msgstr "Acciones"
 
 msgctxt "model:ir.ui.menu,name:menu_action_act_window"
 msgid "Window Actions"
-msgstr "Действия на прозорец"
+msgstr "Ventana de Acciones"
 
 msgctxt "model:ir.ui.menu,name:menu_action_report_form"
 msgid "Reports"
-msgstr "Справки"
+msgstr "Informes"
 
 msgctxt "model:ir.ui.menu,name:menu_action_url"
 msgid "URLs"
-msgstr "URL-и"
+msgstr "URLs"
 
 msgctxt "model:ir.ui.menu,name:menu_action_wizard"
 msgid "Wizards"
-msgstr "Помощници"
+msgstr "Asistentes"
 
 msgctxt "model:ir.ui.menu,name:menu_administration"
 msgid "Administration"
-msgstr "Администрация"
+msgstr "Administración"
 
 msgctxt "model:ir.ui.menu,name:menu_attachment_form"
 msgid "Attachments"
-msgstr "Прикачени файлове"
+msgstr "Adjuntos"
 
 msgctxt "model:ir.ui.menu,name:menu_config_wizard_item_form"
 msgid "Config Wizard Items"
-msgstr "Елементи на помощника за конфигуриране"
+msgstr "Elementos del Asistente de Configuración"
 
 msgctxt "model:ir.ui.menu,name:menu_cron_form"
 msgid "Scheduled Actions"
-msgstr "Планирани действия"
+msgstr "Acciones Programadas"
 
 msgctxt "model:ir.ui.menu,name:menu_export_form"
 msgid "Exports"
-msgstr "Извличания"
+msgstr "Exportaciones"
 
 msgctxt "model:ir.ui.menu,name:menu_icon_form"
 msgid "Icons"
-msgstr "Икони"
+msgstr "Iconos"
 
 msgctxt "model:ir.ui.menu,name:menu_ir_sequence_type"
 msgid "Sequence Types"
-msgstr "Видове последователности"
+msgstr "Tipos de Secuencia"
 
 msgctxt "model:ir.ui.menu,name:menu_lang_form"
 msgid "Languages"
-msgstr "Езици"
+msgstr "Idiomas"
 
 msgctxt "model:ir.ui.menu,name:menu_localization"
 msgid "Localization"
-msgstr "Превод"
+msgstr "Localización"
 
 msgctxt "model:ir.ui.menu,name:menu_menu_list"
 msgid "Menu"
-msgstr "Меню"
+msgstr "Menú"
 
 msgctxt "model:ir.ui.menu,name:menu_model_access_form"
 msgid "Models Access"
-msgstr "Модел на достъп"
+msgstr "Permisos de Modelos"
 
 msgctxt "model:ir.ui.menu,name:menu_model_button_form"
 msgid "Buttons"
-msgstr "Бутони"
+msgstr "Botones"
 
 #, fuzzy
 msgctxt "model:ir.ui.menu,name:menu_model_data_form"
 msgid "Data"
-msgstr "Данни"
+msgstr "Datos"
 
 msgctxt "model:ir.ui.menu,name:menu_model_field_access_form"
 msgid "Fields Access"
-msgstr "Достъп до полета"
+msgstr "Permisos de Campos"
 
 msgctxt "model:ir.ui.menu,name:menu_model_form"
 msgid "Models"
-msgstr "Модели"
+msgstr "Modelos"
 
 msgctxt "model:ir.ui.menu,name:menu_models"
 msgid "Models"
-msgstr "Модели"
+msgstr "Modelos"
 
 msgctxt "model:ir.ui.menu,name:menu_module_form"
 msgid "Modules"
-msgstr "Модули"
+msgstr "Módulos"
 
 msgctxt "model:ir.ui.menu,name:menu_module_install_upgrade"
 msgid "Perform Pending Installation/Upgrade"
-msgstr "Започване на изчакващите инталации/обновявания"
+msgstr "Realizar Instalaciones/Actualizaciones Pendientes"
 
 msgctxt "model:ir.ui.menu,name:menu_modules"
 msgid "Modules"
-msgstr "Модули"
+msgstr "Módulos"
 
 msgctxt "model:ir.ui.menu,name:menu_property_form"
 msgid "Properties"
-msgstr "Свойства"
+msgstr "Propiedades"
 
 msgctxt "model:ir.ui.menu,name:menu_property_form_default"
 msgid "Default Properties"
-msgstr "Свойства по подразбиране"
+msgstr "Propiedades por Defecto"
 
 msgctxt "model:ir.ui.menu,name:menu_rule_group_form"
 msgid "Record Rules"
-msgstr "Правила на запис"
+msgstr "Reglas de Registros"
 
 msgctxt "model:ir.ui.menu,name:menu_scheduler"
 msgid "Scheduler"
-msgstr "Планировщик"
+msgstr "Programador de Tareas"
 
 msgctxt "model:ir.ui.menu,name:menu_sequence_form"
 msgid "Sequences"
-msgstr "Последователности"
+msgstr "Secuencias"
 
 msgctxt "model:ir.ui.menu,name:menu_sequence_strict_form"
 msgid "Sequences Strict"
-msgstr "Точни последователности"
+msgstr "Secuencias Estrictas"
 
 msgctxt "model:ir.ui.menu,name:menu_sequences"
 msgid "Sequences"
-msgstr "Последователности"
+msgstr "Secuencias"
 
 msgctxt "model:ir.ui.menu,name:menu_translation_clean"
 msgid "Clean Translations"
-msgstr "Изчистване на преводи"
+msgstr "Limpiar Traducciones"
 
 msgctxt "model:ir.ui.menu,name:menu_translation_export"
 msgid "Export Translations"
-msgstr "Извличане на преводи"
+msgstr "Exportar Traducciones"
 
 msgctxt "model:ir.ui.menu,name:menu_translation_form"
 msgid "Translations"
-msgstr "Преводи"
+msgstr "Traducciones"
 
 msgctxt "model:ir.ui.menu,name:menu_translation_set"
 msgid "Set Translations"
-msgstr ""
+msgstr "Establecer Traducciones"
 
 msgctxt "model:ir.ui.menu,name:menu_translation_update"
 msgid "Synchronize Translations"
-msgstr "Синхронизиране на преводите"
+msgstr "Sincronizar Traducciones"
 
 msgctxt "model:ir.ui.menu,name:menu_trigger_form"
 msgid "Triggers"
-msgstr "Превключватели"
+msgstr "Disparadores"
 
 msgctxt "model:ir.ui.menu,name:menu_ui"
 msgid "User Interface"
-msgstr "Потребителски интерфейс"
+msgstr "Interfaz de Usuario"
 
 msgctxt "model:ir.ui.menu,name:menu_view"
 msgid "Views"
-msgstr "Изгледи"
+msgstr "Vistas"
 
 msgctxt "model:ir.ui.menu,name:menu_view_search"
 msgid "View Search"
-msgstr ""
+msgstr "Buscar Vista"
 
 msgctxt "model:ir.ui.menu,name:menu_view_tree_state"
 msgid "Tree State"
-msgstr ""
+msgstr "Estado de Arbol"
 
 msgctxt "model:ir.ui.menu,name:menu_view_tree_width"
 msgid "View Tree Width"
-msgstr "Ширина на дървовиден изглед"
+msgstr "Ancho de la Vista de Arbol"
 
 msgctxt "model:ir.ui.menu,name:model_model_fields_form"
 msgid "Fields"
-msgstr "Полета"
+msgstr "Campos"
 
 msgctxt "model:ir.ui.menu.favorite,name:"
 msgid "Menu Favorite"
-msgstr ""
+msgstr "Menú Favorito"
 
 msgctxt "model:ir.ui.view,name:"
 msgid "View"
-msgstr "Изглед"
+msgstr "Vista"
 
 msgctxt "model:ir.ui.view.show.start,name:"
 msgid "Show view"
-msgstr ""
+msgstr "Mostrar vista"
 
 msgctxt "model:ir.ui.view_search,name:"
 msgid "View Search"
-msgstr ""
+msgstr "Buscar Vista"
 
 msgctxt "model:ir.ui.view_tree_state,name:"
 msgid "View Tree State"
-msgstr ""
+msgstr "Estado de Vista de Arbol"
 
 msgctxt "model:ir.ui.view_tree_width,name:"
 msgid "View Tree Width"
-msgstr "Ширина на дървовиден изглед"
+msgstr "Ancho de la Vista de Arbol"
 
 msgctxt "selection:ir.action.keyword,keyword:"
 msgid "Action form"
-msgstr "Форма за действие"
+msgstr "Acción formulario"
 
 msgctxt "selection:ir.action.keyword,keyword:"
 msgid "Action tree"
-msgstr "Дърво с действия"
+msgstr "Árbol de acciones"
 
 msgctxt "selection:ir.action.keyword,keyword:"
 msgid "Form relate"
-msgstr "Свързана форма"
+msgstr "Formulario relacionado"
 
 msgctxt "selection:ir.action.keyword,keyword:"
 msgid "Open Graph"
-msgstr "Отваряне на графика"
+msgstr "Abrir Gráfico"
 
 msgctxt "selection:ir.action.keyword,keyword:"
 msgid "Open tree"
-msgstr "Отваряне на дърво"
+msgstr "Desplegar árbol"
 
 msgctxt "selection:ir.action.keyword,keyword:"
 msgid "Print form"
-msgstr "Отпечатване на форма"
+msgstr "Imprimir formulario"
 
 msgctxt "selection:ir.attachment,type:"
 msgid "Data"
-msgstr "Данни"
+msgstr "Datos"
 
 msgctxt "selection:ir.attachment,type:"
 msgid "Link"
-msgstr "Препратка"
+msgstr "Enlace"
 
 msgctxt "selection:ir.cron,interval_type:"
 msgid "Days"
-msgstr "Дни"
+msgstr "Días"
 
 msgctxt "selection:ir.cron,interval_type:"
 msgid "Hours"
-msgstr "Часове"
+msgstr "Horas"
 
 msgctxt "selection:ir.cron,interval_type:"
 msgid "Minutes"
-msgstr "Минути"
+msgstr "Minutos"
 
 msgctxt "selection:ir.cron,interval_type:"
 msgid "Months"
-msgstr "Месеци"
+msgstr "Meses"
 
 msgctxt "selection:ir.cron,interval_type:"
 msgid "Weeks"
-msgstr "Седмици"
+msgstr "Semanas"
 
 msgctxt "selection:ir.lang,direction:"
 msgid "Left-to-right"
-msgstr "Отляво надясно"
+msgstr "De izquierda a derecha"
 
 msgctxt "selection:ir.lang,direction:"
 msgid "Right-to-left"
-msgstr "Отдясно наляво"
+msgstr "De derecha a Izquierda"
 
 msgctxt "selection:ir.module.module,state:"
 msgid "Installed"
-msgstr "Инсталиран"
+msgstr "Instalado"
 
 msgctxt "selection:ir.module.module,state:"
 msgid "Not Installed"
-msgstr "Не е инсталиран"
+msgstr "No instalado"
 
 msgctxt "selection:ir.module.module,state:"
 msgid "To be installed"
-msgstr "За инсталиране"
+msgstr "Para ser instalado"
 
 msgctxt "selection:ir.module.module,state:"
 msgid "To be removed"
-msgstr "За премахване"
+msgstr "Para ser eliminado"
 
 msgctxt "selection:ir.module.module,state:"
 msgid "To be upgraded"
-msgstr "За обновяване"
+msgstr "Para ser actualizado"
 
 msgctxt "selection:ir.module.module.config_wizard.item,state:"
 msgid "Done"
-msgstr "Приключен"
+msgstr "Terminado"
 
 msgctxt "selection:ir.module.module.config_wizard.item,state:"
 msgid "Open"
-msgstr "Отваряне"
+msgstr "Abrir"
 
 msgctxt "selection:ir.module.module.dependency,state:"
 msgid "Installed"
-msgstr "Инсталиран"
+msgstr "Instalado"
 
 msgctxt "selection:ir.module.module.dependency,state:"
 msgid "Not Installed"
-msgstr "Не е инсталиран"
+msgstr "No instalado"
 
 msgctxt "selection:ir.module.module.dependency,state:"
 msgid "To be installed"
-msgstr "За инсталиране"
+msgstr "Para ser instalado"
 
 msgctxt "selection:ir.module.module.dependency,state:"
 msgid "To be removed"
-msgstr "За премахване"
+msgstr "Para ser eliminado"
 
 msgctxt "selection:ir.module.module.dependency,state:"
 msgid "To be upgraded"
-msgstr "За обновяване"
+msgstr "Para ser actualizado"
 
 msgctxt "selection:ir.module.module.dependency,state:"
 msgid "Unknown"
-msgstr "Неизвестен"
+msgstr "Desconocido"
 
 msgctxt "selection:ir.sequence,type:"
 msgid "Decimal Timestamp"
-msgstr "Десетичен времеви маркер"
+msgstr "Fecha-hora Decimal"
 
 msgctxt "selection:ir.sequence,type:"
 msgid "Hexadecimal Timestamp"
-msgstr "Шестнайсетичен времеви маркер"
+msgstr "Fecha-hora Hexadecimal"
 
 msgctxt "selection:ir.sequence,type:"
 msgid "Incremental"
-msgstr "Нарастване"
+msgstr "Incremental"
 
 msgctxt "selection:ir.sequence.strict,type:"
 msgid "Decimal Timestamp"
-msgstr "Десетичен времеви маркер"
+msgstr "Fecha-hora Decimal"
 
 msgctxt "selection:ir.sequence.strict,type:"
 msgid "Hexadecimal Timestamp"
-msgstr "Шестнайсетичен времеви маркер"
+msgstr "Fecha-hora Hexadecimal"
 
 msgctxt "selection:ir.sequence.strict,type:"
 msgid "Incremental"
-msgstr "Нарастване"
+msgstr "Incremental"
 
 msgctxt "selection:ir.translation,type:"
 msgid "Error"
-msgstr "Грешка"
+msgstr "Error"
 
 msgctxt "selection:ir.translation,type:"
 msgid "Field"
-msgstr "Поле"
+msgstr "Campo"
 
 msgctxt "selection:ir.translation,type:"
 msgid "Help"
-msgstr "Помощ"
+msgstr "Ayuda"
 
 msgctxt "selection:ir.translation,type:"
 msgid "Model"
-msgstr "Модел"
+msgstr "Modelo"
 
 msgctxt "selection:ir.translation,type:"
 msgid "ODT"
@@ -3614,15 +3566,15 @@ msgstr "ODT"
 
 msgctxt "selection:ir.translation,type:"
 msgid "Selection"
-msgstr "Избор"
+msgstr "Selección"
 
 msgctxt "selection:ir.translation,type:"
 msgid "View"
-msgstr "Изглед"
+msgstr "Vista"
 
 msgctxt "selection:ir.translation,type:"
 msgid "Wizard Button"
-msgstr "Бутон на помощник"
+msgstr "Botón de Asistente"
 
 msgctxt "selection:ir.ui.menu,action:"
 msgid ""
@@ -3630,19 +3582,19 @@ msgstr ""
 
 msgctxt "selection:ir.ui.menu,action:"
 msgid "ir.action.act_window"
-msgstr ""
+msgstr "ir.action.act_window"
 
 msgctxt "selection:ir.ui.menu,action:"
 msgid "ir.action.report"
-msgstr ""
+msgstr "ir.action.report"
 
 msgctxt "selection:ir.ui.menu,action:"
 msgid "ir.action.url"
-msgstr ""
+msgstr "ir.action.url"
 
 msgctxt "selection:ir.ui.menu,action:"
 msgid "ir.action.wizard"
-msgstr ""
+msgstr "ir.action.wizard"
 
 msgctxt "selection:ir.ui.view,type:"
 msgid ""
@@ -3650,78 +3602,75 @@ msgstr ""
 
 msgctxt "selection:ir.ui.view,type:"
 msgid "Board"
-msgstr "Табло"
+msgstr "Tablero"
 
-#, fuzzy
 msgctxt "selection:ir.ui.view,type:"
 msgid "Calendar"
-msgstr "Управление на календари"
+msgstr "Calendario"
 
 msgctxt "selection:ir.ui.view,type:"
 msgid "Form"
-msgstr "Форма"
+msgstr "Formulario"
 
 msgctxt "selection:ir.ui.view,type:"
 msgid "Graph"
-msgstr "Графика"
+msgstr "Gráfico"
 
 msgctxt "selection:ir.ui.view,type:"
 msgid "Tree"
-msgstr "Дърво"
+msgstr "Árbol"
 
-#, fuzzy
 msgctxt "view:ir.action.act_window.domain:"
 msgid "Domain"
-msgstr "Домейн"
+msgstr "Dominio"
 
 msgctxt "view:ir.action.act_window.domain:"
 msgid "Domains"
-msgstr ""
+msgstr "Dominios"
 
-#, fuzzy
 msgctxt "view:ir.action.act_window.view:"
 msgid "View"
-msgstr "Изглед"
+msgstr "Vista"
 
 msgctxt "view:ir.action.act_window.view:"
 msgid "Views"
-msgstr "Изгледи"
+msgstr "Vistas"
 
 msgctxt "view:ir.action.act_window:"
 msgid "General"
-msgstr "Основен"
+msgstr "General"
 
 msgctxt "view:ir.action.act_window:"
 msgid "Open Window"
-msgstr "Отваряне на прозорец"
+msgstr "Abrir Ventana"
 
 msgctxt "view:ir.action.act_window:"
 msgid "Open a Window"
-msgstr "Отваряне на прозорец"
+msgstr "Abrir una Ventana"
 
 msgctxt "view:ir.action.keyword:"
 msgid "Keyword"
-msgstr "Ключова дума"
+msgstr "Acción de teclado"
 
 msgctxt "view:ir.action.keyword:"
 msgid "Keywords"
-msgstr "Ключови думи"
+msgstr "Acciones de teclado"
 
 msgctxt "view:ir.action.report:"
 msgid "General"
-msgstr "Основен"
+msgstr "General"
 
 msgctxt "view:ir.action.report:"
 msgid "Report"
-msgstr "Справка"
+msgstr "Informe"
 
 msgctxt "view:ir.action.report:"
 msgid "Report xml"
-msgstr "Xml на справка"
+msgstr "Informe XML"
 
 msgctxt "view:ir.action.url:"
 msgid "General"
-msgstr "Основен"
+msgstr "General"
 
 msgctxt "view:ir.action.url:"
 msgid "URL"
@@ -3729,448 +3678,479 @@ msgstr "URL"
 
 msgctxt "view:ir.action.wizard:"
 msgid "General"
-msgstr "Основен"
+msgstr "General"
 
 msgctxt "view:ir.action.wizard:"
 msgid "Wizard"
-msgstr "Помощник"
+msgstr "Asistente"
 
 msgctxt "view:ir.action:"
 msgid "Action"
-msgstr "Действие"
+msgstr "Acción"
 
 msgctxt "view:ir.action:"
 msgid "General"
-msgstr "Основен"
+msgstr "General"
 
 msgctxt "view:ir.attachment:"
 msgid "Attachments"
-msgstr "Прикачени файлове"
+msgstr "Adjuntos"
 
 msgctxt "view:ir.cron:"
 msgid "Action to trigger"
-msgstr "Действие за стартиране"
+msgstr "Acción a disparar"
 
 msgctxt "view:ir.cron:"
 msgid "Scheduled Action"
-msgstr "Планирано действие"
+msgstr "Acción Programada"
 
 msgctxt "view:ir.cron:"
 msgid "Scheduled Actions"
-msgstr "Планирани действия"
+msgstr "Acciones Programadas"
 
 msgctxt "view:ir.export:"
 msgid "Exports"
-msgstr "Извличания"
+msgstr "Exportaciones"
 
 msgctxt "view:ir.lang:"
 msgid "Date Formatting"
-msgstr "Форматиране на дата"
+msgstr "Formato de Fecha"
 
 msgctxt "view:ir.lang:"
 msgid "Language"
-msgstr "Език"
+msgstr "Idioma"
 
 msgctxt "view:ir.lang:"
 msgid "Languages"
-msgstr "Езици"
+msgstr "Idiomas"
 
 msgctxt "view:ir.lang:"
 msgid "Numbers Formatting"
-msgstr "Форматиране на числа"
+msgstr "Formato de Números"
 
 msgctxt "view:ir.model.access:"
 msgid "Access controls"
-msgstr "Контрол на достъпа"
+msgstr "Controles de acceso"
 
 msgctxt "view:ir.model.button:"
 msgid "Button"
-msgstr "Бутон"
+msgstr "Botón"
 
 msgctxt "view:ir.model.button:"
 msgid "Buttons"
-msgstr "Бутони"
+msgstr "Botones"
 
 msgctxt "view:ir.model.data:"
 msgid "Model Data"
-msgstr ""
+msgstr "Datos de Modelo"
 
 msgctxt "view:ir.model.data:"
 msgid "Sync"
-msgstr ""
+msgstr "Sincronizar"
 
 msgctxt "view:ir.model.field.access:"
 msgid "Field Access"
-msgstr "Достъп до поле"
+msgstr "Permiso de Campo"
 
-#, fuzzy
 msgctxt "view:ir.model.field:"
 msgid "Field"
-msgstr "Поле"
+msgstr "Campo"
 
 msgctxt "view:ir.model.field:"
 msgid "Fields"
-msgstr "Полета"
+msgstr "Campos"
 
 msgctxt "view:ir.model.print_model_graph.start:"
 msgid "Print Model Graph"
-msgstr "Печат на графика на модел"
+msgstr "Imprimir Gráfico del Modelo"
 
 msgctxt "view:ir.model:"
 msgid "Model Description"
-msgstr "Описание на модел"
+msgstr "Descripción del modelo"
 
 msgctxt "view:ir.module.module.config_wizard.done:"
 msgid "Module configuration"
-msgstr ""
+msgstr "Configuración del módulo"
 
 msgctxt "view:ir.module.module.config_wizard.done:"
 msgid "The configuration is done."
-msgstr ""
+msgstr "La configuracion se ha realizado."
 
 msgctxt "view:ir.module.module.config_wizard.first:"
 msgid "Welcome to the module configuration wizard!"
-msgstr "Добре дошли в помощника за конфигуриране на модула!"
+msgstr "Bienvenido al asistente de configuración del módulo!"
 
 msgctxt "view:ir.module.module.config_wizard.first:"
 msgid ""
 "You will be able to configure your installation depending on the modules you"
 " have installed."
 msgstr ""
-"Може да настроите инсталацията си в зависимост от инсталираните модули."
+"Usted será capaz de configurar su instalación dependiendo de los módulos que"
+" ha instalado."
 
 msgctxt "view:ir.module.module.config_wizard.item:"
 msgid "Config Wizard Items"
-msgstr "Елементи на помощника за конфигуриране"
+msgstr "Elementos del Asistente de Configuración"
 
 msgctxt "view:ir.module.module.config_wizard.other:"
 msgid "Configuration Wizard Next Step!"
-msgstr "Следваща стъпа на помощника за конфигуриране!"
+msgstr "¡Siguiente Paso del Asistente de Configuración!"
 
 msgctxt "view:ir.module.module.dependency:"
 msgid "Dependencies"
-msgstr "Зависимости"
+msgstr "Dependencias"
 
 msgctxt "view:ir.module.module.dependency:"
 msgid "Dependency"
-msgstr "Зависимост"
+msgstr "Dependencia"
 
 msgctxt "view:ir.module.module.install_upgrade.done:"
 msgid "System Upgrade Done"
-msgstr "Обновяване на системата завършено"
+msgstr "Actualización del Sistema Realizada"
 
 msgctxt "view:ir.module.module.install_upgrade.done:"
 msgid "The modules have been upgraded / installed !"
-msgstr "Модулите са обновени / инсталирани !"
+msgstr "¡Los módulos se han actualizado / instalado!"
 
 msgctxt "view:ir.module.module.install_upgrade.start:"
 msgid "Note that this operation may take a few minutes."
-msgstr ""
+msgstr "Tenga en cuenta que esta operación puede demorar varios minutos."
 
 msgctxt "view:ir.module.module.install_upgrade.start:"
 msgid "System Upgrade"
-msgstr "Обновяване на системата"
+msgstr "Actualización del Sistema"
 
 msgctxt "view:ir.module.module.install_upgrade.start:"
 msgid "Your system will be upgraded."
-msgstr "Системата ще бъде обновена."
+msgstr "Su sistema sera actualizado."
 
 msgctxt "view:ir.module.module:"
 msgid "Cancel Installation"
-msgstr "Отказ от инсталалиране"
+msgstr "Cancelar Instalación"
 
 msgctxt "view:ir.module.module:"
 msgid "Cancel Uninstallation"
-msgstr "Отказ от деинсталиране"
+msgstr "Cancelar Desinstalación"
 
 msgctxt "view:ir.module.module:"
 msgid "Cancel Upgrade"
-msgstr "Отказ от обновяване"
+msgstr "Cancelar Actualización"
 
 msgctxt "view:ir.module.module:"
 msgid "Mark for Installation"
-msgstr "Отбелязване за инсталиране"
+msgstr "Marcar para Instalar"
 
 msgctxt "view:ir.module.module:"
 msgid "Mark for Uninstallation (beta)"
-msgstr "Отбелязване за деинсталиране (beta)"
+msgstr "Marcar para Desinstalar (beta)"
 
 msgctxt "view:ir.module.module:"
 msgid "Mark for Upgrade"
-msgstr "Отбелязване за обновяване"
+msgstr "Marcar para Actualizar"
 
 msgctxt "view:ir.module.module:"
 msgid "Module"
-msgstr "Модул"
+msgstr "Módulo"
 
 msgctxt "view:ir.module.module:"
 msgid "Modules"
-msgstr "Модули"
+msgstr "Módulos"
 
 msgctxt "view:ir.property:"
 msgid "Properties"
-msgstr "Свойства"
+msgstr "Propiedades"
 
 msgctxt "view:ir.property:"
 msgid "Property"
-msgstr "Свойство"
+msgstr "Propiedad"
 
 msgctxt "view:ir.rule.group:"
 msgid ""
 "If there is no test defined, the rule is always satisfied if not global"
-msgstr "Ако не указан тест правилото винаги е удовлетворено ако не е глобално"
+msgstr ""
+"Si no hay ninguna prueba definida, la regla se aplica siempre que no sea "
+"global"
 
 msgctxt "view:ir.rule.group:"
 msgid "Record rules"
-msgstr "Правила на записи"
+msgstr "Reglas de Registros"
 
 msgctxt "view:ir.rule.group:"
 msgid "The rule is satisfied if at least one test is True"
-msgstr "Правилото е удовлетворено ако поне един тест е успешен"
+msgstr "La regla se satisface si al menos una condición es verdadera"
 
 msgctxt "view:ir.rule:"
 msgid "Test"
-msgstr "Тест"
+msgstr "Prueba"
+
+msgctxt "view:ir.sequence.strict:"
+msgid "${day}"
+msgstr "${day}"
+
+msgctxt "view:ir.sequence.strict:"
+msgid "${month}"
+msgstr "${month}"
+
+msgctxt "view:ir.sequence.strict:"
+msgid "${year}"
+msgstr "${year}"
+
+msgctxt "view:ir.sequence.strict:"
+msgid "Day:"
+msgstr "Día:"
+
+msgctxt "view:ir.sequence.strict:"
+msgid "Legend (for prefix, suffix)"
+msgstr "Leyenda (para prefijo y/o sufijo)"
+
+msgctxt "view:ir.sequence.strict:"
+msgid "Month:"
+msgstr "Mes:"
+
+msgctxt "view:ir.sequence.strict:"
+msgid "Sequences Strict"
+msgstr "Secuencias Estrictas"
+
+msgctxt "view:ir.sequence.strict:"
+msgid "Year:"
+msgstr "Año:"
 
 msgctxt "view:ir.sequence.type:"
 msgid "Sequence Type"
-msgstr "Вид последователност"
+msgstr "Tipo de Secuencia"
 
 msgctxt "view:ir.sequence:"
 msgid "${day}"
-msgstr "${ден}"
+msgstr "${day}"
 
 msgctxt "view:ir.sequence:"
 msgid "${month}"
-msgstr "${month} - месец"
+msgstr "${month}"
 
 msgctxt "view:ir.sequence:"
 msgid "${year}"
-msgstr "${year} - година"
+msgstr "${year}"
 
 msgctxt "view:ir.sequence:"
 msgid "Day:"
-msgstr "Ден:"
+msgstr "Día:"
 
 msgctxt "view:ir.sequence:"
 msgid "Incremental"
-msgstr "Нарастване"
+msgstr "Incremental"
 
 msgctxt "view:ir.sequence:"
 msgid "Legend (Placeholders for prefix, suffix)"
-msgstr "Легенда (променливи за префикс, суфикс)"
+msgstr "Leyenda (variables para utilizar en prefijo y/o sufijo)"
 
 msgctxt "view:ir.sequence:"
 msgid "Month:"
-msgstr "Месец:"
+msgstr "Mes:"
 
 msgctxt "view:ir.sequence:"
 msgid "Sequences"
-msgstr "Последователности"
+msgstr "Secuencias"
 
 msgctxt "view:ir.sequence:"
 msgid "Timestamp"
-msgstr "Дата"
+msgstr "Fecha-hora"
 
 msgctxt "view:ir.sequence:"
 msgid "Year:"
-msgstr "Година:"
+msgstr "Año:"
 
 msgctxt "view:ir.translation.clean.start:"
 msgid "Clean Translations"
-msgstr "Изчистване на преводи"
+msgstr "Limpiar Traducciones"
 
 msgctxt "view:ir.translation.clean.start:"
 msgid "Clean Translations?"
-msgstr "Изчистване на преводите?"
+msgstr "¿Limpiar las Traducciones?"
 
 msgctxt "view:ir.translation.clean.succeed:"
 msgid "Clean Translations"
-msgstr "Изчистване на преводи"
+msgstr "Limpiar Traducciones"
 
 msgctxt "view:ir.translation.clean.succeed:"
 msgid "Clean Translations Succeed!"
-msgstr "Изчистването на преводите е успешно!"
+msgstr "¡Las traducciones se limpiaron correctamente!"
 
 msgctxt "view:ir.translation.export.result:"
 msgid "Export Translation"
-msgstr "Извличане на превод"
+msgstr "Exportar Traducción"
 
 msgctxt "view:ir.translation.export.start:"
 msgid "Export Translation"
-msgstr "Извличане на превод"
+msgstr "Exportar Traducción"
 
 msgctxt "view:ir.translation.set.start:"
 msgid "Set Translations"
-msgstr ""
+msgstr "Establecer Traducciones"
 
 msgctxt "view:ir.translation.set.start:"
 msgid "Synchronize Translations?"
-msgstr ""
+msgstr "¿Sincronizar las Traducciones?"
 
 msgctxt "view:ir.translation.set.succeed:"
 msgid "Set Succeed!"
-msgstr ""
+msgstr "¡Realizado Exitosamente!"
 
 msgctxt "view:ir.translation.set.succeed:"
 msgid "Set Translations"
-msgstr ""
+msgstr "Establecer Traducciones"
 
 msgctxt "view:ir.translation.update.start:"
 msgid "Synchronize Translations"
-msgstr "Синхронизиране на преводите"
+msgstr "Sincronizar Traducciones"
 
 msgctxt "view:ir.translation:"
 msgid "Translations"
-msgstr "Преводи"
+msgstr "Traducciones"
 
 msgctxt "view:ir.trigger:"
 msgid "Trigger"
-msgstr "Превключвател"
+msgstr "Disparador"
 
 msgctxt "view:ir.trigger:"
 msgid "Triggers"
-msgstr "Превключватели"
+msgstr "Disparadores"
 
 msgctxt "view:ir.ui.icon:"
 msgid "Icon"
-msgstr "Икона"
+msgstr "Icono"
 
 msgctxt "view:ir.ui.icon:"
 msgid "Icons"
-msgstr "Икони"
+msgstr "Iconos"
 
 msgctxt "view:ir.ui.menu.favorite:"
 msgid "Menu Favorite"
-msgstr ""
+msgstr "Menú Favorito"
 
 msgctxt "view:ir.ui.menu.favorite:"
 msgid "Menu Favorites"
-msgstr ""
+msgstr "Menu Favoritos"
 
 msgctxt "view:ir.ui.menu:"
 msgid "Menu"
-msgstr "Меню"
+msgstr "Menú"
 
 msgctxt "view:ir.ui.view:"
 msgid "View"
-msgstr "Изглед"
+msgstr "Vista"
 
 msgctxt "view:ir.ui.view:"
 msgid "_Show"
-msgstr "Показване"
+msgstr "_Mostrar"
 
 msgctxt "view:ir.ui.view_search:"
 msgid "View Search"
-msgstr ""
+msgstr "Buscar Vista"
 
 msgctxt "view:ir.ui.view_search:"
 msgid "View Searches"
-msgstr ""
+msgstr "Vista Busquedas"
 
 msgctxt "view:ir.ui.view_tree_state:"
 msgid "View Tree State"
-msgstr ""
+msgstr "Estado de Vista de Arbol"
 
 msgctxt "view:ir.ui.view_tree_state:"
 msgid "Views Tree State"
-msgstr ""
+msgstr "Estado de la Vista de Arbol"
 
 msgctxt "view:ir.ui.view_tree_width:"
 msgid "View Tree Width"
-msgstr "Ширина на дървовиден изглед"
+msgstr "Ancho de la Vista de Arbol"
 
 msgctxt "view:ir.ui.view_tree_width:"
 msgid "Views Tree Width"
-msgstr "Ширина на дърво с изгледи"
+msgstr "Ancho de la Vista de Arbol"
 
 msgctxt "wizard_button:ir.model.print_model_graph,start,end:"
 msgid "Cancel"
-msgstr "Отказ"
+msgstr "Cancelar"
 
 msgctxt "wizard_button:ir.model.print_model_graph,start,print_:"
 msgid "Print"
-msgstr "Печат"
+msgstr "Imprimir"
 
-#, fuzzy
 msgctxt "wizard_button:ir.module.module.config_wizard,done,end:"
 msgid "Ok"
-msgstr "Добре"
+msgstr "Aceptar"
 
 msgctxt "wizard_button:ir.module.module.config_wizard,first,action:"
 msgid "Ok"
-msgstr "Добре"
+msgstr "Aceptar"
 
 msgctxt "wizard_button:ir.module.module.config_wizard,first,end:"
 msgid "Cancel"
-msgstr "Отказ"
+msgstr "Cancelar"
 
 msgctxt "wizard_button:ir.module.module.config_wizard,other,action:"
 msgid "Next"
-msgstr "Напред"
+msgstr "Siguiente"
 
 msgctxt "wizard_button:ir.module.module.config_wizard,other,end:"
 msgid "Cancel"
-msgstr "Отказ"
+msgstr "Cancelar"
 
 msgctxt "wizard_button:ir.module.module.install_upgrade,done,config:"
 msgid "Ok"
-msgstr "Добре"
+msgstr "Aceptar"
 
 msgctxt "wizard_button:ir.module.module.install_upgrade,start,end:"
 msgid "Cancel"
-msgstr "Отказ"
+msgstr "Cancelar"
 
 msgctxt "wizard_button:ir.module.module.install_upgrade,start,upgrade:"
 msgid "Start Upgrade"
-msgstr "Започване на обновяване"
+msgstr "Iniciar Actualización"
 
 msgctxt "wizard_button:ir.translation.clean,start,clean:"
 msgid "Clean"
-msgstr "Празно"
+msgstr "Limpiar"
 
 msgctxt "wizard_button:ir.translation.clean,start,end:"
 msgid "Cancel"
-msgstr "Отказ"
+msgstr "Cancelar"
 
 msgctxt "wizard_button:ir.translation.clean,succeed,end:"
 msgid "Ok"
-msgstr "Добре"
+msgstr "Aceptar"
 
 msgctxt "wizard_button:ir.translation.export,result,end:"
 msgid "Close"
-msgstr "Затваряне"
+msgstr "Cerrar"
 
 msgctxt "wizard_button:ir.translation.export,start,end:"
 msgid "Cancel"
-msgstr "Отказ"
+msgstr "Cancelar"
 
 msgctxt "wizard_button:ir.translation.export,start,export:"
 msgid "Export"
-msgstr "Извличане"
+msgstr "Exportar"
 
-#, fuzzy
 msgctxt "wizard_button:ir.translation.set,start,end:"
 msgid "Cancel"
-msgstr "Отказване"
+msgstr "Cancelar"
 
 msgctxt "wizard_button:ir.translation.set,start,set_:"
 msgid "Set"
-msgstr ""
+msgstr "Establecer"
 
-#, fuzzy
 msgctxt "wizard_button:ir.translation.set,succeed,end:"
 msgid "Ok"
-msgstr "Добре"
+msgstr "Aceptar"
 
 msgctxt "wizard_button:ir.translation.update,start,end:"
 msgid "Cancel"
-msgstr "Отказ"
+msgstr "Cancelar"
 
 msgctxt "wizard_button:ir.translation.update,start,update:"
 msgid "Update"
-msgstr "Обновяване"
+msgstr "Actualizar"
 
 msgctxt "wizard_button:ir.ui.view.show,start,end:"
 msgid "Close"
-msgstr "Затваряне"
+msgstr "Cerrar"

@@ -477,6 +477,12 @@ class ModuleInstallUpgrade(Wizard):
             ])
     config = StateAction('ir.act_module_config_wizard')
 
+    @classmethod
+    def check_access(cls):
+        # Use new cursor to prevent lock when installing modules
+        with Transaction().new_cursor():
+            super(ModuleInstallUpgrade, cls).check_access()
+
     @staticmethod
     def default_start(fields):
         pool = Pool()
@@ -503,13 +509,14 @@ class ModuleInstallUpgrade(Wizard):
             modules = Module.search([
                 ('state', 'in', ['to upgrade', 'to remove', 'to install']),
                 ])
+            update = [m.name for m in modules]
             langs = Lang.search([
                 ('translatable', '=', True),
                 ])
             lang = [x.code for x in langs]
             transaction.cursor.commit()
-        if modules:
-            pool.init(update=True, lang=lang)
+        if update:
+            pool.init(update=update, lang=lang)
         return 'done'
 
 

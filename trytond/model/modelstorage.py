@@ -24,7 +24,7 @@ from trytond.const import OPERATORS, RECORD_CACHE_SIZE, BROWSE_FIELD_TRESHOLD
 from trytond.transaction import Transaction
 from trytond.pool import Pool
 from trytond.cache import LRUDict, freeze
-from trytond.config import CONFIG
+from trytond import backend
 from trytond.rpc import RPC
 from .modelview import ModelView
 
@@ -753,7 +753,7 @@ class ModelStorage(Model):
         # Allow root user to update/delete
         if Transaction().user == 0:
             return True
-        with Transaction().set_user(0):
+        with Transaction().set_context(_check_access=False):
             models_data = ModelData.search([
                 ('model', '=', cls.__name__),
                 ('db_id', 'in', map(int, records)),
@@ -843,7 +843,7 @@ class ModelStorage(Model):
     def _validate(cls, records, field_names=None):
         pool = Pool()
         # Ensure that records are readable
-        with Transaction().set_user(0, set_context=True):
+        with Transaction().set_context(_check_access=False):
             records = cls.browse(records)
 
         def call(name):
@@ -1018,7 +1018,7 @@ class ModelStorage(Model):
                         if (value.quantize(Decimal(str(10.0 ** -digits[1])))
                                 != value):
                             raise_user_error(value)
-                    elif CONFIG.options['db_type'] != 'mysql':
+                    elif backend.name() != 'mysql':
                         if not (round(value, digits[1]) == float(value)):
                             raise_user_error(value)
                 # validate digits

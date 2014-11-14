@@ -5,7 +5,7 @@ import hashlib
 from sql.operators import Concat
 
 from trytond.model import ModelView, ModelSQL, fields
-from trytond.config import CONFIG
+from trytond.config import config
 from trytond.transaction import Transaction
 from trytond.pyson import Eval
 from trytond.pool import Pool
@@ -117,7 +117,7 @@ class Attachment(ModelSQL, ModelView):
             filename = self.digest
             if self.collision:
                 filename = filename + '-' + str(self.collision)
-            filename = os.path.join(CONFIG['data_path'], db_name,
+            filename = os.path.join(config.get('database', 'path'), db_name,
                     filename[0:2], filename[2:4], filename)
             if name == 'data_size' or format_ == 'size':
                 try:
@@ -140,7 +140,7 @@ class Attachment(ModelSQL, ModelView):
         cursor = Transaction().cursor
         table = cls.__table__()
         db_name = cursor.dbname
-        directory = os.path.join(CONFIG['data_path'], db_name)
+        directory = os.path.join(config.get('database', 'path'), db_name)
         if not os.path.isdir(directory):
             os.makedirs(directory, 0770)
         digest = hashlib.md5(value).hexdigest()
@@ -191,22 +191,19 @@ class Attachment(ModelSQL, ModelView):
         return (self.write_date if self.write_date else self.create_date
             ).replace(microsecond=0)
 
-    @classmethod
-    def get_last_user(cls, attachments, name):
-        with Transaction().set_user(0):
-            return dict(
-                (x.id, x.write_uid.rec_name
-                    if x.write_uid else x.create_uid.rec_name)
-                for x in cls.browse(attachments))
+    def get_last_user(self, name):
+        return (self.write_uid.rec_name if self.write_uid
+            else self.create_uid.rec_name)
 
     @classmethod
     def check_access(cls, ids, mode='read'):
         pool = Pool()
         ModelAccess = pool.get('ir.model.access')
-        if Transaction().user == 0:
+        if ((Transaction().user == 0)
+                or not Transaction().context.get('_check_access')):
             return
         model_names = set()
-        with Transaction().set_user(0):
+        with Transaction().set_context(_check_access=False):
             for attachment in cls.browse(ids):
                 if attachment.resource:
                     model_names.add(attachment.resource.__name__)

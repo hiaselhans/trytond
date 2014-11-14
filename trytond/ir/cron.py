@@ -13,7 +13,7 @@ from trytond.tools import safe_eval, get_smtp_server
 from trytond.transaction import Transaction
 from trytond.pool import Pool
 import trytond.backend as backend
-from trytond.config import CONFIG
+from trytond.config import config
 
 __all__ = [
     'Cron',
@@ -132,7 +132,7 @@ class Cron(ModelSQL, ModelView):
             (cron.name, cron.__url__, tb_s),
             raise_exception=False)
 
-        from_addr = CONFIG['smtp_default_from_email']
+        from_addr = config.get('email', 'from')
         to_addr = cron.request_user.email
 
         msg = MIMEText(body, _charset='utf-8')
@@ -156,7 +156,7 @@ class Cron(ModelSQL, ModelView):
         pool = Pool()
         Config = pool.get('ir.configuration')
         try:
-            args = (cron.args or []) and safe_eval(cron.args)
+            args = (cron.args or []) and literal_eval(cron.args)
             Model = pool.get(cron.model)
             with Transaction().set_user(cron.user.id):
                 getattr(Model, cron.function)(*args)

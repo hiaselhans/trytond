@@ -9,6 +9,8 @@ import time
 import datetime
 from itertools import groupby, ifilter
 from operator import attrgetter
+from ast import literal_eval
+
 from sql import Literal
 from sql.conditionals import Coalesce
 from sql.aggregate import Count
@@ -26,7 +28,7 @@ import trytond.backend as backend
 from trytond.transaction import Transaction
 from trytond.cache import Cache
 from trytond.pool import Pool
-from trytond.config import CONFIG
+from trytond.config import config
 from trytond.pyson import PYSONEncoder
 from trytond.rpc import RPC
 
@@ -75,9 +77,9 @@ class User(ModelSQL, ModelView):
     def __setup__(cls):
         super(User, cls).__setup__()
         cls.__rpc__.update({
-                'get_preferences': RPC(),
-                'set_preferences': RPC(readonly=False),
-                'get_preferences_fields_view': RPC(),
+                'get_preferences': RPC(check_access=False),
+                'set_preferences': RPC(readonly=False, check_access=False),
+                'get_preferences_fields_view': RPC(check_access=False),
                 })
         cls._sql_constraints += [
             ('login_key', 'UNIQUE (login)',
@@ -197,13 +199,13 @@ class User(ModelSQL, ModelView):
     def get_sessions(users, name):
         Session = Pool().get('ir.session')
         now = datetime.datetime.now()
-        timeout = datetime.timedelta(seconds=int(CONFIG['session_timeout']))
+        timeout = datetime.timedelta(
+            seconds=config.getint('session', 'timeout'))
         result = dict((u.id, 0) for u in users)
         for sub_ids in grouped_slice(users):
-            with Transaction().set_user(0):
-                sessions = Session.search([
-                        ('create_uid', 'in', sub_ids),
-                        ], order=[('create_uid', 'ASC')])
+            sessions = Session.search([
+                    ('create_uid', 'in', sub_ids),
+                    ], order=[('create_uid', 'ASC')])
 
             def filter_(session):
                 timestamp = session.write_date or session.create_date
@@ -341,7 +343,7 @@ class User(ModelSQL, ModelView):
                 date = date.replace(i, j)
             res['locale'] = {
                 'date': date,
-                'grouping': safe_eval(user.language.grouping),
+                'grouping': literal_eval(user.language.grouping),
                 'decimal_point': user.language.decimal_point,
                 'thousands_sep': user.language.thousands_sep,
             }
@@ -354,8 +356,7 @@ class User(ModelSQL, ModelView):
         if preferences is not None:
             return preferences.copy()
         user = Transaction().user
-        with Transaction().set_user(0, set_context=True):
-            user = cls(user)
+        user = cls(user)
         preferences = cls._get_preferences(user, context_only=context_only)
         cls._get_preferences_cache.set(key, preferences)
         return preferences.copy()
@@ -370,8 +371,7 @@ class User(ModelSQL, ModelView):
         values_clean = values.copy()
         fields = cls._preferences_fields + cls._context_fields
         user_id = Transaction().user
-        with Transaction().set_user(0):
-            user = cls(user_id)
+        user = cls(user_id)
         for field in values:
             if field not in fields or field == 'groups':
                 del values_clean[field]
@@ -386,8 +386,7 @@ class User(ModelSQL, ModelView):
                     values_clean['language'] = langs[0].id
                 else:
                     del values_clean['language']
-        with Transaction().set_user(0):
-            cls.write([user], values_clean)
+        cls.write([user], values_clean)
 
     @classmethod
     def get_preferences_fields_view(cls):
@@ -553,7 +552,7 @@ class LoginAttempt(ModelSQL):
     @staticmethod
     def delay():
         return (datetime.datetime.now()
-            - datetime.timedelta(seconds=int(CONFIG['session_timeout'])))
+            - datetime.timedelta(seconds=config.getint('session', 'timeout')))
 
     @classmethod
     def add(cls, login):

@@ -10,12 +10,15 @@ Introduction to all the key parts of trytond:
     :maxdepth: 1
 
     install
+    configuration
+    setup_database
     logs
     models/index
     models/fields_default_value
     models/fields_on_change
     domain
     pyson
+    access_rights
     actions
     views/index
     views/extension

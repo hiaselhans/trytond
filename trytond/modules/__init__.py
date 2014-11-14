@@ -248,7 +248,7 @@ def load_module_graph(graph, pool, lang=None):
     Load all the modules from a given graph
     """
     if lang is None:
-        lang = [CONFIG['language']]
+        lang = [config.get('database', 'language')]
     modules_todo = []
     models_to_update_history = set()
     logger = logging.getLogger('modules')
@@ -380,7 +380,7 @@ def register_classes():
             module.register()
 
 
-def load_modules(database_name, pool, update=False, lang=None):
+def load_modules(database_name, pool, update=None, lang=None):
     """
     Load all modules for a database into a pool
     (also include modules to be installed)
@@ -393,16 +393,9 @@ def load_modules(database_name, pool, update=False, lang=None):
             # Migration from 2.2: workflow module removed
             cursor.execute(*ir_module.delete(
                 where=(ir_module.name == 'workflow')))
-            if 'all' in CONFIG['init']:
-                cursor.execute(*ir_module.select(
-                    ir_module.name, where=(ir_module.name != 'tests')
-                ))
-            else:
-                cursor.execute(*ir_module.select(
-                    ir_module.name, where=ir_module.state.in_(
-                        ('installed', 'to install', 'to upgrade', 'to remove')
-                    )
-                ))
+            cursor.execute(*ir_module.select(ir_module.name,
+                where=ir_module.state.in_(('installed', 'to install',
+                                           'to upgrade', 'to remove'))))
         else:
             cursor.execute(*ir_module.select(
                 ir_module.name, where=ir_module.state.in_(
@@ -411,12 +404,7 @@ def load_modules(database_name, pool, update=False, lang=None):
             ))
         module_list = [name for (name,) in cursor.fetchall()]
         if update:
-            for module in CONFIG['init'].keys():
-                if CONFIG['init'][module]:
-                    module_list.append(module)
-            for module in CONFIG['update'].keys():
-                if CONFIG['update'][module] and module != 'all':
-                    module_list.append(module)
+            module_list += update
 
         sorted_list = Index().create_graph(module_list)
         try:
@@ -452,6 +440,7 @@ def load_modules(database_name, pool, update=False, lang=None):
             Module = pool.get('ir.module.module')
             Module.update_list()
         cursor.commit()
+        Cache.resets(database_name)
         return res
 
     if not Transaction().cursor:
