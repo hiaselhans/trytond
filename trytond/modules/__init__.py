@@ -75,14 +75,6 @@ class Module(object):
         except ImportError:
             return None
 
-    def is_to_install(self):
-        for kind in ('init', 'update'):
-            if 'all' in CONFIG[kind] and self.name != 'tests':
-                return True
-            elif self.name in CONFIG[kind]:
-                return True
-        return False
-
     def __str__(self):
         return "Trytond-module: %s" % self.name
 
@@ -135,7 +127,7 @@ class Index(dict):
             for egg in pkg_resources.iter_entry_points('trytond.modules'):
                 mod_name = egg.module_name.split('.')[-1]
                 mod_path = os.path.join(egg.dist.location,
-                                        *egg.module_name.split('.'))
+                                        mod_name)
                 if not os.path.isdir(mod_path):
                     for path in sys.path:
                         mod_path = os.path.join(path,
@@ -243,7 +235,7 @@ class Index(dict):
         return os.path.join(self[module].path, *path[1:])
 
 
-def load_module_graph(graph, pool, lang=None):
+def load_module_graph(graph, pool, update=None, lang=None):
     """
     Load all the modules from a given graph
     """
@@ -265,7 +257,7 @@ def load_module_graph(graph, pool, lang=None):
         logger.info(module.name)
         classes = pool.setup(module.name)
         package_state = module_states.get(module.name, 'uninstalled')
-        if module.is_to_install():
+        if update and module.name in update:
             if package_state == 'installed':
                 package_state = 'to upgrade'
             elif package_state != 'to upgrade':
