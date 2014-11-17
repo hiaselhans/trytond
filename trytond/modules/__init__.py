@@ -168,15 +168,12 @@ class Index(dict):
         def add_module(module):
             # Add a module to sorted list, if all its dependencies have
             # been fulfilled. Returns true on success
-            print(module.name, to_install)
-            print("--------")
             for dep in module.depends:
                 if self[dep] not in sorted_list:
                     return self[dep]
             for x_dep in module.extras_depend:
                 if x_dep in modules_list and self[x_dep] not in sorted_list:
                     return self[x_dep]
-            print("added", module.name)
             sorted_list.append(module)
             to_install.remove(module)
             return False
@@ -350,21 +347,21 @@ def register_classes():
     """
     index = Index.create_index()
     sorted_list = index.create_graph()
-    import trytond.ir
-    trytond.ir.register()
-    import trytond.res
-    trytond.res.register()
-    import trytond.webdav
-    trytond.webdav.register()
-    import trytond.tests
-    trytond.tests.register()
+    #import trytond.ir
+    #trytond.ir.register()
+    #import trytond.res
+    #trytond.res.register()
+    #import trytond.webdav
+    #trytond.webdav.register()
+    #import trytond.tests
+    #trytond.tests.register()
 
     logger = logging.getLogger('modules')
 
     for package in sorted_list:
 
-        if package.name in ('ir', 'res', 'webdav', 'tests'):
-            continue
+        #if package.name in ('ir', 'res', 'webdav', 'tests'):
+        #    continue
 
         logger.info('%s:registering classes' % package.name)
         if not os.path.isdir(package.path):
@@ -402,9 +399,9 @@ def load_modules(database_name, pool, update=None, lang=None):
         if update:
             module_list += update
 
-        sorted_list = Index().create_graph(module_list)
+        sorted_list = Index().create_graph(set(module_list))
         try:
-            load_module_graph(sorted_list, pool, lang)
+            load_module_graph(sorted_list, pool, update, lang)
         except Exception:
             cursor.rollback()
             raise
@@ -448,5 +445,4 @@ def load_modules(database_name, pool, update=None, lang=None):
              Transaction().reset_context():
             res = _load_modules()
 
-    Cache.resets(database_name)
     return res
