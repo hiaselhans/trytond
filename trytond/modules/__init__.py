@@ -168,21 +168,25 @@ class Index(dict):
         def add_module(module):
             # Add a module to sorted list, if all its dependencies have
             # been fulfilled. Returns true on success
+            print(module.name, to_install)
+            print("--------")
             for dep in module.depends:
                 if self[dep] not in sorted_list:
-                    return False
+                    return self[dep]
             for x_dep in module.extras_depend:
                 if x_dep in modules_list and self[x_dep] not in sorted_list:
-                    return False
+                    return self[x_dep]
+            print("added", module.name)
             sorted_list.append(module)
             to_install.remove(module)
-            return True
+            return False
 
         while to_install:
-            amount_added = sum([add_module(mod) for mod in to_install])
-            if amount_added == 0:
-                raise Exception('Missing dependencies for modules: %s' %
-                                to_install)
+            missing_packages = [add_module(mod) for mod in to_install]
+            if all(missing_packages):
+                missing = list(set(missing_packages))
+                raise Exception('Missing dependencies: %s' %
+                                missing)
 
         return sorted_list
 
