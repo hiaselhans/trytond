@@ -76,17 +76,20 @@ class TranslateFactory:
     def __call__(self, text):
         if self.language not in self.cache:
             self.cache[self.language] = {}
-            translations = self.translation.search([
-                ('lang', '=', self.language),
-                ('type', '=', 'odt'),
-                ('name', '=', self.report_name),
-                ('value', '!=', ''),
-                ('value', '!=', None),
-                ('fuzzy', '=', False),
-                ('res_id', '=', -1),
-                ])
+            translations = []
+            for name in self.report_name:
+                translations += self.translation.search([
+                    ('lang', '=', self.language),
+                    ('type', '=', 'odt'),
+                    ('name', '=', name),
+                    ('value', '!=', ''),
+                    ('value', '!=', None),
+                    ('fuzzy', '=', False),
+                    ('res_id', '=', -1),
+                    ])
             for translation in translations:
-                self.cache[self.language][translation.src] = translation.value
+                if not translation.src in self.cache[self.language]:
+                    self.cache[self.language][translation.src] = translation.value
         return self.cache[self.language].get(text, text)
 
     def set_language(self, language):
@@ -94,6 +97,7 @@ class TranslateFactory:
 
 
 class Report(URLMixin, PoolBase):
+    __translation_context__ = None
 
     @classmethod
     def __setup__(cls):
@@ -190,7 +194,7 @@ class Report(URLMixin, PoolBase):
         localcontext['datetime'] = datetime
         localcontext['context'] = Transaction().context
 
-        translate = TranslateFactory(cls.__name__, Transaction().language,
+        translate = TranslateFactory(cls.__translation_context__ or (cls.__name__,), Transaction().language,
             Translation)
         localcontext['setLang'] = lambda language: translate.set_language(
             language)
