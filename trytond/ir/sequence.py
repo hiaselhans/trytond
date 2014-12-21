@@ -5,12 +5,12 @@ import time
 from itertools import izip
 from sql import Flavor
 
-from ..model import ModelView, ModelSQL, fields
-from ..tools import datetime_strftime
-from ..pyson import Eval, And
-from ..transaction import Transaction
-from ..pool import Pool
-from .. import backend
+from trytond.model import ModelView, ModelSQL, fields
+from trytond.tools import datetime_strftime
+from trytond.pyson import Eval, And
+from trytond.transaction import Transaction
+from trytond.pool import Pool
+import trytond.backend as backend
 
 __all__ = [
     'SequenceType', 'Sequence', 'SequenceStrict',

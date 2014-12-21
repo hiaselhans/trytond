@@ -283,7 +283,7 @@ class Database(DatabaseInterface):
 
     @staticmethod
     def init(cursor):
-        from trytond.modules import get_module_info
+        from trytond.modules import Index
         sql_file = os.path.join(os.path.dirname(__file__), 'init.sql')
         with open(sql_file) as fp:
             for line in fp.read().split(';'):
@@ -296,7 +296,6 @@ class Database(DatabaseInterface):
             state = 'uninstalled'
             if module in ('ir', 'res'):
                 state = 'to install'
-            info = get_module_info(module)
             insert = ir_module.insert(
                 [ir_module.create_uid, ir_module.create_date, ir_module.name,
                     ir_module.state],
@@ -304,7 +303,7 @@ class Database(DatabaseInterface):
             cursor.execute(*insert)
             cursor.execute('SELECT last_insert_rowid()')
             module_id, = cursor.fetchone()
-            for dependency in info.get('depends', []):
+            for dependency in Index()[module].depends:
                 insert = ir_module_dependency.insert(
                     [ir_module_dependency.create_uid,
                         ir_module_dependency.create_date,

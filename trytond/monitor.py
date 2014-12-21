@@ -3,13 +3,15 @@
 import sys
 import os
 import subprocess
+import logging
 from threading import Lock
-from trytond.modules import get_module_list
+from trytond.modules import Index
 
 _LOCK = Lock()
 _TIMES = {}
 _MODULES = None
 
+logger = logging.getLogger('monitor')
 
 def _modified(path):
     _LOCK.acquire()
@@ -32,20 +34,43 @@ def _modified(path):
     return False
 
 
-def monitor(files):
+def _importable(package):
+    """
+    check if a package can be imported or not
+    :param package:
+    :return: True on success
+    """
+    #exit_code = subprocess.call((sys.executable, '-c', 'import %s' %
+    #                             package.name),
+    #                             cwd=os.path.dirname(package.path))
+    #
+    #return exit_code == 0
+
+    try:
+        package.import_module()
+    except Exception, e:
+        logger.info(str(e))
+        raise
+        #return False
+    return True
+
+
+def monitor():
     '''
-    Monitor files and module files for change
+    Monitor module files for change
 
     :return: True if at least one file has changed
     '''
-    global _MODULES
     modified = False
-    for file_ in files:
-        if _modified(file_):
-            modified = True
-    directories = set()
+    last_keys = set(Index().keys())
+    try:
+        Index.create_index()
+    except Exception:
+        pass
+    
+    # check all imported modules:
     for module in sys.modules.keys():
-        if not module.startswith('trytond.'):
+        if not module.startswith('trytond.modules'):
             continue
         if not hasattr(sys.modules[module], '__file__'):
             continue
@@ -55,33 +80,25 @@ def monitor(files):
         if os.path.splitext(path)[1] in ['.pyc', '.pyo', '.pyd']:
             path = path[:-1]
         if _modified(path):
-            if subprocess.call((sys.executable, '-c', 'import %s' % module),
-                    cwd=os.path.dirname(os.path.abspath(os.path.normpath(
-                        os.path.join(__file__, '..'))))):
-                modified = False
-                break
             modified = True
 
-        # Check view XML
-        directory = os.path.dirname(path)
-        if directory not in directories:
-            directories.add(directory)
-            view_dir = os.path.join(directory, 'view')
-            if os.path.isdir(view_dir):
-                for view in os.listdir(view_dir):
-                    view = os.path.join(view_dir, view)
-                    if os.path.splitext(view)[1] == '.xml':
-                        if _modified(view):
-                            modified = True
+    # check view xml
+    for package in Index().itervalues():
+        view_dir = os.path.join(package.path, 'view')
+        if os.path.isdir(view_dir):
+            for filename in os.listdir(view_dir):
+                if _modified(os.path.join(view_dir, filename)):
+                    modified = True
 
-    modules = set(get_module_list())
-    if _MODULES is None:
-        _MODULES = modules
-    for module in modules.difference(_MODULES):
-        if subprocess.call((sys.executable, '-c',
-                    'import trytond.modules.%s' % module)):
-            modified = False
-            break
+    if last_keys and last_keys.symmetric_difference(Index().keys()):
         modified = True
-    _MODULES = modules
+
+    # Do not restart on module-errors
+    if modified:
+        for package in Index().itervalues():
+            if package._imported and not _importable(package):
+                logger.info('Module import failed on %s. not reloading' %
+                            package.name)
+                return False
+
     return modified

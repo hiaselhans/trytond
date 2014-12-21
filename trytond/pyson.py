@@ -594,5 +594,4 @@ CONTEXT = {
     'Date': Date,
     'DateTime': DateTime,
     'Len': Len,
-    'Id': Id,
 }

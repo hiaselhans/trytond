@@ -4,7 +4,7 @@
 import os
 
 from trytond.model import ModelView, ModelSQL, fields
-from trytond.tools import file_open
+from trytond.modules import Index
 from trytond.transaction import Transaction
 from trytond.rpc import RPC
 
@@ -50,5 +50,5 @@ class Icon(ModelSQL, ModelView):
 
     def get_icon(self, name):
         path = os.path.join(self.module, self.path.replace('/', os.sep))
-        with file_open(path, subdir='modules') as fp:
+        with open(Index().module_file(path), 'r') as fp:
             return fp.read()

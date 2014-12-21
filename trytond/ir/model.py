@@ -10,18 +10,18 @@ try:
 except ImportError:
     import json
 
-from ..model import ModelView, ModelSQL, fields
-from ..report import Report
-from ..wizard import Wizard, StateView, StateAction, Button
-from ..transaction import Transaction
-from ..cache import Cache
-from ..pool import Pool
-from ..pyson import Bool, Eval
-from ..rpc import RPC
-from .. import backend
-from ..protocols.jsonrpc import JSONDecoder, JSONEncoder
+from trytond.model import ModelView, ModelSQL, fields
+from trytond.report import Report
+from trytond.wizard import Wizard, StateView, StateAction, Button
+from trytond.transaction import Transaction
+from trytond.cache import Cache
+from trytond.pool import Pool
+from trytond.pyson import Bool, Eval
+from trytond.rpc import RPC
+import trytond.backend as backend
+from trytond.protocols.jsonrpc import JSONDecoder, JSONEncoder
 try:
-    from ..tools.StringMatcher import StringMatcher
+    from trytond.tools.StringMatcher import StringMatcher
 except ImportError:
     from difflib import SequenceMatcher as StringMatcher
 
