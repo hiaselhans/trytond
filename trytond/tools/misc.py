@@ -1,11 +1,10 @@
-#This file is part of Tryton.  The COPYRIGHT file at the top level of
-#this repository contains the full copyright notices and license terms.
+# This file is part of Tryton.  The COPYRIGHT file at the top level of
+# this repository contains the full copyright notices and license terms.
 # -*- coding: utf-8 -*-
 """
 Miscelleanous tools used by tryton
 """
 import os
-import sys
 import subprocess
 from threading import local
 import smtplib
@@ -48,53 +47,6 @@ def exec_command_pipe(name, *args, **kwargs):
         child_env.update(kwargs['env'])
     return subprocess.Popen(cmd, shell=True, stdin=subprocess.PIPE,
         stdout=subprocess.PIPE, env=child_env)
-
-
-def file_open(name, mode="r", subdir='modules'):
-    """Open a file from the root dir, using a subdir folder."""
-    from trytond.modules import EGG_MODULES
-    root_path = os.path.dirname(os.path.dirname(os.path.abspath(
-                unicode(__file__, sys.getfilesystemencoding()))))
-
-    egg_name = False
-    if subdir == 'modules':
-        module_name = name.split(os.sep)[0]
-        if module_name in EGG_MODULES:
-            epoint = EGG_MODULES[module_name]
-            mod_path = os.path.join(epoint.dist.location,
-                    *epoint.module_name.split('.')[:-1])
-            egg_name = os.path.join(mod_path, name)
-            if not os.path.isfile(egg_name):
-                # Find module in path
-                for path in sys.path:
-                    mod_path = os.path.join(path,
-                            *epoint.module_name.split('.')[:-1])
-                    egg_name = os.path.join(mod_path, name)
-                    if os.path.isfile(egg_name):
-                        break
-                if not os.path.isfile(egg_name):
-                    # When testing modules from setuptools location is the
-                    # module directory
-                    egg_name = os.path.join(
-                        os.path.dirname(epoint.dist.location), name)
-
-    if subdir:
-        if (subdir == 'modules'
-                and (name.startswith('ir' + os.sep)
-                    or name.startswith('res' + os.sep)
-                    or name.startswith('webdav' + os.sep)
-                    or name.startswith('tests' + os.sep))):
-            name = os.path.join(root_path, name)
-        else:
-            name = os.path.join(root_path, subdir, name)
-    else:
-        name = os.path.join(root_path, name)
-
-    for i in (name, egg_name):
-        if i and os.path.isfile(i):
-            return open(i, mode)
-
-    raise IOError('File not found : %s ' % name)
 
 
 def get_smtp_server():
@@ -402,10 +354,10 @@ def reduce_domain(domain):
                 (isinstance(arg, list) and
                     len(arg) > 2 and
                     arg[1] in OPERATORS)):
-            #clause
+            # clause
             result.append(arg)
         elif isinstance(arg, list) and arg:
-            #sub-domain
+            # sub-domain
             sub_domain = reduce_domain(arg)
             sub_operator = sub_domain[0]
             if sub_operator == operator:

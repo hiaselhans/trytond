@@ -8,7 +8,6 @@ import zipfile
 import polib
 import xml.dom.minidom
 from difflib import SequenceMatcher
-import os
 from hashlib import md5
 from lxml import etree
 from itertools import izip
@@ -18,16 +17,18 @@ from sql.conditionals import Case
 from sql.operators import Or, And
 from sql.aggregate import Max
 
-from ..model import ModelView, ModelSQL, fields
-from ..wizard import Wizard, StateView, StateTransition, StateAction, \
+from trytond.model import ModelView, ModelSQL, fields
+from trytond.wizard import Wizard, StateView, StateTransition, StateAction, \
     Button
-from ..tools import file_open, reduce_ids, grouped_slice
-from .. import backend
-from ..pyson import PYSONEncoder
-from ..transaction import Transaction
-from ..pool import Pool
-from ..cache import Cache
-from ..const import RECORD_CACHE_SIZE
+
+from trytond.tools import reduce_ids, grouped_slice
+import trytond.backend as backend
+from trytond.pyson import PYSONEncoder
+from trytond.transaction import Transaction
+from trytond.pool import Pool
+from trytond.cache import Cache
+from trytond.const import RECORD_CACHE_SIZE
+from trytond.modules import Index
 
 __all__ = ['Translation',
     'TranslationSetStart', 'TranslationSetSucceed', 'TranslationSet',
@@ -1032,8 +1033,7 @@ class TranslationSet(Wizard):
 
             odt_content = ''
             if report.report:
-                with file_open(report.report.replace('/', os.sep),
-                        mode='rb') as fp:
+                with open(Index().module_file(report.report), 'rb') as fp:
                     odt_content = fp.read()
             for content in (report.report_content_custom, odt_content):
                 if not content:

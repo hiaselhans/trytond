@@ -7,14 +7,13 @@ import sys
 import logging
 from email.mime.text import MIMEText
 from email.header import Header
-from ast import literal_eval
 
-from ..model import ModelView, ModelSQL, fields
-from ..tools import get_smtp_server
-from ..transaction import Transaction
-from ..pool import Pool
-from .. import backend
-from ..config import config
+from trytond.model import ModelView, ModelSQL, fields
+from trytond.tools import safe_eval, get_smtp_server
+from trytond.transaction import Transaction
+from trytond.pool import Pool
+import trytond.backend as backend
+from trytond.config import config
 
 __all__ = [
     'Cron',

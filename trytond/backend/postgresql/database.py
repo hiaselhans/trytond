@@ -232,7 +232,7 @@ class Database(DatabaseInterface):
 
     @staticmethod
     def init(cursor):
-        from trytond.modules import get_module_info
+        from trytond.modules import Index
         sql_file = os.path.join(os.path.dirname(__file__), 'init.sql')
         with open(sql_file) as fp:
             for line in fp.read().split(';'):
@@ -243,14 +243,13 @@ class Database(DatabaseInterface):
             state = 'uninstalled'
             if module in ('ir', 'res'):
                 state = 'to install'
-            info = get_module_info(module)
             cursor.execute('SELECT NEXTVAL(\'ir_module_module_id_seq\')')
             module_id = cursor.fetchone()[0]
             cursor.execute('INSERT INTO ir_module_module '
                 '(id, create_uid, create_date, name, state) '
                 'VALUES (%s, %s, now(), %s, %s)',
                 (module_id, 0, module, state))
-            for dependency in info.get('depends', []):
+            for dependency in Index()[module].depends:
                 cursor.execute('INSERT INTO ir_module_module_dependency '
                     '(create_uid, create_date, module, name) '
                     'VALUES (%s, now(), %s, %s)',
