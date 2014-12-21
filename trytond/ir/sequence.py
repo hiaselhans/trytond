@@ -288,10 +288,12 @@ class Sequence(ModelSQL, ModelView):
         if not date:
             date = Date.today()
         year = datetime_strftime(date, '%Y')
+        short_year = datetime_strftime(date, '%y')
         month = datetime_strftime(date, '%m')
         day = datetime_strftime(date, '%d')
         return Template(string or '').substitute(
                 year=year,
+                short_year=short_year,
                 month=month,
                 day=day,
                 )
