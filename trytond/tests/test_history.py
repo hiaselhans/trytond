@@ -1,5 +1,5 @@
-#This file is part of Tryton.  The COPYRIGHT file at the top level of
-#this repository contains the full copyright notices and license terms.
+# This file is part of Tryton.  The COPYRIGHT file at the top level of
+# this repository contains the full copyright notices and license terms.
 import unittest
 import datetime
 
@@ -192,6 +192,40 @@ class HistoryTestCase(unittest.TestCase):
         with Transaction().start(DB_NAME, USER, context=CONTEXT):
             History.restore_history([history_id], datetime.datetime.max)
             self.assertRaises(UserError, History.read, [history_id])
+
+    def test0041restore_history_before(self):
+        'Test restore history before'
+        History = POOL.get('test.history')
+
+        with Transaction().start(DB_NAME, USER,
+                context=CONTEXT) as transaction:
+            history = History(value=1)
+            history.save()
+            history_id = history.id
+
+            transaction.cursor.commit()
+
+        with Transaction().start(DB_NAME, USER,
+                context=CONTEXT) as transaction:
+            history = History(history_id)
+            history.value = 2
+            history.save()
+            second = history.write_date
+
+            transaction.cursor.commit()
+
+        with Transaction().start(DB_NAME, USER,
+                context=CONTEXT) as transaction:
+            history = History(history_id)
+            history.value = 3
+            history.save()
+
+            transaction.cursor.commit()
+
+        with Transaction().start(DB_NAME, USER, context=CONTEXT):
+            History.restore_history_before([history_id], second)
+            history = History(history_id)
+            self.assertEqual(history.value, 1)
 
     @unittest.skipIf(backend.name() in ('sqlite', 'mysql'),
         'now() is not the start of the transaction')

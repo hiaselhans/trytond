@@ -1,5 +1,5 @@
-#This file is part of Tryton.  The COPYRIGHT file at the top level of
-#this repository contains the full copyright notices and license terms.
+# This file is part of Tryton.  The COPYRIGHT file at the top level of
+# this repository contains the full copyright notices and license terms.
 
 __all__ = ['Wizard', 'StateView', 'StateTransition', 'StateAction', 'Button']
 
@@ -67,14 +67,17 @@ class StateView(State):
         assert len(self.buttons) == len(set(b.state for b in self.buttons))
         assert len([b for b in self.buttons if b.default]) <= 1
 
-    def get_view(self):
+    def get_view(self, wizard, state_name):
         '''
         Returns the view definition
         '''
         Model_ = Pool().get(self.model_name)
         ModelData = Pool().get('ir.model.data')
-        module, fs_id = self.view.split('.')
-        view_id = ModelData.get_id(module, fs_id)
+        if self.view:
+            module, fs_id = self.view.split('.')
+            view_id = ModelData.get_id(module, fs_id)
+        else:
+            view_id = None
         return Model_.fields_view_get(view_id=view_id, view_type='form')
 
     def get_defaults(self, wizard, state_name, fields):
@@ -256,7 +259,7 @@ class Wizard(WarningErrorMixin, URLMixin, PoolBase):
         result = {}
 
         if isinstance(state, StateView):
-            view = state.get_view()
+            view = state.get_view(self, state_name)
             defaults = state.get_defaults(self, state_name,
                 view['fields'].keys())
             buttons = state.get_buttons(self, state_name)

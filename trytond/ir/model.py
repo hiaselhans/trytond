@@ -1,7 +1,9 @@
-#This file is part of Tryton.  The COPYRIGHT file at the top level of
-#this repository contains the full copyright notices and license terms.
+# This file is part of Tryton.  The COPYRIGHT file at the top level of
+# this repository contains the full copyright notices and license terms.
 import re
 import heapq
+
+from sql import Null
 from sql.aggregate import Max
 from sql.conditionals import Case
 from collections import defaultdict
@@ -309,7 +311,7 @@ class ModelField(ModelSQL, ModelView):
         for field_name in model_fields:
             if model_fields[field_name]['module'] == module_name \
                     and field_name not in model._fields:
-                #XXX This delete field even when it is defined later
+                # XXX This delete field even when it is defined later
                 # in the module
                 cursor.execute(*ir_model_field.delete(
                         where=ir_model_field.id ==
@@ -511,7 +513,7 @@ class ModelAccess(ModelSQL, ModelView):
                 Max(Case((model_access.perm_create, 1), else_=0)),
                 Max(Case((model_access.perm_delete, 1), else_=0)),
                 where=ir_model.model.in_(models)
-                & ((user_group.user == user) | (model_access.group == None)),
+                & ((user_group.user == user) | (model_access.group == Null)),
                 group_by=ir_model.model))
         access.update(dict(
                 (m, {'read': r, 'write': w, 'create': c, 'delete': d})
@@ -691,7 +693,7 @@ class ModelFieldAccess(ModelSQL, ModelView):
                 Max(Case((field_access.perm_create, 1), else_=0)),
                 Max(Case((field_access.perm_delete, 1), else_=0)),
                 where=ir_model.model.in_(models)
-                & ((user_group.user == user) | (field_access.group == None)),
+                & ((user_group.user == user) | (field_access.group == Null)),
                 group_by=[ir_model.model, model_field.name]))
         for m, f, r, w, c, d in cursor.fetchall():
             accesses[m][f] = {'read': r, 'write': w, 'create': c, 'delete': d}
@@ -870,7 +872,7 @@ class ModelData(ModelSQL, ModelView):
         Operator = fields.SQL_OPERATORS[operator]
         query = table.select(table.id,
             where=Operator(
-                (table.fs_values != table.values) & (table.fs_values != None),
+                (table.fs_values != table.values) & (table.fs_values != Null),
                 value))
         return [('id', 'in', query)]
 

@@ -137,23 +137,15 @@ Class methods:
 
         {
             'model': model name,
+            'type': view type,
+            'view_id': view id,
             'arch': XML description,
             'fields': {
                 field name: {
                     ...
                 },
             },
-            'toolbar': {
-                'print': [
-                    ...
-                ],
-                'action': [
-                    ...
-                ],
-                'relate': [
-                    ...
-                ],
-            },
+            'field_childs': field for tree,
         }
 
 .. classmethod:: ModelView.view_toolbar_get()
@@ -230,7 +222,7 @@ Static methods:
 
     Return the default value for :attr:`create_date`.
 
-CLass methods:
+Class methods:
 
 .. classmethod:: ModelStorage.create(vlist)
 
@@ -336,16 +328,18 @@ CLass methods:
     method must be overridden to add validation and must raise an exception if
     validation fails.
 
+Dual methods:
+
+.. classmethod:: ModelStorage.save(records)
+
+    Save the modification made on the records.
+
 Instance methods:
 
 .. method:: ModelStorage.get_rec_name(name)
 
     Getter for the :class:`trytond.model.fields.Function` field
     :attr:`rec_name`.
-
-.. method:: ModelStorage.save()
-
-    Save the modification made on the record instance.
 
 ========
 ModelSQL
@@ -419,6 +413,15 @@ Class methods:
 .. classmethod:: ModelSQL.restore_history(ids, datetime)
 
     Restore the record ids from history at the specified date time.
+    Restoring a record will still generate an entry in the history table.
+
+    .. warning::
+        No access rights are verified and the records are not validated.
+    ..
+
+.. classmethod:: ModelSQL.restore_history_before(ids, datetime)
+
+    Restore the record ids from history before the specified date time.
     Restoring a record will still generate an entry in the history table.
 
     .. warning::

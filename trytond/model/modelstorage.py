@@ -1,5 +1,5 @@
-#This file is part of Tryton.  The COPYRIGHT file at the top level of
-#this repository contains the full copyright notices and license terms.
+# This file is part of Tryton.  The COPYRIGHT file at the top level of
+# this repository contains the full copyright notices and license terms.
 
 import datetime
 import time
@@ -20,15 +20,22 @@ from trytond.model import Model
 from trytond.model import fields
 from trytond.tools import reduce_domain, memoize
 from trytond.pyson import PYSONEncoder, PYSONDecoder, PYSON
-from trytond.const import OPERATORS, RECORD_CACHE_SIZE, BROWSE_FIELD_TRESHOLD
+from trytond.const import OPERATORS
+from trytond.config import config
 from trytond.transaction import Transaction
 from trytond.pool import Pool
 from trytond.cache import LRUDict, freeze
 from trytond import backend
 from trytond.rpc import RPC
 from .modelview import ModelView
+from .descriptors import dualmethod
 
 __all__ = ['ModelStorage']
+
+
+def cache_size():
+    return Transaction().context.get('_record_cache_size',
+        config.getint('cache', 'record'))
 
 
 class ModelStorage(Model):
@@ -376,7 +383,7 @@ class ModelStorage(Model):
             active_found = False
             while i < len(domain):
                 arg = domain[i]
-                #add test for xmlrpc that doesn't handle tuple
+                # add test for xmlrpc that doesn't handle tuple
                 if (isinstance(arg, tuple)
                         or (isinstance(arg, list)
                             and len(arg) > 2
@@ -433,7 +440,7 @@ class ModelStorage(Model):
         Return a list of instance for the ids
         '''
         ids = map(int, ids)
-        local_cache = LRUDict(RECORD_CACHE_SIZE)
+        local_cache = LRUDict(cache_size())
         return [cls(int(x), _ids=ids, _local_cache=local_cache) for x in ids]
 
     @staticmethod
@@ -859,13 +866,14 @@ class ModelStorage(Model):
             if not call(field[0]):
                 cls.raise_user_error(field[1])
 
-        if not 'res.user' in pool.object_name_list() \
-                or Transaction().user == 0:
-            ctx_pref = {
-            }
-        else:
-            User = pool.get('res.user')
-            ctx_pref = User.get_preferences(context_only=True)
+        ctx_pref = {}
+        if Transaction().user:
+            try:
+                User = pool.get('res.user')
+            except KeyError:
+                pass
+            else:
+                ctx_pref = User.get_preferences(context_only=True)
 
         def is_pyson(test):
             if isinstance(test, PYSON):
@@ -1053,10 +1061,11 @@ class ModelStorage(Model):
                                 value, _ = value.split(',')
                         if not isinstance(field.selection, (tuple, list)):
                             sel_func = getattr(cls, field.selection)
-                            if field.selection_change_with:
-                                test = sel_func(record)
-                            else:
+                            if (not hasattr(sel_func, 'im_self')
+                                    or sel_func.im_self):
                                 test = sel_func()
+                            else:
+                                test = sel_func(record)
                             test = set(dict(test))
                         # None and '' are equivalent
                         if '' in test or None in test:
@@ -1149,7 +1158,7 @@ class ModelStorage(Model):
         if _local_cache is not None:
             self._local_cache = _local_cache
         else:
-            self._local_cache = LRUDict(RECORD_CACHE_SIZE)
+            self._local_cache = LRUDict(cache_size())
         self._local_cache.counter = Transaction().counter
 
         super(ModelStorage, self).__init__(id, **kwargs)
@@ -1158,7 +1167,7 @@ class ModelStorage(Model):
     def _cache(self):
         cache = self._cursor_cache
         if self.__name__ not in cache:
-            cache[self.__name__] = LRUDict(RECORD_CACHE_SIZE)
+            cache[self.__name__] = LRUDict(cache_size())
         return cache[self.__name__]
 
     def __getattr__(self, name):
@@ -1201,7 +1210,7 @@ class ModelStorage(Model):
             to_remove = set(x for x, y in fread_accesses.iteritems()
                     if not y and x != name)
 
-            threshold = BROWSE_FIELD_TRESHOLD
+            threshold = config.getint('cache', 'field')
 
             def not_cached(item):
                 fname, field = item
@@ -1282,7 +1291,7 @@ class ModelStorage(Model):
             with Transaction().set_context(**ctx):
                 key = (Model, freeze(ctx))
                 local_cache = model2cache.setdefault(key,
-                    LRUDict(RECORD_CACHE_SIZE))
+                    LRUDict(cache_size()))
                 ids = model2ids.setdefault(key, [])
                 if field._type in ('many2one', 'one2one', 'reference'):
                     ids.append(value)
@@ -1390,26 +1399,48 @@ class ModelStorage(Model):
             values[fname] = value
         return values
 
-    def save(self):
-        save_values = self._save_values
-        values = self._values
-        self._values = None
-        if save_values or self.id < 0:
-            try:
-                with Transaction().set_cursor(self._cursor), \
-                        Transaction().set_user(self._user), \
-                        Transaction().set_context(self._context):
-                    if self.id < 0:
-                        self._ids.remove(self.id)
-                        try:
-                            self.id = self.create([save_values])[0].id
-                        finally:
-                            self._ids.append(self.id)
-                    else:
-                        self.write([self], save_values)
-            except:
-                self._values = values
-                raise
+    @dualmethod
+    def save(cls, records):
+        if not records:
+            return
+        values = {}
+        save_values = {}
+        to_create = []
+        to_write = []
+        cursor = records[0]._cursor
+        user = records[0]._user
+        context = records[0]._context
+        for record in records:
+            assert cursor == record._cursor
+            assert user == record._user
+            assert context == record._context
+            save_values[record] = record._save_values
+            values[record] = record._values
+            record._values = None
+            if record.id is None or record.id < 0:
+                to_create.append(record)
+            elif save_values[record]:
+                to_write.append(record)
+        transaction = Transaction()
+        try:
+            with transaction.set_cursor(cursor), \
+                    transaction.set_user(user), \
+                    transaction.set_context(context):
+                if to_create:
+                    news = cls.create([save_values[r] for r in to_create])
+                    for record, new in izip(to_create, news):
+                        record._ids.remove(record.id)
+                        record.id = new.id
+                        record._ids.append(record.id)
+                if to_write:
+                    cls.write(*sum(
+                            (([r], save_values[r]) for r in to_write), ()))
+        except:
+            for record in records:
+                record._values = values[record]
+            raise
+        for record in records:
+            record._init_values = None
 
 
 class EvalEnvironment(dict):

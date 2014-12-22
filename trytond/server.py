@@ -1,5 +1,5 @@
-#This file is part of Tryton.  The COPYRIGHT file at the top level of
-#this repository contains the full copyright notices and license terms.
+# This file is part of Tryton.  The COPYRIGHT file at the top level of
+# this repository contains the full copyright notices and license terms.
 """
 %prog [options]
 """
@@ -72,16 +72,21 @@ class TrytonServer(object):
 
         for db_name in self.options.database_names:
             init[db_name] = False
-            with Transaction().start(db_name, 0) as transaction:
-                cursor = transaction.cursor
-                if self.options.update:
-                    if not cursor.test():
-                        self.logger.info("init db")
-                        backend.get('Database').init(cursor)
-                        init[db_name] = True
-                    cursor.commit()
-                elif not cursor.test():
-                    raise Exception("'%s' is not a Tryton database!" % db_name)
+            try:
+                with Transaction().start(db_name, 0) as transaction:
+                    cursor = transaction.cursor
+                    if self.options.update:
+                        if not cursor.test():
+                            self.logger.info("init db")
+                            backend.get('Database').init(cursor)
+                            init[db_name] = True
+                        cursor.commit()
+                    elif not cursor.test():
+                        raise Exception("'%s' is not a Tryton database!" %
+                            db_name)
+            except Exception:
+                self.stop(False)
+                raise
 
         for db_name in self.options.database_names:
             if self.options.update:
@@ -149,9 +154,10 @@ class TrytonServer(object):
                     if not pool.lock.acquire(0):
                         continue
                     try:
-                        if 'ir.cron' not in pool.object_name_list():
+                        try:
+                            Cron = pool.get('ir.cron')
+                        except KeyError:
                             continue
-                        Cron = pool.get('ir.cron')
                     finally:
                         pool.lock.release()
                     thread = threading.Thread(

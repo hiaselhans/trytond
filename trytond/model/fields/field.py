@@ -1,10 +1,10 @@
-#This file is part of Tryton.  The COPYRIGHT file at the top level of
-#this repository contains the full copyright notices and license terms.
+# This file is part of Tryton.  The COPYRIGHT file at the top level of
+# this repository contains the full copyright notices and license terms.
 from collections import namedtuple
 import warnings
 from functools import wraps
 
-from sql import operators, Column, Literal, Select, CombiningQuery
+from sql import operators, Column, Literal, Select, CombiningQuery, Null
 from sql.conditionals import Coalesce, NullIf
 from sql.operators import Concat
 
@@ -241,9 +241,9 @@ class Field(object):
             if (not isinstance(value, (Select, CombiningQuery))
                     and any(v is None for v in value)):
                 if operator == 'in':
-                    expression |= (column == None)
+                    expression |= (column == Null)
                 else:
-                    expression &= (column != None)
+                    expression &= (column != Null)
         return expression
 
     def convert_domain(self, domain, tables, Model):

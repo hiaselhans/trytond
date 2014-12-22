@@ -1,9 +1,10 @@
-#This file is part of Tryton.  The COPYRIGHT file at the top level of
-#this repository contains the full copyright notices and license terms.
+# This file is part of Tryton.  The COPYRIGHT file at the top level of
+# this repository contains the full copyright notices and license terms.
 
 from ..pool import Pool
 from .test import *
 from .model import *
+from .modelview import *
 from .mptt import *
 from .import_data import *
 from .export_data import *
@@ -88,6 +89,7 @@ def register():
         Property,
         Selection,
         SelectionRequired,
+        DictSchema,
         Dict,
         DictDefault,
         DictRequired,
@@ -107,6 +109,8 @@ def register():
         Model4UnionTree1,
         Model4UnionTree2,
         UnionTree,
+        ModelViewChangedValues,
+        ModelViewChangedValuesTarget,
         MPTT,
         ImportDataBoolean,
         ImportDataInteger,

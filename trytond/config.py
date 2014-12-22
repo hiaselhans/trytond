@@ -1,5 +1,5 @@
-#This file is part of Tryton.  The COPYRIGHT file at the top level of
-#this repository contains the full copyright notices and license terms.
+# This file is part of Tryton.  The COPYRIGHT file at the top level of
+# this repository contains the full copyright notices and license terms.
 import os
 import ConfigParser
 import urlparse
@@ -51,6 +51,10 @@ class TrytonConfigParser(ConfigParser.RawConfigParser):
         self.set('database', 'list', 'True')
         self.set('database', 'retry', 5)
         self.set('database', 'language', 'en_US')
+        self.add_section('cache')
+        self.set('cache', 'model', 200)
+        self.set('cache', 'record', 2000)
+        self.set('cache', 'field', 100)
         self.add_section('ssl')
         self.add_section('email')
         self.set('email', 'uri', 'smtp://localhost:25')

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
-#This file is part of Tryton.  The COPYRIGHT file at the top level of
-#this repository contains the full copyright notices and license terms.
+# This file is part of Tryton.  The COPYRIGHT file at the top level of
+# this repository contains the full copyright notices and license terms.
 
 from setuptools import setup, find_packages
 import os
@@ -75,7 +75,7 @@ setup(name=PACKAGE,
         'Genshi',
         'python-dateutil',
         'polib',
-        'python-sql >= 0.2',
+        'python-sql >= 0.4',
         ],
     extras_require={
         'PostgreSQL': ['psycopg2 >= 2.0'],

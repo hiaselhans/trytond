@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-#This file is part of Tryton.  The COPYRIGHT file at the top level of
-#this repository contains the full copyright notices and license terms.
+# This file is part of Tryton.  The COPYRIGHT file at the top level of
+# this repository contains the full copyright notices and license terms.
 import sys
 try:
     import cdecimal
@@ -102,6 +102,7 @@ class FieldsTestCase(unittest.TestCase):
         self.selection_required = POOL.get('test.selection_required')
 
         self.dict_ = POOL.get('test.dict')
+        self.dict_schema = POOL.get('test.dict.schema')
         self.dict_default = POOL.get('test.dict_default')
         self.dict_required = POOL.get('test.dict_required')
 
@@ -2269,6 +2270,21 @@ class FieldsTestCase(unittest.TestCase):
                         'name': 'one2one5',
                         'one2one': target5.id,
                         }])
+            targets = self.one2one_target.create([{
+                        'name': 'multiple1',
+                        }, {
+                        'name': 'multiple2',
+                        }])
+            one2ones = self.one2one.create([{
+                        'name': 'origin6',
+                        'one2one': targets[0].id,
+                        }, {
+                        'name': 'origin7',
+                        'one2one': targets[1].id,
+                        }])
+            for one2one, target in zip(one2ones, targets):
+                self.assert_(one2one)
+                self.assertEqual(one2one.one2one, target)
 
             transaction.cursor.rollback()
 
@@ -2648,7 +2664,7 @@ class FieldsTestCase(unittest.TestCase):
                         }])
             self.assert_(origin3_id)
 
-            size_targets = self.many2many_size_target.create([{
+            self.many2many_size_target.create([{
                         'name': str(i),
                         } for i in range(6)])
 
@@ -3108,6 +3124,23 @@ class FieldsTestCase(unittest.TestCase):
         'Test Dict'
         with Transaction().start(DB_NAME, USER,
                 context=CONTEXT) as transaction:
+
+            self.dict_schema.create([{
+                        'name': 'a',
+                        'string': 'A',
+                        'type_': 'integer',
+                        }, {
+                        'name': 'b',
+                        'string': 'B',
+                        'type_': 'integer',
+                        }, {
+                        'name': 'type',
+                        'string': 'Type',
+                        'type_': 'selection',
+                        'selection': ('arabic: Arabic\n'
+                            'hexa: Hexadecimal'),
+                        }])
+
             dict1, = self.dict_.create([{
                         'dico': {'a': 1, 'b': 2},
                         }])
@@ -3115,6 +3148,21 @@ class FieldsTestCase(unittest.TestCase):
 
             self.dict_.write([dict1], {'dico': {'z': 26}})
             self.assert_(dict1.dico == {'z': 26})
+
+            dict1.dico = {
+                'a': 1,
+                'type': 'arabic',
+                }
+            dict1.save()
+            self.assertEqual(dict1.dico, {'a': 1, 'type': 'arabic'})
+            self.assertEqual(dict1.dico_string, {
+                    'a': 1,
+                    'type': 'Arabic',
+                    })
+            self.assertEqual(dict1.dico_string_keys, {
+                    'a': 'A',
+                    'type': 'Type',
+                    })
 
             dict2, = self.dict_.create([{}])
             self.assert_(dict2.dico is None)

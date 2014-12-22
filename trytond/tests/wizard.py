@@ -1,5 +1,5 @@
-#This file is part of Tryton.  The COPYRIGHT file at the top level of
-#this repository contains the full copyright notices and license terms.
+# This file is part of Tryton.  The COPYRIGHT file at the top level of
+# this repository contains the full copyright notices and license terms.
 from trytond.model import ModelView, ModelSQL, fields
 from trytond.wizard import Wizard, StateView, StateTransition, StateAction, \
     Button
@@ -15,7 +15,7 @@ class TestWizardStart(ModelSQL, ModelView):
     __name__ = 'test.test_wizard.start'
     name = fields.Char('Test me')
     user = fields.Many2One('res.user', 'User')
-    groups = fields.One2Many('res.group', None, 'Groups')
+    groups = fields.Many2Many('res.group', None, None, 'Groups')
 
     @staticmethod
     def default_user():

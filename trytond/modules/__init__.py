@@ -1,5 +1,5 @@
-#This file is part of Tryton.  The COPYRIGHT file at the top level of
-#this repository contains the full copyright notices and license terms.
+# This file is part of Tryton.  The COPYRIGHT file at the top level of
+# this repository contains the full copyright notices and license terms.
 import os
 import sys
 import itertools
@@ -165,7 +165,7 @@ def create_graph(module_list):
         # add 'package' in the graph
         all_deps = deps + [x for x in xdep if x in all_packages]
         if reduce(lambda x, y: x and y in graph, all_deps, True):
-            if not package in current:
+            if package not in current:
                 packages.pop(0)
                 continue
             later.clear()
@@ -234,7 +234,7 @@ def load_module_graph(graph, pool, update=None, lang=None):
                 if hasattr(model, '_history'):
                     models_to_update_history.add(model.__name__)
 
-            #Instanciate a new parser for the package:
+            # Instanciate a new parser for the package:
             tryton_parser = convert.TrytondXmlHandler(pool=pool, module=module,
                 module_state=package_state)
 
@@ -364,9 +364,6 @@ def load_modules(database_name, pool, update=None, lang=None):
         global res
         cursor = Transaction().cursor
         if update:
-            # Migration from 2.2: workflow module removed
-            cursor.execute(*ir_module.delete(
-                    where=(ir_module.name == 'workflow')))
             cursor.execute(*ir_module.select(ir_module.name,
                     where=ir_module.state.in_(('installed', 'to install',
                             'to upgrade', 'to remove'))))
@@ -391,7 +388,7 @@ def load_modules(database_name, pool, update=None, lang=None):
             fetchall = cursor.fetchall()
             if fetchall:
                 for (mod_name,) in fetchall:
-                    #TODO check if ressource not updated by the user
+                    # TODO check if ressource not updated by the user
                     cursor.execute(*ir_model_data.select(ir_model_data.model,
                             ir_model_data.db_id,
                             where=(ir_model_data.module == mod_name),

@@ -1,5 +1,13 @@
-Version 3.4.1 - 2014-12-03
-* Bug fixes (see mercurial logs for details)
+* Use action_id to find report to use
+* Allow custom StateView without Model
+* Remove Pool.object_name_list
+* Add translated descriptor for Dict field
+* Clean private context keyword in RPC
+* Add cache section in configuration
+* Use dualmethod on ModelStorage.save
+* New API for on_change: instance changes
+* Add restore_history_before on ModelSQL
+* Remove img_{width,height} form attributes
 
 Version 3.4.0 - 2014-10-20
 * Bug fixes (see mercurial logs for details)

@@ -80,7 +80,7 @@ method signature is::
 
     on_change_<field name>()
 
-This method must return a dictionary with the values of fields to be updated.
+This method must change the value of the fields to be updated.
 
 .. note::
 
@@ -770,3 +770,11 @@ A dictionary field with predefined keys.
 
     The name of the :class:`DictSchemaMixin` model that stores the definition
     of keys.
+
+Instance methods:
+
+.. method:: Dict.translated([name[, type_]])
+
+    Returns a descriptor for the translated `values` or `keys` of the field
+    following `type_`. The descriptor must be used on the same class as the
+    field. Default `type_` is `values`.

@@ -1,5 +1,5 @@
-#This file is part of Tryton.  The COPYRIGHT file at the top level of
-#this repository contains the full copyright notices and license terms.
+# This file is part of Tryton.  The COPYRIGHT file at the top level of
+# this repository contains the full copyright notices and license terms.
 
 __all__ = ['RPC']
 
@@ -32,9 +32,12 @@ class RPC(object):
         else:
             context = args.pop()
         timestamp = None
-        if '_timestamp' in context:
-            timestamp = context['_timestamp']
-            del context['_timestamp']
+        for key in context.keys():
+            if key == '_timestamp':
+                timestamp = context[key]
+            # Remove all private keyword
+            if key.startswith('_'):
+                del context[key]
         if self.check_access:
             context['_check_access'] = True
         if self.instantiate is not None:
