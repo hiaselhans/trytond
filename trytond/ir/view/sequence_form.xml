@@ -36,7 +36,7 @@ this repository contains the full copyright notices and license terms. -->
         id="legend"/>
     <label string="Year:" id="label_year"/>
     <label string="${year}" colspan="3" xalign="0.0" xexpand="1" id="year"/>
-    <label string="Year (without century):" id="label_year"/>
+    <label string="Year (Two digits):" id="label_short_year"/>
     <label string="${short_year}" colspan="3" xalign="0.0" xexpand="1" id="short_year"/>
     <label string="Month:" id="label_month"/>
     <label string="${month}" colspan="3" xalign="0.0" xexpand="1" id="month"/>
