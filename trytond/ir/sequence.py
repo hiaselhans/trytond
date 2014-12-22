@@ -282,21 +282,21 @@ class Sequence(ModelSQL, ModelView):
             % self._sql_sequence_name)
 
     @staticmethod
-    def _process(string, date=None):
+    def _process(string, date=None, substitutes=None):
         pool = Pool()
         Date = pool.get('ir.date')
         if not date:
             date = Date.today()
-        year = datetime_strftime(date, '%Y')
-        short_year = datetime_strftime(date, '%y')
-        month = datetime_strftime(date, '%m')
-        day = datetime_strftime(date, '%d')
-        return Template(string or '').substitute(
-                year=year,
-                short_year=short_year,
-                month=month,
-                day=day,
-                )
+
+        _substitutes = {'year': datetime_strftime(date, '%Y'),
+                        'short_year': datetime_strftime(date, '%y'),
+                        'month': datetime_strftime(date, '%m'),
+                        'day': datetime_strftime(date, '%d')
+                        }
+        if substitutes:
+            _substitutes.update(substitutes)
+
+        return Template(string or '').substitute(**_substitutes)
 
     @staticmethod
     def _timestamp(sequence):
