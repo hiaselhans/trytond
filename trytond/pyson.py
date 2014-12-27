@@ -21,6 +21,14 @@ class PYSON(object):
     def eval(dct, context):
         raise NotImplementedError
 
+    def __repr__(self):
+        try:
+            pyson = self.pyson()
+        except NotImplementedError:
+            return super(PYSON, self).__repr__()
+        cls = pyson.pop('__class__')
+        return "<trytond.pyson %s: (%s)>" % (cls, pyson.values())
+
     def __invert__(self):
         if self.types() != set([bool]):
             return Not(Bool(self))
