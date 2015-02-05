@@ -102,7 +102,7 @@ class Index(dict):
         try:
             return super(Index, self).__getitem__(item)
         except KeyError:
-            raise Exception('Module %s not found!' % item)
+            raise Exception("Module '%s' not found!" % item)
 
     def add_module(self, name, path):
         if name not in self:
@@ -181,7 +181,7 @@ class Index(dict):
         while to_install:
             missing_packages = [add_module(mod) for mod in to_install]
             if all(missing_packages):
-                missing = list(set(missing_packages))
+                missing = ["{}->{}/{}".format(p, p.depends, p.extras_depend) for p in set(missing_packages)]
                 raise Exception('Missing dependencies: %s' %
                                 missing)
 

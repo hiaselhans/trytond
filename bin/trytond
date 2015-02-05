@@ -13,6 +13,8 @@ if os.path.isdir(DIR):
 import trytond
 from trytond.version import VERSION
 
+from trytond.modules import Index
+Index().create_index()
 
 def parse_commandline():
     options = {}
