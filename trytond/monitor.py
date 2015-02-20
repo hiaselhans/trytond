@@ -18,8 +18,8 @@ def _modified(path):
     try:
         try:
             if not os.path.isfile(path):
+                # Deletion
                 return path in _TIMES
-
             mtime = os.stat(path).st_mtime
             if path not in _TIMES:
                 _TIMES[path] = mtime
@@ -55,7 +55,7 @@ def _importable(package):
     return True
 
 
-def monitor():
+def monitor(files):
     '''
     Monitor module files for change
 
@@ -66,20 +66,10 @@ def monitor():
     try:
         Index.create_index()
     except Exception:
-        pass
-    
-    # check all imported modules:
-    for module in sys.modules.keys():
-        if not module.startswith('trytond.modules'):
-            continue
-        if not hasattr(sys.modules[module], '__file__'):
-            continue
-        path = getattr(sys.modules[module], '__file__')
-        if not path:
-            continue
-        if os.path.splitext(path)[1] in ['.pyc', '.pyo', '.pyd']:
-            path = path[:-1]
-        if _modified(path):
+        return False
+
+    for fle in files:
+        if _modified(fle):
             modified = True
 
     # check view xml
@@ -89,6 +79,12 @@ def monitor():
             for filename in os.listdir(view_dir):
                 if _modified(os.path.join(view_dir, filename)):
                     modified = True
+        for root, dirs, files in os.walk(package.path):
+            for fle in files:
+                if fle.endswith(".py"):
+                    path = os.path.join(root, fle)
+                    if _modified(path):
+                        modified = True
 
     if last_keys and last_keys.symmetric_difference(Index().keys()):
         modified = True
