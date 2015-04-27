@@ -1,19 +1,5 @@
-#This file is part of Tryton.  The COPYRIGHT file at the top level of
-#this repository contains the full copyright notices and license terms.
-from trytond.backend.database import DatabaseInterface, CursorInterface
-from trytond.config import config, parse_uri
-from psycopg2.pool import ThreadedConnectionPool
-from psycopg2.extensions import cursor as PsycopgCursor
-from psycopg2.extensions import ISOLATION_LEVEL_REPEATABLE_READ
-from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
-from psycopg2.extensions import register_type, register_adapter
-from psycopg2.extensions import UNICODE, AsIs
-try:
-    from psycopg2.extensions import PYDATE, PYDATETIME, PYTIME
-except ImportError:
-    PYDATE, PYDATETIME, PYTIME = None, None, None
-from psycopg2 import IntegrityError as DatabaseIntegrityError
-from psycopg2 import OperationalError as DatabaseOperationalError
+# This file is part of Tryton.  The COPYRIGHT file at the top level of
+# this repository contains the full copyright notices and license terms.
 import time
 import logging
 import re
@@ -21,10 +7,34 @@ import os
 if os.name == 'posix':
     import pwd
 from decimal import Decimal
+
+try:
+    from psycopg2cffi import compat
+    compat.register()
+except ImportError:
+    pass
+from psycopg2.pool import ThreadedConnectionPool
+from psycopg2.extensions import cursor as PsycopgCursor
+from psycopg2.extensions import ISOLATION_LEVEL_REPEATABLE_READ
+from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
+from psycopg2.extensions import register_type, register_adapter
+from psycopg2.extensions import UNICODE, AsIs
+try:
+    from psycopg2.extensions import PYDATE, PYDATETIME, PYTIME, PYINTERVAL
+except ImportError:
+    PYDATE, PYDATETIME, PYTIME, PYINTERVAL = None, None, None, None
+from psycopg2 import IntegrityError as DatabaseIntegrityError
+from psycopg2 import OperationalError as DatabaseOperationalError
+
 from sql import Flavor
+
+from trytond.backend.database import DatabaseInterface, CursorInterface
+from trytond.config import config, parse_uri
 
 __all__ = ['Database', 'DatabaseIntegrityError', 'DatabaseOperationalError',
     'Cursor']
+
+logger = logging.getLogger(__name__)
 
 RE_VERSION = re.compile(r'\S+ (\d+)\.(\d+)')
 
@@ -52,8 +62,7 @@ class Database(DatabaseInterface):
     def connect(self):
         if self._connpool is not None:
             return self
-        logger = logging.getLogger('database')
-        logger.info('connect to "%s"' % self.database_name)
+        logger.info('connect to "%s"', self.database_name)
         uri = parse_uri(config.get('database', 'uri'))
         assert uri.scheme == 'postgresql'
         host = uri.hostname and "host=%s" % uri.hostname or ''
@@ -61,8 +70,8 @@ class Database(DatabaseInterface):
         name = "dbname=%s" % self.database_name
         user = uri.username and "user=%s" % uri.username or ''
         password = uri.password and "password=%s" % uri.password or ''
-        minconn = config.getint('database', 'minconn', 1)
-        maxconn = config.getint('database', 'maxconn', 64)
+        minconn = config.getint('database', 'minconn', default=1)
+        maxconn = config.getint('database', 'maxconn', default=64)
         dsn = '%s %s %s %s %s' % (host, port, name, user, password)
         self._connpool = ThreadedConnectionPool(minconn, maxconn, dsn)
         return self
@@ -117,7 +126,7 @@ class Database(DatabaseInterface):
         if uri.hostname:
             cmd.append('--host=' + uri.hostname)
         if uri.port:
-            cmd.append('--port=' + uri.port)
+            cmd.append('--port=' + str(uri.port))
         if uri.password:
             # if db_password is set in configuration we should pass
             # an environment variable PGPASSWORD to our subprocess
@@ -151,7 +160,7 @@ class Database(DatabaseInterface):
         if uri.hostname:
             cmd.append('--host=' + uri.hostname)
         if uri.port:
-            cmd.append('--port=' + uri.port)
+            cmd.append('--port=' + str(uri.port))
         if uri.password:
             env['PGPASSWORD'] = uri.password
         cmd.append('--dbname=' + database_name)
@@ -192,7 +201,7 @@ class Database(DatabaseInterface):
         if res and abs(Database._list_cache_timestamp - now) < timeout:
             return res
         uri = parse_uri(config.get('database', 'uri'))
-        db_user = uri.username
+        db_user = uri.username or os.environ.get('PGUSER')
         if not db_user and os.name == 'posix':
             db_user = pwd.getpwuid(os.getuid())[0]
         if db_user:
@@ -355,7 +364,7 @@ class Cursor(CursorInterface):
         return self.cursor.fetchone()[0]
 
     def lock(self, table):
-        self.cursor.execute('LOCK "%s" IN EXCLUSIVE MODE' % table)
+        self.cursor.execute('LOCK "%s" IN EXCLUSIVE MODE NOWAIT' % table)
 
     def has_constraint(self):
         return True
@@ -378,5 +387,7 @@ if PYDATETIME:
     register_type(PYDATETIME)
 if PYTIME:
     register_type(PYTIME)
+if PYINTERVAL:
+    register_type(PYINTERVAL)
 register_adapter(float, lambda value: AsIs(repr(value)))
 register_adapter(Decimal, lambda value: AsIs(str(value)))

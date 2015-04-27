@@ -1,5 +1,5 @@
-#This file is part of Tryton.  The COPYRIGHT file at the top level of
-#this repository contains the full copyright notices and license terms.
+# This file is part of Tryton.  The COPYRIGHT file at the top level of
+# this repository contains the full copyright notices and license terms.
 try:
     import cStringIO as StringIO
 except ImportError:
@@ -11,7 +11,8 @@ from difflib import SequenceMatcher
 from hashlib import md5
 from lxml import etree
 from itertools import izip
-from sql import Column
+
+from sql import Column, Null
 from sql.functions import Substring, Position
 from sql.conditionals import Case
 from sql.operators import Or, And
@@ -23,11 +24,11 @@ from trytond.wizard import Wizard, StateView, StateTransition, StateAction, \
 
 from trytond.tools import reduce_ids, grouped_slice
 import trytond.backend as backend
-from trytond.pyson import PYSONEncoder
+from trytond.pyson import PYSONEncoder, Eval
 from trytond.transaction import Transaction
 from trytond.pool import Pool
 from trytond.cache import Cache
-from trytond.const import RECORD_CACHE_SIZE
+from trytond.config import config
 from trytond.modules import Index
 
 __all__ = ['Translation',
@@ -127,7 +128,7 @@ class Translation(ModelSQL, ModelView):
 
         # Migration from 2.2 and 2.8
         cursor.execute(*ir_translation.update([ir_translation.res_id],
-                [-1], where=(ir_translation.res_id == None)
+                [-1], where=(ir_translation.res_id == Null)
                 | (ir_translation.res_id == 0)))
 
         table = TableHandler(Transaction().cursor, cls, module_name)
@@ -149,7 +150,7 @@ class Translation(ModelSQL, ModelView):
                 & (ir_translation.name == name)
                 # Keep searching on all values for migration
                 & ((ir_translation.res_id == -1)
-                    | (ir_translation.res_id == None)
+                    | (ir_translation.res_id == Null)
                     | (ir_translation.res_id == 0))))
         trans_id = None
         if cursor.rowcount == -1 or cursor.rowcount is None:
@@ -337,13 +338,15 @@ class Translation(ModelSQL, ModelView):
     @classmethod
     def search_rec_name(cls, name, clause):
         clause = tuple(clause)
-        translations = cls.search(['OR',
-                ('src',) + clause[1:],
-                ('value',) + clause[1:],
-                ])
-        if translations:
-            return [('id', 'in', [t.id for t in translations])]
-        return [(cls._rec_name,) + clause[1:]]
+        if clause[1].startswith('!') or clause[1].startswith('not '):
+            bool_op = 'AND'
+        else:
+            bool_op = 'OR'
+        return [bool_op,
+            ('src',) + clause[1:],
+            ('value',) + clause[1:],
+            (cls._rec_name,) + clause[1:],
+            ]
 
     @classmethod
     def search_model(cls, name, clause):
@@ -371,6 +374,10 @@ class Translation(ModelSQL, ModelView):
     @classmethod
     def get_src_md5(cls, src):
         return md5((src or '').encode('utf-8')).hexdigest()
+
+    @classmethod
+    def view_attributes(cls):
+        return [('/form//field[@name="value"]', 'spell', Eval('lang'))]
 
     @classmethod
     def get_ids(cls, name, ttype, lang, ids):
@@ -437,7 +444,7 @@ class Translation(ModelSQL, ModelView):
                         (table.type == ttype),
                         (table.name == name),
                         (table.value != ''),
-                        (table.value != None),
+                        (table.value != Null),
                         red_sql,
                         ))
                 if fuzzy_sql:
@@ -612,7 +619,7 @@ class Translation(ModelSQL, ModelView):
             & (table.type == ttype)
             & (table.name == name)
             & (table.value != '')
-            & (table.value != None)
+            & (table.value != Null)
             & (table.fuzzy == False)
             & (table.res_id == -1))
         if source is not None:
@@ -657,7 +664,7 @@ class Translation(ModelSQL, ModelView):
                         (table.type == ttype),
                         (table.name == name),
                         (table.value != ''),
-                        (table.value != None),
+                        (table.value != Null),
                         (table.fuzzy == False),
                         (table.res_id == -1),
                         ))
@@ -781,7 +788,7 @@ class Translation(ModelSQL, ModelView):
                     (model_data.db_id, model_data.noupdate)
 
         translations = set()
-        to_create = []
+        to_save = []
         pofile = polib.pofile(po_path)
 
         id2translation = {}
@@ -796,7 +803,7 @@ class Translation(ModelSQL, ModelView):
                 raise ValueError('Unknow translation type: %s' %
                     translation.type)
             key2ids.setdefault(key, []).append(translation.id)
-            if len(module_translations) <= RECORD_CACHE_SIZE:
+            if len(module_translations) <= config.getint('cache', 'record'):
                 id2translation[translation.id] = translation
 
         def override_translation(ressource_id, new_translation):
@@ -830,12 +837,14 @@ class Translation(ModelSQL, ModelView):
         # Make a first loop to retreive translation ids in the right order to
         # get better read locality and a full usage of the cache.
         translation_ids = []
-        if len(module_translations) <= RECORD_CACHE_SIZE:
+        if len(module_translations) <= config.getint('cache', 'record'):
             processes = (True,)
         else:
             processes = (False, True)
         for processing in processes:
-            if processing and len(module_translations) > RECORD_CACHE_SIZE:
+            if (processing
+                    and len(module_translations) > config.getint('cache',
+                        'record')):
                 id2translation = dict((t.id, t)
                     for t in cls.browse(translation_ids))
             for entry in pofile:
@@ -873,26 +882,15 @@ class Translation(ModelSQL, ModelView):
                     continue
 
                 if not ids:
-                    to_create.append(translation._save_values)
-                else:
-                    to_write = []
+                    to_save.append(translation)
+                elif not noupdate:
                     for translation_id in ids:
                         old_translation = id2translation[translation_id]
-                        if (old_translation.value != translation.value
-                                or old_translation.fuzzy !=
-                                translation.fuzzy):
-                            to_write.append(old_translation)
-                    with Transaction().set_context(module=module):
-                        if to_write and not noupdate:
-                            cls.write(to_write, {
-                                    'value': translation.value,
-                                    'fuzzy': translation.fuzzy,
-                                    })
-                        translations |= set(cls.browse(ids))
-
-        if to_create:
-            with Transaction().set_context(module=module):
-                translations |= set(cls.create(to_create))
+                        old_translation.value = translation.value
+                        old_translation.fuzzy = translation.fuzzy
+                        to_save.append(old_translation)
+        cls.save(to_save)
+        translations |= set(to_save)
 
         if translations:
             all_translations = set(cls.search([
@@ -984,7 +982,7 @@ class TranslationSet(Wizard):
     set_ = StateTransition()
     succeed = StateView('ir.translation.set.succeed',
         'ir.translation_set_succeed_view_form', [
-            Button('Ok', 'end', 'tryton-ok', default=True),
+            Button('OK', 'end', 'tryton-ok', default=True),
             ])
 
     def _translate_report(self, node):
@@ -1229,7 +1227,7 @@ class TranslationClean(Wizard):
     clean = StateTransition()
     succeed = StateView('ir.translation.clean.succeed',
         'ir.translation_clean_succeed_view_form', [
-            Button('Ok', 'end', 'tryton-ok', default=True),
+            Button('OK', 'end', 'tryton-ok', default=True),
             ])
 
     @staticmethod
@@ -1239,9 +1237,10 @@ class TranslationClean(Wizard):
             model_name, field_name = translation.name.split(',', 1)
         except ValueError:
             return True
-        if model_name not in pool.object_name_list():
+        try:
+            Model = pool.get(model_name)
+        except KeyError:
             return True
-        Model = pool.get(model_name)
         if field_name not in Model._fields:
             return True
 
@@ -1252,10 +1251,11 @@ class TranslationClean(Wizard):
             model_name, field_name = translation.name.split(',', 1)
         except ValueError:
             return True
-        if model_name not in pool.object_name_list():
+        try:
+            Model = pool.get(model_name)
+        except KeyError:
             return True
         if translation.res_id >= 0:
-            Model = pool.get(model_name)
             if field_name not in Model._fields:
                 return True
             field = Model._fields[field_name]
@@ -1282,9 +1282,10 @@ class TranslationClean(Wizard):
             model_name, field_name = translation.name.split(',', 1)
         except ValueError:
             return True
-        if model_name not in pool.object_name_list():
+        try:
+            Model = pool.get(model_name)
+        except KeyError:
             return True
-        Model = pool.get(model_name)
         if field_name not in Model._fields:
             return True
         field = Model._fields[field_name]
@@ -1300,7 +1301,9 @@ class TranslationClean(Wizard):
     def _clean_view(translation):
         pool = Pool()
         model_name = translation.name
-        if model_name not in pool.object_name_list():
+        try:
+            pool.get(model_name)
+        except KeyError:
             return True
 
     @staticmethod
@@ -1311,10 +1314,10 @@ class TranslationClean(Wizard):
                 translation.name.split(',', 2)
         except ValueError:
             return True
-        if (wizard_name not in
-                pool.object_name_list(type='wizard')):
+        try:
+            Wizard = pool.get(wizard_name, type='wizard')
+        except KeyError:
             return True
-        Wizard = pool.get(wizard_name, type='wizard')
         if not Wizard:
             return True
         state = Wizard.states.get(state_name)
@@ -1331,9 +1334,10 @@ class TranslationClean(Wizard):
             model_name, field_name = translation.name.split(',', 1)
         except ValueError:
             return True
-        if model_name not in pool.object_name_list():
+        try:
+            Model = pool.get(model_name)
+        except KeyError:
             return True
-        Model = pool.get(model_name)
         if field_name not in Model._fields:
             return True
         field = Model._fields[field_name]
@@ -1368,8 +1372,15 @@ class TranslationClean(Wizard):
                 'recursion_error',
                 ):
             return False
-        if model_name in pool.object_name_list():
+        Model, Wizard = None, None
+        try:
             Model = pool.get(model_name)
+        except KeyError:
+            try:
+                Wizard = pool.get(model_name, type='wizard')
+            except KeyError:
+                pass
+        if Model:
             errors = Model._error_messages.values()
             if issubclass(Model, ModelSQL):
                 errors += Model._sql_error_messages.values()
@@ -1377,8 +1388,7 @@ class TranslationClean(Wizard):
                     errors.append(error)
             if translation.src not in errors:
                 return True
-        elif model_name in pool.object_name_list(type='wizard'):
-            Wizard = pool.get(model_name, type='wizard')
+        elif Wizard:
             errors = Wizard._error_messages.values()
             if translation.src not in errors:
                 return True
@@ -1530,10 +1540,10 @@ class TranslationUpdate(Wizard):
                 & translation.src.in_(
                     translation.select(translation.src,
                         where=((translation.value == '')
-                            | (translation.value == None))
+                            | (translation.value == Null))
                         & (translation.lang == lang)))
                 & (translation.value != '')
-                & (translation.value != None),
+                & (translation.value != Null),
                 group_by=translation.src))
 
         for row in cursor.dictfetchall():
@@ -1541,13 +1551,13 @@ class TranslationUpdate(Wizard):
                     [translation.fuzzy, translation.value],
                     [True, row['value']],
                     where=(translation.src == row['src'])
-                    & ((translation.value == '') | (translation.value == None))
+                    & ((translation.value == '') | (translation.value == Null))
                     & (translation.lang == lang)))
 
         cursor.execute(*translation.update(
                 [translation.fuzzy],
                 [False],
-                where=((translation.value == '') | (translation.value == None))
+                where=((translation.value == '') | (translation.value == Null))
                 & (translation.lang == lang)))
 
         action['pyson_domain'] = PYSONEncoder().encode([
@@ -1608,9 +1618,8 @@ class TranslationExport(Wizard):
     def transition_export(self):
         pool = Pool()
         Translation = pool.get('ir.translation')
-        file_data = Translation.translation_export(
+        self.result.file = Translation.translation_export(
             self.start.language.code, self.start.module.name)
-        self.result.file = buffer(file_data) if file_data else None
         return 'result'
 
     def default_result(self, fields):

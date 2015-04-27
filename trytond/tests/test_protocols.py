@@ -1,5 +1,5 @@
-#This file is part of Tryton.  The COPYRIGHT file at the top level of
-#this repository contains the full copyright notices and license terms.
+# This file is part of Tryton.  The COPYRIGHT file at the top level of
+# this repository contains the full copyright notices and license terms.
 
 import unittest
 import json
@@ -30,9 +30,10 @@ class JSONTestCase(unittest.TestCase):
         'Test time'
         self.dumps_loads(datetime.datetime.now().time())
 
-    def test_buffer(self):
-        'Test buffer'
-        self.dumps_loads(buffer('foo'))
+    def test_bytes(self):
+        'Test bytes'
+        self.dumps_loads(bytes(b'foo'))
+        self.dumps_loads(bytearray(b'foo'))
 
     def test_decimal(self):
         'Test Decimal'
@@ -52,9 +53,10 @@ class XMLTestCase(unittest.TestCase):
         'Test Decimal'
         self.dumps_loads(Decimal('3.141592653589793'))
 
-    def test_buffer(self):
-        'Test buffer'
-        self.dumps_loads(buffer('foo'))
+    def test_bytes(self):
+        'Test bytes'
+        self.dumps_loads(bytes(b'foo'))
+        self.dumps_loads(bytearray(b'foo'))
 
     def test_date(self):
         'Test date'

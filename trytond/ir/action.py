@@ -1,5 +1,5 @@
-#This file is part of Tryton.  The COPYRIGHT file at the top level of
-#this repository contains the full copyright notices and license terms.
+# This file is part of Tryton.  The COPYRIGHT file at the top level of
+# this repository contains the full copyright notices and license terms.
 import base64
 import os
 from operator import itemgetter
@@ -11,9 +11,8 @@ from sql.aggregate import Count
 
 from trytond.modules import Index
 from trytond.model import ModelView, ModelStorage, ModelSQL, fields
-from trytond.tools import safe_eval
 import trytond.backend as backend
-from trytond.pyson import PYSONEncoder, CONTEXT, PYSON
+from trytond.pyson import PYSONDecoder, PYSON
 from trytond.transaction import Transaction
 from trytond.pool import Pool
 from trytond.cache import Cache
@@ -478,10 +477,6 @@ class ActionReport(ActionMixin, ModelSQL, ModelView):
     @classmethod
     def __setup__(cls):
         super(ActionReport, cls).__setup__()
-        cls._sql_constraints += [
-            ('report_name_module_uniq', 'UNIQUE(report_name, module)',
-                'The internal name must be unique by module!'),
-        ]
         cls._error_messages.update({
                 'invalid_email': 'Invalid email definition on report "%s".',
                 })
@@ -538,12 +533,16 @@ class ActionReport(ActionMixin, ModelSQL, ModelView):
                         limit=limit, offset=offset))
                 for report_id, report in cursor.fetchall():
                     if report:
-                        report = buffer(base64.decodestring(str(report)))
+                        report = fields.Binary.cast(
+                            base64.decodestring(bytes(report)))
                         cursor.execute(*action_report.update(
                                 [action_report.report_content_custom],
                                 [report],
                                 where=action_report.id == report_id))
             table.drop_column('report_content_data')
+
+        # Migration from 3.4 remove report_name_module_uniq constraint
+        table.drop_constraint('report_name_module_uniq')
 
     @staticmethod
     def default_type():
@@ -580,7 +579,7 @@ class ActionReport(ActionMixin, ModelSQL, ModelView):
         for report in reports:
             if report.email:
                 try:
-                    value = safe_eval(report.email, CONTEXT)
+                    value = PYSONDecoder().decode(report.email)
                 except Exception:
                     value = None
                 if isinstance(value, dict):
@@ -594,7 +593,7 @@ class ActionReport(ActionMixin, ModelSQL, ModelView):
     @classmethod
     def get_report_content(cls, reports, name):
         contents = {}
-        converter = buffer
+        converter = fields.Binary.cast
         default = None
         format_ = Transaction().context.pop('%s.%s'
             % (cls.__name__, name), '')
@@ -625,7 +624,7 @@ class ActionReport(ActionMixin, ModelSQL, ModelView):
     @classmethod
     def get_style_content(cls, reports, name):
         contents = {}
-        converter = buffer
+        converter = fields.Binary.cast
         default = None
         format_ = Transaction().context.pop('%s.%s'
             % (cls.__name__, name), '')
@@ -644,14 +643,13 @@ class ActionReport(ActionMixin, ModelSQL, ModelView):
     @classmethod
     def get_pyson(cls, reports, name):
         pysons = {}
-        encoder = PYSONEncoder()
         field = name[6:]
         defaults = {
             'email': '{}',
             }
         for report in reports:
-            pysons[report.id] = encoder.encode(safe_eval(getattr(report, field)
-                    or defaults.get(field, 'None'), CONTEXT))
+            pysons[report.id] = (getattr(report, field)
+                or defaults.get(field, 'null'))
         return pysons
 
     @classmethod
@@ -811,7 +809,7 @@ class ActionActWindow(ActionMixin, ModelSQL, ModelView):
                 if not domain:
                     continue
                 try:
-                    value = safe_eval(domain, CONTEXT)
+                    value = PYSONDecoder().decode(domain)
                 except Exception:
                     cls.raise_user_error('invalid_domain', {
                             'domain': domain,
@@ -843,7 +841,7 @@ class ActionActWindow(ActionMixin, ModelSQL, ModelView):
         for action in actions:
             if action.context:
                 try:
-                    value = safe_eval(action.context, CONTEXT)
+                    value = PYSONDecoder().decode(action.context)
                 except Exception:
                     cls.raise_user_error('invalid_context', {
                             'context': action.context,
@@ -874,15 +872,12 @@ class ActionActWindow(ActionMixin, ModelSQL, ModelView):
             for view in self.act_window_views]
 
     def get_domains(self, name):
-        encoder = PYSONEncoder()
-        return [(domain.name,
-                encoder.encode(safe_eval(domain.domain or '[]', CONTEXT)))
+        return [(domain.name, domain.domain or '[]')
             for domain in self.act_window_domains]
 
     @classmethod
     def get_pyson(cls, windows, name):
         pysons = {}
-        encoder = PYSONEncoder()
         field = name[6:]
         defaults = {
             'domain': '[]',
@@ -890,8 +885,8 @@ class ActionActWindow(ActionMixin, ModelSQL, ModelView):
             'search_value': '{}',
             }
         for window in windows:
-            pysons[window.id] = encoder.encode(safe_eval(getattr(window, field)
-                    or defaults.get(field, 'None'), CONTEXT))
+            pysons[window.id] = (getattr(window, field)
+                or defaults.get(field, 'null'))
         return pysons
 
     @classmethod
@@ -970,10 +965,44 @@ class ActionActWindowDomain(ModelSQL, ModelView):
     def __setup__(cls):
         super(ActionActWindowDomain, cls).__setup__()
         cls._order.insert(0, ('sequence', 'ASC'))
+        cls._error_messages.update({
+                'invalid_domain': ('Invalid domain or search criteria '
+                    '"%(domain)s" on action "%(action)s".'),
+                })
 
     @staticmethod
     def default_active():
         return True
+
+    @classmethod
+    def validate(cls, actions):
+        super(ActionActWindowDomain, cls).validate(actions)
+        cls.check_domain(actions)
+
+    @classmethod
+    def check_domain(cls, actions):
+        for action in actions:
+            if not action.domain:
+                continue
+            try:
+                value = PYSONDecoder().decode(action.domain)
+            except Exception:
+                value = None
+            if isinstance(value, PYSON):
+                if not value.types() == set([list]):
+                    value = None
+            elif not isinstance(value, list):
+                value = None
+            else:
+                try:
+                    fields.domain_validate(value)
+                except Exception:
+                    value = None
+            if value is None:
+                cls.raise_user_error('invalid_domain', {
+                        'domain': action.domain,
+                        'action': action.rec_name,
+                        })
 
 
 class ActionWizard(ActionMixin, ModelSQL, ModelView):

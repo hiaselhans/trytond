@@ -1,5 +1,5 @@
-#This file is part of Tryton.  The COPYRIGHT file at the top level of
-#this repository contains the full copyright notices and license terms.
+# This file is part of Tryton.  The COPYRIGHT file at the top level of
+# this repository contains the full copyright notices and license terms.
 import os
 import sys
 import logging
@@ -15,6 +15,8 @@ from trytond.config import config
 from trytond.transaction import Transaction
 from trytond.cache import Cache
 import trytond.convert as convert
+
+logger = logging.getLogger(__name__)
 
 ir_module = Table('ir_module_module')
 ir_model_data = Table('ir_model_data')
@@ -244,7 +246,6 @@ def load_module_graph(graph, pool, update=None, lang=None):
         lang = [config.get('database', 'language')]
     modules_todo = []
     models_to_update_history = set()
-    logger = logging.getLogger('modules')
     cursor = Transaction().cursor
 
     modules = [m.name for m in graph]
@@ -330,7 +331,7 @@ def load_module_graph(graph, pool, update=None, lang=None):
     for model_name in models_to_update_history:
         model = pool.get(model_name)
         if model._history:
-            logger.info('history:update %s' % model.__name__)
+            logger.info('history:update %s', model.__name__)
             model._update_history_table()
 
     # Vacuum :
@@ -383,9 +384,6 @@ def load_modules(database_name, pool, update=None, lang=None):
         res = True
         cursor = Transaction().cursor
         if update:
-            # Migration from 2.2: workflow module removed
-            cursor.execute(*ir_module.delete(
-                where=(ir_module.name == 'workflow')))
             cursor.execute(*ir_module.select(ir_module.name,
                 where=ir_module.state.in_(('installed', 'to install',
                                            'to upgrade', 'to remove'))))
@@ -414,11 +412,10 @@ def load_modules(database_name, pool, update=None, lang=None):
             if fetchall:
                 for (mod_name,) in fetchall:
                     # TODO check if ressource not updated by the user
-                    cursor.execute(*ir_model_data.select(
-                        ir_model_data.model, ir_model_data.db_id,
-                        where=(ir_model_data.module == mod_name),
-                        order_by=ir_model_data.id.desc
-                    ))
+                    cursor.execute(*ir_model_data.select(ir_model_data.model,
+                            ir_model_data.db_id,
+                            where=(ir_model_data.module == mod_name),
+                            order_by=ir_model_data.id.desc))
                     for rmod, rid in cursor.fetchall():
                         Model = pool.get(rmod)
                         Model.delete([Model(rid)])

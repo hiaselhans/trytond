@@ -1,5 +1,5 @@
-#This file is part of Tryton.  The COPYRIGHT file at the top level of
-#this repository contains the full copyright notices and license terms.
+# This file is part of Tryton.  The COPYRIGHT file at the top level of
+# this repository contains the full copyright notices and license terms.
 "User"
 import copy
 import string
@@ -202,17 +202,18 @@ class User(ModelSQL, ModelView):
         timeout = datetime.timedelta(
             seconds=config.getint('session', 'timeout'))
         result = dict((u.id, 0) for u in users)
-        for sub_ids in grouped_slice(users):
-            sessions = Session.search([
-                    ('create_uid', 'in', sub_ids),
-                    ], order=[('create_uid', 'ASC')])
+        with Transaction().set_user(0):
+            for sub_ids in grouped_slice(users):
+                sessions = Session.search([
+                        ('create_uid', 'in', sub_ids),
+                        ], order=[('create_uid', 'ASC')])
 
-            def filter_(session):
-                timestamp = session.write_date or session.create_date
-                return abs(timestamp - now) < timeout
-            result.update(dict((i, len(list(g)))
-                    for i, g in groupby(ifilter(filter_, sessions),
-                        attrgetter('create_uid.id'))))
+                def filter_(session):
+                    timestamp = session.write_date or session.create_date
+                    return abs(timestamp - now) < timeout
+                result.update(dict((i, len(list(g)))
+                        for i, g in groupby(ifilter(filter_, sessions),
+                            attrgetter('create_uid.id'))))
         return result
 
     @staticmethod
@@ -273,12 +274,14 @@ class User(ModelSQL, ModelView):
 
     @classmethod
     def search_rec_name(cls, name, clause):
-        users = cls.search([
-            ('login', '=', clause[2]),
-            ], order=[])
-        if len(users) == 1:
-            return [('id', '=', users[0].id)]
-        return [(cls._rec_name,) + tuple(clause[1:])]
+        if clause[1].startswith('!') or clause[1].startswith('not '):
+            bool_op = 'AND'
+        else:
+            bool_op = 'OR'
+        return [bool_op,
+            ('login',) + tuple(clause[1:]),
+            (cls._rec_name,) + tuple(clause[1:]),
+            ]
 
     @classmethod
     def copy(cls, users, default=None):
@@ -301,7 +304,6 @@ class User(ModelSQL, ModelView):
         ModelData = pool.get('ir.model.data')
         Action = pool.get('ir.action')
         ConfigItem = pool.get('ir.module.module.config_wizard.item')
-        Config = pool.get('ir.configuration')
 
         res = {}
         if context_only:
@@ -314,7 +316,7 @@ class User(ModelSQL, ModelView):
                     if user.language:
                         res['language'] = user.language.code
                     else:
-                        res['language'] = Config.get_language()
+                        res['language'] = None
                 else:
                     res[field] = None
                     if getattr(user, field):
@@ -666,7 +668,7 @@ class UserConfig(Wizard):
     start = StateView('res.user.config.start',
         'res.user_config_start_view_form', [
             Button('Cancel', 'end', 'tryton-cancel'),
-            Button('Ok', 'user', 'tryton-ok', default=True),
+            Button('OK', 'user', 'tryton-ok', default=True),
             ])
     user = StateView('res.user',
         'res.user_view_form', [

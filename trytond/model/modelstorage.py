@@ -1,5 +1,5 @@
-#This file is part of Tryton.  The COPYRIGHT file at the top level of
-#this repository contains the full copyright notices and license terms.
+# This file is part of Tryton.  The COPYRIGHT file at the top level of
+# this repository contains the full copyright notices and license terms.
 
 import datetime
 import time
@@ -18,17 +18,25 @@ from collections import defaultdict
 
 from trytond.model import Model
 from trytond.model import fields
-from trytond.tools import reduce_domain, memoize
+from trytond.tools import reduce_domain, memoize, is_instance_method, \
+    grouped_slice
 from trytond.pyson import PYSONEncoder, PYSONDecoder, PYSON
-from trytond.const import OPERATORS, RECORD_CACHE_SIZE, BROWSE_FIELD_TRESHOLD
+from trytond.const import OPERATORS
+from trytond.config import config
 from trytond.transaction import Transaction
 from trytond.pool import Pool
 from trytond.cache import LRUDict, freeze
 from trytond import backend
 from trytond.rpc import RPC
 from .modelview import ModelView
+from .descriptors import dualmethod
 
-__all__ = ['ModelStorage']
+__all__ = ['ModelStorage', 'EvalEnvironment']
+
+
+def cache_size():
+    return Transaction().context.get('_record_cache_size',
+        config.getint('cache', 'record'))
 
 
 class ModelStorage(Model):
@@ -358,7 +366,10 @@ class ModelStorage(Model):
             fields_names = cls._fields.keys()
         if 'id' not in fields_names:
             fields_names.append('id')
-        return cls.read(map(int, records), fields_names)
+        rows = cls.read(map(int, records), fields_names)
+        index = {r.id: i for i, r in enumerate(records)}
+        rows.sort(key=lambda r: index[r['id']])
+        return rows
 
     @classmethod
     def _search_domain_active(cls, domain, active_test=True):
@@ -376,7 +387,7 @@ class ModelStorage(Model):
             active_found = False
             while i < len(domain):
                 arg = domain[i]
-                #add test for xmlrpc that doesn't handle tuple
+                # add test for xmlrpc that doesn't handle tuple
                 if (isinstance(arg, tuple)
                         or (isinstance(arg, list)
                             and len(arg) > 2
@@ -419,13 +430,13 @@ class ModelStorage(Model):
     @classmethod
     def search_global(cls, text):
         '''
-        Yield tuples (id, rec_name, icon) for text
+        Yield tuples (record, name, icon) for text
         '''
         # TODO improve search clause
         for record in cls.search([
                     ('rec_name', 'ilike', '%%%s%%' % text),
                     ]):
-            yield record.id, record.rec_name, None
+            yield record, record.rec_name, None
 
     @classmethod
     def browse(cls, ids):
@@ -433,7 +444,7 @@ class ModelStorage(Model):
         Return a list of instance for the ids
         '''
         ids = map(int, ids)
-        local_cache = LRUDict(RECORD_CACHE_SIZE)
+        local_cache = LRUDict(cache_size())
         return [cls(int(x), _ids=ids, _local_cache=local_cache) for x in ids]
 
     @staticmethod
@@ -848,7 +859,7 @@ class ModelStorage(Model):
 
         def call(name):
             method = getattr(cls, name)
-            if not hasattr(method, 'im_self') or method.im_self:
+            if not is_instance_method(cls, name):
                 return method(records)
             else:
                 return all(method(r) for r in records)
@@ -859,13 +870,14 @@ class ModelStorage(Model):
             if not call(field[0]):
                 cls.raise_user_error(field[1])
 
-        if not 'res.user' in pool.object_name_list() \
-                or Transaction().user == 0:
-            ctx_pref = {
-            }
-        else:
-            User = pool.get('res.user')
-            ctx_pref = User.get_preferences(context_only=True)
+        ctx_pref = {}
+        if Transaction().user:
+            try:
+                User = pool.get('res.user')
+            except KeyError:
+                pass
+            else:
+                ctx_pref = User.get_preferences(context_only=True)
 
         def is_pyson(test):
             if isinstance(test, PYSON):
@@ -889,7 +901,7 @@ class ModelStorage(Model):
         def validate_domain(field):
             if not field.domain:
                 return
-            if field._type == 'dict':
+            if field._type in ['dict', 'reference']:
                 return
             if field._type in ('many2one', 'one2many'):
                 Relation = pool.get(field.model_name)
@@ -917,23 +929,26 @@ class ModelStorage(Model):
 
         def validate_relation_domain(field, records, Relation, domain):
             if field._type in ('many2one', 'one2many', 'many2many', 'one2one'):
-                relations = []
+                relations = set()
                 for record in records:
                     if getattr(record, field.name):
                         if field._type in ('many2one', 'one2one'):
-                            relations.append(getattr(record, field.name))
+                            relations.add(getattr(record, field.name))
                         else:
-                            relations.extend(getattr(record, field.name))
+                            relations.update(getattr(record, field.name))
             else:
-                relations = records
+                # Cache alignment is not a problem
+                relations = set(records)
             if relations:
-                finds = Relation.search(['AND',
-                        [('id', 'in', [r.id for r in relations])],
-                        domain,
-                        ])
-                if set(relations) != set(finds):
-                    cls.raise_user_error('domain_validation_record',
-                        error_args=cls._get_error_args(field.name))
+                for sub_relations in grouped_slice(relations):
+                    sub_relations = set(sub_relations)
+                    finds = Relation.search(['AND',
+                            [('id', 'in', [r.id for r in sub_relations])],
+                            domain,
+                            ])
+                    if sub_relations != set(finds):
+                        cls.raise_user_error('domain_validation_record',
+                            error_args=cls._get_error_args(field.name))
 
         field_names = set(field_names or [])
         function_fields = {name for name, field in cls._fields.iteritems()
@@ -1053,10 +1068,10 @@ class ModelStorage(Model):
                                 value, _ = value.split(',')
                         if not isinstance(field.selection, (tuple, list)):
                             sel_func = getattr(cls, field.selection)
-                            if field.selection_change_with:
-                                test = sel_func(record)
-                            else:
+                            if not is_instance_method(cls, field.selection):
                                 test = sel_func()
+                            else:
+                                test = sel_func(record)
                             test = set(dict(test))
                         # None and '' are equivalent
                         if '' in test or None in test:
@@ -1149,7 +1164,7 @@ class ModelStorage(Model):
         if _local_cache is not None:
             self._local_cache = _local_cache
         else:
-            self._local_cache = LRUDict(RECORD_CACHE_SIZE)
+            self._local_cache = LRUDict(cache_size())
         self._local_cache.counter = Transaction().counter
 
         super(ModelStorage, self).__init__(id, **kwargs)
@@ -1158,7 +1173,7 @@ class ModelStorage(Model):
     def _cache(self):
         cache = self._cursor_cache
         if self.__name__ not in cache:
-            cache[self.__name__] = LRUDict(RECORD_CACHE_SIZE)
+            cache[self.__name__] = LRUDict(cache_size())
         return cache[self.__name__]
 
     def __getattr__(self, name):
@@ -1201,7 +1216,7 @@ class ModelStorage(Model):
             to_remove = set(x for x, y in fread_accesses.iteritems()
                     if not y and x != name)
 
-            threshold = BROWSE_FIELD_TRESHOLD
+            threshold = config.getint('cache', 'field')
 
             def not_cached(item):
                 fname, field = item
@@ -1232,7 +1247,10 @@ class ModelStorage(Model):
         # add depends of field with context
         for field in ffields.values():
             if field.context:
-                for context_field_name in field.depends:
+                eval_fields = fields.get_eval_fields(field.context)
+                for context_field_name in eval_fields:
+                    if context_field_name in field.depends:
+                        continue
                     context_field = self._fields.get(context_field_name)
                     if context_field not in ffields:
                         ffields[context_field_name] = context_field
@@ -1282,7 +1300,7 @@ class ModelStorage(Model):
             with Transaction().set_context(**ctx):
                 key = (Model, freeze(ctx))
                 local_cache = model2cache.setdefault(key,
-                    LRUDict(RECORD_CACHE_SIZE))
+                    LRUDict(cache_size()))
                 ids = model2ids.setdefault(key, [])
                 if field._type in ('many2one', 'one2one', 'reference'):
                     ids.append(value)
@@ -1390,26 +1408,48 @@ class ModelStorage(Model):
             values[fname] = value
         return values
 
-    def save(self):
-        save_values = self._save_values
-        values = self._values
-        self._values = None
-        if save_values or self.id < 0:
-            try:
-                with Transaction().set_cursor(self._cursor), \
-                        Transaction().set_user(self._user), \
-                        Transaction().set_context(self._context):
-                    if self.id < 0:
-                        self._ids.remove(self.id)
-                        try:
-                            self.id = self.create([save_values])[0].id
-                        finally:
-                            self._ids.append(self.id)
-                    else:
-                        self.write([self], save_values)
-            except:
-                self._values = values
-                raise
+    @dualmethod
+    def save(cls, records):
+        if not records:
+            return
+        values = {}
+        save_values = {}
+        to_create = []
+        to_write = []
+        cursor = records[0]._cursor
+        user = records[0]._user
+        context = records[0]._context
+        for record in records:
+            assert cursor == record._cursor
+            assert user == record._user
+            assert context == record._context
+            save_values[record] = record._save_values
+            values[record] = record._values
+            record._values = None
+            if record.id is None or record.id < 0:
+                to_create.append(record)
+            elif save_values[record]:
+                to_write.append(record)
+        transaction = Transaction()
+        try:
+            with transaction.set_cursor(cursor), \
+                    transaction.set_user(user), \
+                    transaction.set_context(context):
+                if to_create:
+                    news = cls.create([save_values[r] for r in to_create])
+                    for record, new in izip(to_create, news):
+                        record._ids.remove(record.id)
+                        record.id = new.id
+                        record._ids.append(record.id)
+                if to_write:
+                    cls.write(*sum(
+                            (([r], save_values[r]) for r in to_write), ()))
+        except:
+            for record in records:
+                record._values = values[record]
+            raise
+        for record in records:
+            record._init_values = None
 
 
 class EvalEnvironment(dict):

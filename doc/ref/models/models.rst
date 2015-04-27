@@ -129,6 +129,15 @@ Static methods:
     Same as :meth:`ModelView.button` but return the action id of the XML `id`
     action.
 
+.. staticmethod:: ModelView.button_change([\*fields])
+
+    Same as :meth:`ModelView.button` but for button that change values of the
+    fields on client side (similar to :ref:`on_change
+    <ref-models-fields-on_change>`).
+
+    .. warning::
+        Only on instance methods.
+
 Class methods:
 
 .. classmethod:: ModelView.fields_view_get([view_id[, view_type[, toolbar]]])
@@ -137,23 +146,15 @@ Class methods:
 
         {
             'model': model name,
+            'type': view type,
+            'view_id': view id,
             'arch': XML description,
             'fields': {
                 field name: {
                     ...
                 },
             },
-            'toolbar': {
-                'print': [
-                    ...
-                ],
-                'action': [
-                    ...
-                ],
-                'relate': [
-                    ...
-                ],
-            },
+            'field_childs': field for tree,
         }
 
 .. classmethod:: ModelView.view_toolbar_get()
@@ -166,6 +167,12 @@ Class methods:
 .. classmethod:: ModelView.view_header_get(value[, view_type])
 
     Returns the window title used by the client for the specific view type.
+
+.. classmethod:: ModelView.view_attributes()
+
+    Returns a list of XPath, attribute and value.
+    Each element from the XPath will get the attribute set with the JSON
+    encoded value.
 
 ============
 ModelStorage
@@ -230,7 +237,7 @@ Static methods:
 
     Return the default value for :attr:`create_date`.
 
-CLass methods:
+Class methods:
 
 .. classmethod:: ModelStorage.create(vlist)
 
@@ -297,7 +304,7 @@ CLass methods:
 
 .. classmethod:: ModelStorage.search_global(cls, text)
 
-    Yield tuples (id, rec_name, icon) for records matching text.
+    Yield tuples (record, name, icon) for records matching text.
     It is used for the global search.
 
 .. classmethod:: ModelStorage.browse(ids)
@@ -336,16 +343,18 @@ CLass methods:
     method must be overridden to add validation and must raise an exception if
     validation fails.
 
+Dual methods:
+
+.. classmethod:: ModelStorage.save(records)
+
+    Save the modification made on the records.
+
 Instance methods:
 
 .. method:: ModelStorage.get_rec_name(name)
 
     Getter for the :class:`trytond.model.fields.Function` field
     :attr:`rec_name`.
-
-.. method:: ModelStorage.save()
-
-    Save the modification made on the record instance.
 
 ========
 ModelSQL
@@ -372,6 +381,10 @@ Class attributes are:
     where the first element of the tuple is a field name of the model and the
     second is the sort ordering as `ASC` for ascending or `DESC` for
     descending.
+
+    In case the field used for the first element is a :class:`fields.Many2One`,
+    it is also possible to use the dotted notation to sort on a specific field
+    from the target record.
 
 .. attribute:: ModelSQL._order_name
 
@@ -419,6 +432,15 @@ Class methods:
 .. classmethod:: ModelSQL.restore_history(ids, datetime)
 
     Restore the record ids from history at the specified date time.
+    Restoring a record will still generate an entry in the history table.
+
+    .. warning::
+        No access rights are verified and the records are not validated.
+    ..
+
+.. classmethod:: ModelSQL.restore_history_before(ids, datetime)
+
+    Restore the record ids from history before the specified date time.
     Restoring a record will still generate an entry in the history table.
 
     .. warning::

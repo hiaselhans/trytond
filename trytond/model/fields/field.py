@@ -1,14 +1,14 @@
-#This file is part of Tryton.  The COPYRIGHT file at the top level of
-#this repository contains the full copyright notices and license terms.
+# This file is part of Tryton.  The COPYRIGHT file at the top level of
+# this repository contains the full copyright notices and license terms.
 from collections import namedtuple
 import warnings
 from functools import wraps
 
-from sql import operators, Column, Literal, Select, CombiningQuery
+from sql import operators, Column, Literal, Select, CombiningQuery, Null
 from sql.conditionals import Coalesce, NullIf
 from sql.operators import Concat
 
-from trytond.pyson import PYSON
+from trytond.pyson import PYSON, PYSONEncoder, Eval
 from trytond.const import OPERATORS
 from trytond.transaction import Transaction
 from trytond.pool import Pool
@@ -89,6 +89,25 @@ def depends(*fields, **kwargs):
             return func(self, *args, **kwargs)
         return wrapper
     return decorator
+
+
+def get_eval_fields(value):
+    "Return fields evaluated"
+    class Encoder(PYSONEncoder):
+        def __init__(self, *args, **kwargs):
+            super(Encoder, self).__init__(*args, **kwargs)
+            self.fields = set()
+
+        def default(self, obj):
+            if isinstance(obj, Eval):
+                fname = obj._value
+                if not fname.startswith('_parent_'):
+                    self.fields.add(fname)
+            return super(Encoder, self).default(obj)
+
+    encoder = Encoder()
+    encoder.encode(value)
+    return encoder.fields
 
 
 SQL_OPERATORS = {
@@ -241,9 +260,9 @@ class Field(object):
             if (not isinstance(value, (Select, CombiningQuery))
                     and any(v is None for v in value)):
                 if operator == 'in':
-                    expression |= (column == None)
+                    expression |= (column == Null)
                 else:
-                    expression &= (column != None)
+                    expression &= (column != Null)
         return expression
 
     def convert_domain(self, domain, tables, Model):

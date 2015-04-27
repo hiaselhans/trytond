@@ -153,10 +153,18 @@ Each form view must start with this tag.
     * ``string``: The text that will be used as default title for the tab or
       the window.
 
-    * ``on_write``: The name of a function that will be called when the record
-      is saved.  The function must have this syntax:
+    .. _form-attributes-on_write:
+
+    * ``on_write``: The name of a method on the Model of the view that will be
+      called when a record is saved.  The method must return a list of record
+      ids that the client must reload if they are already loaded.  The function
+      must have this syntax:
 
       ``on_write(self, ids)``
+
+      .. note::
+        The method must be registered in :attr:`trytond.model.Model.__rpc__`.
+      ..
 
     * ``col``: The number of columns for the view.
 
@@ -223,6 +231,9 @@ Display a field of the object with the value of the current record.
 
     * ``view_ids``: A comma separated list that specifies the view ids used to
       display the relation.
+
+    * ``product``: Only for One2Many fields, a comma separated list of target
+      field name used to create records from the cartesian product.
 
     * ``completion``: Only for Many2One fields, it is a boolean to set the
       completion of the field.
@@ -327,6 +338,7 @@ Display a button.
         * ``previous``: to go to the previous record
         * ``close``: to close the current tab
         * ``switch <view type>``: to switch the view to the defined type
+        * ``reload``: to reload the current tab
         * ``reload context``: to reload user context
         * ``reload menu``: to reload menu
 
@@ -475,10 +487,7 @@ Each tree view must start with this tag.
     * ``string``: The text that will be used as default title for the tab or
       the window.
 
-    * ``on_write``: The name of a function that will be called when a record is
-      saved.  The function must have this syntax:
-
-      ``on_write(self, ids)``
+    * ``on_write``: see form-attributes-on_write_.
 
     * ``editable``: If it is set to ``top`` or ``bottom``, the list becomes
       editable and the new record will be added on ``top`` or ``bottom`` of the

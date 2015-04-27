@@ -1,18 +1,20 @@
-#This file is part of Tryton.  The COPYRIGHT file at the top level of
-#this repository contains the full copyright notices and license terms.
+# This file is part of Tryton.  The COPYRIGHT file at the top level of
+# this repository contains the full copyright notices and license terms.
 import time
 from xml import sax
 import logging
-import traceback
-import sys
 import re
 from sql import Table
 from itertools import izip
 from collections import defaultdict
+from decimal import Decimal
 
-from .version import VERSION
-from .tools import safe_eval, grouped_slice
+from . import __version__
+from .tools import grouped_slice
 from .transaction import Transaction
+from .pyson import PYSONEncoder, CONTEXT
+
+logger = logging.getLogger(__name__)
 
 CDATA_START = re.compile('^\s*\<\!\[cdata\[', re.IGNORECASE)
 CDATA_END = re.compile('\]\]\>\s*$', re.IGNORECASE)
@@ -53,7 +55,7 @@ class MenuitemTagHandler:
                 values[attr] = attributes.get(attr)
 
         if attributes.get('active'):
-            values['active'] = bool(safe_eval(attributes['active']))
+            values['active'] = bool(eval(attributes['active']))
 
         if values.get('parent'):
             values['parent'] = self.mh.get_id(values['parent'])
@@ -208,12 +210,13 @@ class RecordTagHandler:
             search_attr = attributes.get('search', '')
             ref_attr = attributes.get('ref', '')
             eval_attr = attributes.get('eval', '')
+            pyson_attr = bool(int(attributes.get('pyson', '0')))
 
             if search_attr:
                 search_model = self.model._fields[field_name].model_name
                 SearchModel = self.mh.pool.get(search_model)
                 with Transaction().set_context(active_test=False):
-                    found, = SearchModel.search(safe_eval(search_attr))
+                    found, = SearchModel.search(eval(search_attr))
                     self.values[field_name] = found.id
 
             elif ref_attr:
@@ -222,10 +225,16 @@ class RecordTagHandler:
             elif eval_attr:
                 context = {}
                 context['time'] = time
-                context['version'] = VERSION.rsplit('.', 1)[0]
+                context['version'] = __version__.rsplit('.', 1)[0]
                 context['ref'] = self.mh.get_id
                 context['obj'] = lambda *a: 1
-                self.values[field_name] = safe_eval(eval_attr, context)
+                context['Decimal'] = Decimal
+                if pyson_attr:
+                    context.update(CONTEXT)
+                value = eval(eval_attr, context)
+                if pyson_attr:
+                    value = PYSONEncoder().encode(value)
+                self.values[field_name] = value
 
         else:
             raise Exception("Tags '%s' not supported inside tag record." %
@@ -325,7 +334,7 @@ class Fs2bdAccessor:
         Whe call the prefetch function here to. Like that whe are sure
         not to erase data when get is called.
         """
-        if not module in self.fetched_modules:
+        if module not in self.fetched_modules:
             self.fetch_new_module(module)
         if fs_id not in self.fs2db[module]:
             self.fs2db[module][fs_id] = {}
@@ -366,13 +375,12 @@ class Fs2bdAccessor:
             record_ids.setdefault(rec.model, [])
             record_ids[rec.model].append(rec.db_id)
 
-        object_name_list = set(self.pool.object_name_list())
-
         self.browserecord[module] = {}
         for model_name in record_ids.keys():
-            if model_name not in object_name_list:
+            try:
+                Model = self.pool.get(model_name)
+            except KeyError:
                 continue
-            Model = self.pool.get(model_name)
             self.browserecord[module][model_name] = {}
             for sub_record_ids in grouped_slice(record_ids[model_name]):
                 with Transaction().set_context(active_test=False):
@@ -436,8 +444,9 @@ class TrytondXmlHandler(sax.handler.ContentHandler):
         try:
             self.sax_parser.parse(source)
         except Exception:
-            logging.getLogger("convert").error(
-                "Error while parsing xml file:\n" + self.current_state())
+            logger.error(
+                "Error while parsing xml file:\n" + self.current_state(),
+                exc_info=True)
             raise
         return self.to_delete
 
@@ -469,8 +478,7 @@ class TrytondXmlHandler(sax.handler.ContentHandler):
                 pass
 
             else:
-                logging.getLogger("convert").info("Tag %s not supported" %
-                    name)
+                logger.info("Tag %s not supported", (name,))
                 return
         elif not self.skip_data:
             self.taghandler.startElement(name, attributes)
@@ -535,16 +543,7 @@ class TrytondXmlHandler(sax.handler.ContentHandler):
         elif field_type == 'reference':
             if not getattr(record, key):
                 return None
-            elif not isinstance(getattr(record, key), basestring):
-                return str(getattr(record, key))
-            ref_mode, ref_id = getattr(record, key).split(',', 1)
-            try:
-                ref_id = safe_eval(ref_id)
-            except Exception:
-                pass
-            if isinstance(ref_id, (list, tuple)):
-                ref_id = ref_id[0]
-            return ref_mode + ',' + str(ref_id)
+            return str(getattr(record, key))
         elif field_type in ['one2many', 'many2many']:
             raise Unhandled_field("Unhandled field %s" % key)
         else:
@@ -613,7 +612,7 @@ class TrytondXmlHandler(sax.handler.ContentHandler):
                     % (fs_id, module))
 
             record = self.fs2db.get_browserecord(module, Model.__name__, db_id)
-            #Re-create record if it was deleted
+            # Re-create record if it was deleted
             if not record:
                 with Transaction().set_context(
                         module=module, language='en_US'):
@@ -668,10 +667,10 @@ class TrytondXmlHandler(sax.handler.ContentHandler):
                 # if they are not false in a boolean context (ie None,
                 # False, {} or [])
                 if db_field != expected_value and (db_field or expected_value):
-                    logging.getLogger("convert").warning(
+                    logger.warning(
                         "Field %s of %s@%s not updated (id: %s), because "
-                        "it has changed since the last update"
-                        % (key, record.id, model, fs_id))
+                        "it has changed since the last update",
+                        key, record.id, model, fs_id)
                     continue
 
                 # so, the field in the fs and in the db are different,
@@ -792,34 +791,33 @@ def post_import(pool, module, to_delete):
             ('module', '=', module),
             ], order=[('id', 'DESC')])
 
-    object_name_list = set(pool.object_name_list())
     for mrec in mdata:
         model, db_id = mrec.model, mrec.db_id
 
-        logging.getLogger("convert").info(
-                'Deleting %s@%s' % (db_id, model))
+        logger.info('Deleting %s@%s', db_id, model)
         try:
             # Deletion of the record
-            if model in object_name_list:
+            try:
                 Model = pool.get(model)
+            except KeyError:
+                Model = None
+            if Model:
                 Model.delete([Model(db_id)])
                 mdata_delete.append(mrec)
             else:
-                logging.getLogger("convert").warning(
-                        'Could not delete id %d of model %s because model no '
-                        'longer exists.' % (db_id, model))
+                logger.warning(
+                    'Could not delete id %d of model %s because model no '
+                    'longer exists.', db_id, model)
             cursor.commit()
         except Exception:
             cursor.rollback()
-            tb_s = ''.join(traceback.format_exception(*sys.exc_info()))
-            logging.getLogger("convert").error(
+            logger.error(
                 'Could not delete id: %d of model %s\n'
-                    'There should be some relation '
-                    'that points to this resource\n'
-                    'You should manually fix this '
-                    'and restart --update=module\n'
-                    'Exception: %s' %
-                    (db_id, model, tb_s))
+                'There should be some relation '
+                'that points to this resource\n'
+                'You should manually fix this '
+                'and restart --update=module\n',
+                db_id, model, exc_info=True)
             if 'active' in Model._fields:
                 Model.write([Model(db_id)], {
                         'active': False,

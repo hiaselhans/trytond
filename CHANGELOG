@@ -1,5 +1,39 @@
-Version 3.4.1 - 2014-12-03
+Version 3.6.0 - 2015-04-20
 * Bug fixes (see mercurial logs for details)
+* Use bytes and bytearray for Binary
+* Add button_change
+* Add support for PyPy
+* Add support for psycopg2cffi
+* Add noeval on PYSONDecoder
+* Add __repr__ to PYSON
+* Remove safe_eval
+* Add ModelView.view_attributes
+* Add pyson attribute on data field tag
+* Changed into JSON:
+    - record rule domain
+    - trigger condition
+    - 'states', 'domain', 'spell' and 'colors' view attributes
+    - view domain
+    - 'email', 'domain', 'context', 'order' and 'search_value' action fields
+* Add product attribute on form view for One2Many
+* Remove float_time widget
+* Add TimeDelta field
+* search_global yields record instead of id
+* Add ModelTestCase
+* Add test for missing default model access
+* Report API refactorization
+* Add test for access rights of menu and actions
+* Allow to use the dotted notation for order parameters
+* Use action_id to find report to use
+* Allow custom StateView without Model
+* Remove Pool.object_name_list
+* Add translated descriptor for Dict field
+* Clean private context keyword in RPC
+* Add cache section in configuration
+* Use dualmethod on ModelStorage.save
+* New API for on_change: instance changes
+* Add restore_history_before on ModelSQL
+* Remove img_{width,height} form attributes
 
 Version 3.4.0 - 2014-10-20
 * Bug fixes (see mercurial logs for details)

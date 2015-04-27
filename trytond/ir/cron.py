@@ -1,5 +1,5 @@
-#This file is part of Tryton.  The COPYRIGHT file at the top level of
-#this repository contains the full copyright notices and license terms.
+# This file is part of Tryton.  The COPYRIGHT file at the top level of
+# this repository contains the full copyright notices and license terms.
 import datetime
 from dateutil.relativedelta import relativedelta
 import traceback
@@ -18,6 +18,8 @@ from trytond.config import config
 __all__ = [
     'Cron',
     ]
+
+logger = logging.getLogger(__name__)
 
 _INTERVALTYPES = {
     'days': lambda interval: relativedelta(days=interval),
@@ -139,7 +141,6 @@ class Cron(ModelSQL, ModelView):
         msg['To'] = to_addr
         msg['From'] = from_addr
         msg['Subject'] = Header(subject, 'utf-8')
-        logger = logging.getLogger(__name__)
         if not to_addr:
             logger.error(msg.as_string())
         else:
@@ -147,9 +148,9 @@ class Cron(ModelSQL, ModelView):
                 server = get_smtp_server()
                 server.sendmail(from_addr, to_addr, msg.as_string())
                 server.quit()
-            except Exception, exception:
-                logger.error('Unable to deliver email (%s):\n %s'
-                    % (exception, msg.as_string()))
+            except Exception:
+                logger.error('Unable to deliver email:\n %s',
+                    msg.as_string(), exc_info=True)
 
     @classmethod
     def _callback(cls, cron):
@@ -201,8 +202,4 @@ class Cron(ModelSQL, ModelView):
                     transaction.cursor.commit()
                 except Exception:
                     transaction.cursor.rollback()
-                    tb_s = reduce(lambda x, y: x + y,
-                            traceback.format_exception(*sys.exc_info()))
-                    tb_s = tb_s.decode('utf-8', 'ignore')
-                    logger = logging.getLogger('cron')
-                    logger.error('Exception:\n%s' % tb_s)
+                    logger.error('Running cron %s', cron.id, exc_info=True)

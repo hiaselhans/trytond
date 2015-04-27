@@ -1,5 +1,5 @@
-#This file is part of Tryton.  The COPYRIGHT file at the top level of
-#this repository contains the full copyright notices and license terms.
+# This file is part of Tryton.  The COPYRIGHT file at the top level of
+# this repository contains the full copyright notices and license terms.
 "Group"
 from itertools import chain
 from trytond.model import ModelView, ModelSQL, fields
@@ -24,10 +24,8 @@ class MenuMany2Many(fields.Many2Many):
                             ('id', 'in', sub_ids),
                             ])))
         menu_ids = set(chain(*test_ids))
-        for ids in res.itervalues():
-            for id_ in ids[:]:
-                if id_ not in menu_ids:
-                    ids.remove(id_)
+        for group_id, ids in res.iteritems():
+            res[group_id] = tuple(id_ for id_ in ids if id_ in menu_ids)
         return res
 
 

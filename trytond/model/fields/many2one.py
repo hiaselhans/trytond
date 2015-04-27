@@ -1,5 +1,5 @@
-#This file is part of Tryton.  The COPYRIGHT file at the top level of
-#this repository contains the full copyright notices and license terms.
+# This file is part of Tryton.  The COPYRIGHT file at the top level of
+# this repository contains the full copyright notices and license terms.
 from types import NoneType
 from sql import Query, Expression
 from sql.operators import Or
@@ -180,25 +180,33 @@ class Many2One(Field):
         return column.in_(query)
 
     def convert_order(self, name, tables, Model):
-        if getattr(Model, 'order_%s' % name, None):
-            return super(Many2One, self).convert_order(name, tables, Model)
-        assert name == self.name
+        fname, _, oexpr = name.partition('.')
+        if not oexpr and getattr(Model, 'order_%s' % fname, None):
+            return super(Many2One, self).convert_order(fname, tables, Model)
+        assert fname == self.name
 
         Target = self.get_target()
 
-        oname = 'id'
-        if Target._rec_name in Target._fields:
-            oname = Target._rec_name
-        if Target._order_name in Target._fields:
-            oname = Target._order_name
+        if oexpr:
+            oname, _, _ = oexpr.partition('.')
+        else:
+            oname = 'id'
+            if Target._rec_name in Target._fields:
+                oname = Target._rec_name
+            if Target._order_name in Target._fields:
+                oname = Target._order_name
+            oexpr = oname
+
+        table, _ = tables[None]
+        if oname == 'id':
+            return [self.sql_column(table)]
 
         ofield = Target._fields[oname]
-        table, _ = tables[None]
-        target_tables = tables.get(name)
+        target_tables = tables.get(fname)
         if target_tables is None:
             target = Target.__table__()
             target_tables = {
                 None: (target, target.id == self.sql_column(table)),
                 }
-            tables[name] = target_tables
-        return ofield.convert_order(oname, target_tables, Target)
+            tables[fname] = target_tables
+        return ofield.convert_order(oexpr, target_tables, Target)

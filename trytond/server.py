@@ -1,5 +1,5 @@
-#This file is part of Tryton.  The COPYRIGHT file at the top level of
-#this repository contains the full copyright notices and license terms.
+# This file is part of Tryton.  The COPYRIGHT file at the top level of
+# this repository contains the full copyright notices and license terms.
 """
 %prog [options]
 """
@@ -31,16 +31,22 @@ class TrytonServer(object):
             logging.getLogger('server').info('using %s as logging '
                 'configuration file', options.logconf)
         else:
-            logformat = '[%(asctime)s] %(levelname)s:%(name)s:%(message)s'
-            datefmt = '%a %b %d %H:%M:%S %Y'
-            logging.basicConfig(level=logging.INFO, format=logformat,
-                datefmt=datefmt)
+            logformat = ('%(process)s %(thread)s [%(asctime)s] '
+                '%(levelname)s %(name)s %(message)s')
+            if options.verbose:
+                if options.dev:
+                    level = logging.DEBUG
+                else:
+                    level = logging.INFO
+            else:
+                level = logging.ERROR
+            logging.basicConfig(level=level, format=logformat)
 
         self.logger = logging.getLogger(__name__)
 
         if options.configfile:
-            self.logger.info('using %s as configuration file'
-                % options.configfile)
+            self.logger.info('using %s as configuration file',
+                options.configfile)
         else:
             self.logger.info('using default configuration')
         self.logger.info('initialising distributed objects services')
@@ -49,8 +55,8 @@ class TrytonServer(object):
         self.webdavd = []
         self.options = options
 
-        if time.tzname != ('UTC', 'UTC'):
-            self.logger.error('timezeone is not set to UTC')
+        if time.tzname[0] != 'UTC':
+            self.logger.error('timezone is not set to UTC')
 
     def run(self):
         "Run the server and never return"
@@ -72,16 +78,21 @@ class TrytonServer(object):
 
         for db_name in self.options.database_names:
             init[db_name] = False
-            with Transaction().start(db_name, 0) as transaction:
-                cursor = transaction.cursor
-                if self.options.update:
-                    if not cursor.test():
-                        self.logger.info("init db")
-                        backend.get('Database').init(cursor)
-                        init[db_name] = True
-                    cursor.commit()
-                elif not cursor.test():
-                    raise Exception("'%s' is not a Tryton database!" % db_name)
+            try:
+                with Transaction().start(db_name, 0) as transaction:
+                    cursor = transaction.cursor
+                    if self.options.update:
+                        if not cursor.test():
+                            self.logger.info("init db")
+                            backend.get('Database').init(cursor)
+                            init[db_name] = True
+                        cursor.commit()
+                    elif not cursor.test():
+                        raise Exception("'%s' is not a Tryton database!" %
+                            db_name)
+            except Exception:
+                self.stop(False)
+                raise
 
         for db_name in self.options.database_names:
             if self.options.update:
@@ -149,9 +160,10 @@ class TrytonServer(object):
                     if not pool.lock.acquire(0):
                         continue
                     try:
-                        if 'ir.cron' not in pool.object_name_list():
+                        try:
+                            Cron = pool.get('ir.cron')
+                        except KeyError:
                             continue
-                        Cron = pool.get('ir.cron')
                     finally:
                         pool.lock.release()
                     thread = threading.Thread(
@@ -176,24 +188,24 @@ class TrytonServer(object):
             for hostname, port in parse_listen(
                     config.get('jsonrpc', 'listen')):
                 self.jsonrpcd.append(JSONRPCDaemon(hostname, port, ssl))
-                self.logger.info("starting JSON-RPC%s protocol on %s:%d" %
-                    (ssl and ' SSL' or '', hostname or '*', port))
+                self.logger.info("starting JSON-RPC%s protocol on %s:%d",
+                    ssl and ' SSL' or '', hostname or '*', port)
 
         if config.get('xmlrpc', 'listen'):
             from trytond.protocols.xmlrpc import XMLRPCDaemon
             for hostname, port in parse_listen(
                     config.get('xmlrpc', 'listen')):
                 self.xmlrpcd.append(XMLRPCDaemon(hostname, port, ssl))
-                self.logger.info("starting XML-RPC%s protocol on %s:%d" %
-                    (ssl and ' SSL' or '', hostname or '*', port))
+                self.logger.info("starting XML-RPC%s protocol on %s:%d",
+                    ssl and ' SSL' or '', hostname or '*', port)
 
         if config.get('webdav', 'listen'):
             from trytond.protocols.webdav import WebDAVServerThread
             for hostname, port in parse_listen(
                     config.get('webdav', 'listen')):
                 self.webdavd.append(WebDAVServerThread(hostname, port, ssl))
-                self.logger.info("starting WebDAV%s protocol on %s:%d" %
-                    (ssl and ' SSL' or '', hostname or '*', port))
+                self.logger.info("starting WebDAV%s protocol on %s:%d",
+                    ssl and ' SSL' or '', hostname or '*', port)
 
         for servers in (self.xmlrpcd, self.jsonrpcd, self.webdavd):
             for server in servers:

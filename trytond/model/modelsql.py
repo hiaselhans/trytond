@@ -1,11 +1,12 @@
-#This file is part of Tryton.  The COPYRIGHT file at the top level of
-#this repository contains the full copyright notices and license terms.
+# This file is part of Tryton.  The COPYRIGHT file at the top level of
+# this repository contains the full copyright notices and license terms.
 import re
 import datetime
 from functools import reduce
 from itertools import islice, izip, chain, ifilter
+from collections import OrderedDict
 
-from sql import Table, Column, Literal, Desc, Asc, Expression, Flavor
+from sql import Table, Column, Literal, Desc, Asc, Expression, Flavor, Null
 from sql.functions import Now, Extract
 from sql.conditionals import Coalesce
 from sql.operators import Or, And, Operator
@@ -15,12 +16,15 @@ from trytond.model import ModelStorage, ModelView
 from trytond.model import fields
 from trytond import backend
 from trytond.tools import reduce_ids, grouped_slice
-from trytond.const import OPERATORS, RECORD_CACHE_SIZE
+from trytond.const import OPERATORS
 from trytond.transaction import Transaction
 from trytond.pool import Pool
 from trytond.cache import LRUDict
 from trytond.exceptions import ConcurrencyException
 from trytond.rpc import RPC
+
+from .modelstorage import cache_size
+
 _RE_UNIQUE = re.compile('UNIQUE\s*\((.*)\)', re.I)
 _RE_CHECK = re.compile('CHECK\s*\((.*)\)', re.I)
 
@@ -82,10 +86,9 @@ class ModelSQL(ModelStorage):
             if field_name == 'id':
                 continue
             default_fun = None
-            try:
-                sql_type = field.sql_type()
-            except NotImplementedError:
+            if hasattr(field, 'set'):
                 continue
+            sql_type = field.sql_type()
             if field_name in cls._defaults:
                 default_fun = cls._defaults[field_name]
 
@@ -295,8 +298,7 @@ class ModelSQL(ModelStorage):
                         [[id_, Now(), user] for id_ in sub_ids]))
 
     @classmethod
-    def restore_history(cls, ids, datetime):
-        'Restore record ids from history at the date time'
+    def _restore_history(cls, ids, datetime, _before=False):
         if not cls._history:
             return
         transaction = Transaction()
@@ -324,7 +326,11 @@ class ModelSQL(ModelStorage):
         to_update = []
         for id_ in ids:
             column_datetime = Coalesce(history.write_date, history.create_date)
-            hwhere = (column_datetime <= datetime) & (history.id == id_)
+            if not _before:
+                hwhere = (column_datetime <= datetime)
+            else:
+                hwhere = (column_datetime < datetime)
+            hwhere &= (history.id == id_)
             horder = (column_datetime.desc, Column(history, '__id').desc)
             cursor.execute(*history.select(*hcolumns,
                     where=hwhere, order_by=horder, limit=1))
@@ -351,6 +357,16 @@ class ModelSQL(ModelStorage):
             cls.__insert_history(to_delete, True)
         if to_update:
             cls.__insert_history(to_update)
+
+    @classmethod
+    def restore_history(cls, ids, datetime):
+        'Restore record ids from history at the date time'
+        cls._restore_history(ids, datetime)
+
+    @classmethod
+    def restore_history_before(cls, ids, datetime):
+        'Restore record ids from history before the date time'
+        cls._restore_history(ids, datetime, _before=True)
 
     @classmethod
     def __check_timestamp(cls, ids):
@@ -488,7 +504,7 @@ class ModelSQL(ModelStorage):
         cls.__insert_history(new_ids)
 
         records = cls.browse(new_ids)
-        for sub_records in grouped_slice(records, RECORD_CACHE_SIZE):
+        for sub_records in grouped_slice(records, cache_size()):
             cls._validate(sub_records)
 
         field_names = cls._fields.keys()
@@ -552,8 +568,9 @@ class ModelSQL(ModelStorage):
 
         columns = []
         for f in fields_names + fields_related.keys() + datetime_fields:
-            if (f in cls._fields and not hasattr(cls._fields[f], 'set')):
-                columns.append(Column(table, f).as_(f))
+            field = cls._fields.get(f)
+            if field and not hasattr(field, 'set'):
+                columns.append(field.sql_column(table).as_(f))
             elif f == '_timestamp' and not table_query:
                 sql_type = fields.Char('timestamp').sql_type().base
                 columns.append(Extract('EPOCH',
@@ -594,7 +611,8 @@ class ModelSQL(ModelStorage):
             result = [{'id': x} for x in ids]
 
         for column in columns:
-            field = column.output_name
+            # Split the output name to remove SQLite type detection
+            field = column.output_name.split()[0]
             if field == '_timestamp':
                 continue
             if (getattr(cls._fields[field], 'translate', False)
@@ -736,7 +754,9 @@ class ModelSQL(ModelStorage):
         Config = pool.get('ir.configuration')
 
         assert not len(args) % 2
-        all_records = sum(((records, values) + args)[0:None:2], [])
+        # Remove possible duplicates from all records
+        all_records = list(OrderedDict.fromkeys(
+                sum(((records, values) + args)[0:None:2], [])))
         all_ids = [r.id for r in all_records]
         all_field_names = set()
 
@@ -823,7 +843,7 @@ class ModelSQL(ModelStorage):
             field.set(cls, fname, *fargs)
 
         cls.__insert_history(all_ids)
-        for sub_records in grouped_slice(all_records, RECORD_CACHE_SIZE):
+        for sub_records in grouped_slice(all_records, cache_size()):
             cls._validate(sub_records, field_names=all_field_names)
         cls.trigger_write(trigger_eligibles)
 
@@ -858,7 +878,7 @@ class ModelSQL(ModelStorage):
                     and field.left and field.right):
                 tree_ids[fname] = []
                 for sub_ids in grouped_slice(ids):
-                    where = reduce_ids(Column(table, fname), sub_ids)
+                    where = reduce_ids(field.sql_column(table), sub_ids)
                     cursor.execute(*table.select(table.id, where=where))
                     tree_ids[fname] += [x[0] for x in cursor.fetchall()]
 
@@ -980,10 +1000,11 @@ class ModelSQL(ModelStorage):
             }
         if order is None or order is False:
             order = cls._order
-        for fname, otype in order:
+        for oexpr, otype in order:
+            fname, _, extra_expr = oexpr.partition('.')
             field = cls._fields[fname]
             Order = order_types[otype.upper()]
-            forder = field.convert_order(fname, tables, cls)
+            forder = field.convert_order(oexpr, tables, cls)
             order_by.extend((Order(o) for o in forder))
 
         main_table, _ = tables[None]
@@ -1020,12 +1041,12 @@ class ModelSQL(ModelStorage):
                     main_table.create_date).as_('_datetime'))
             columns.append(Column(main_table, '__id'))
         if not query:
-            columns += [Column(main_table, name).as_(name)
-                for name, field in cls._fields.iteritems()
-                if not hasattr(field, 'get')
-                and name != 'id'
-                and not getattr(field, 'translate', False)
-                and field.loading == 'eager']
+            columns += [f.sql_column(main_table).as_(n)
+                for n, f in cls._fields.iteritems()
+                if not hasattr(f, 'get')
+                and n != 'id'
+                and not getattr(f, 'translate', False)
+                and f.loading == 'eager']
             if not cls.table_query():
                 sql_type = fields.Char('timestamp').sql_type().base
                 columns += [Extract('EPOCH',
@@ -1040,7 +1061,7 @@ class ModelSQL(ModelStorage):
         rows = cursor.dictfetchmany(cursor.IN_MAX)
         cache = cursor.get_cache()
         if cls.__name__ not in cache:
-            cache[cls.__name__] = LRUDict(RECORD_CACHE_SIZE)
+            cache[cls.__name__] = LRUDict(cache_size())
         delete_records = transaction.delete_records.setdefault(cls.__name__,
             set())
 
@@ -1065,8 +1086,8 @@ class ModelSQL(ModelStorage):
                 where = reduce_ids(history.id, sub_ids)
                 cursor.execute(*history.select(history.id, history.write_date,
                         where=where
-                        & (history.write_date != None)
-                        & (history.create_date == None)
+                        & (history.write_date != Null)
+                        & (history.create_date == Null)
                         & (history.write_date
                             <= transaction.context['_datetime'])))
                 for deleted_id, delete_date in cursor.fetchall():
@@ -1081,30 +1102,34 @@ class ModelSQL(ModelStorage):
             return ifilter(lambda r: history_key(r) == ids_history[r['id']]
                 and r['id'] not in to_delete, rows)
 
-        rows = list(filter_history(rows))
-        keys = None
-        for data in islice(rows, 0, cache.size_limit):
-            if data['id'] in delete_records:
-                continue
-            if keys is None:
-                keys = data.keys()
-                for k in keys[:]:
-                    if k in ('_timestamp', '_datetime', '__id'):
-                        keys.remove(k)
-                        continue
-                    field = cls._fields[k]
-                    if not getattr(field, 'datetime_field', None):
-                        keys.remove(k)
-                        continue
-            for k in keys:
-                del data[k]
-            cache[cls.__name__].setdefault(data['id'], {}).update(data)
+        # Can not cache the history value if we are not sure to have fetch all
+        # the rows for each records
+        if (not (cls._history and transaction.context.get('_datetime'))
+                or len(rows) < cursor.IN_MAX):
+            rows = list(filter_history(rows))
+            keys = None
+            for data in islice(rows, 0, cache.size_limit):
+                if data['id'] in delete_records:
+                    continue
+                if keys is None:
+                    keys = data.keys()
+                    for k in keys[:]:
+                        if k in ('_timestamp', '_datetime', '__id'):
+                            keys.remove(k)
+                            continue
+                        field = cls._fields[k]
+                        if not getattr(field, 'datetime_field', None):
+                            keys.remove(k)
+                            continue
+                for k in keys:
+                    del data[k]
+                cache[cls.__name__].setdefault(data['id'], {}).update(data)
 
         if len(rows) >= cursor.IN_MAX:
             if (cls._history
                     and Transaction().context.get('_datetime')
                     and not query):
-                columns = columns[:2]
+                columns = columns[:3]
             else:
                 columns = columns[:1]
             cursor.execute(*table.select(*columns,
@@ -1229,7 +1254,7 @@ class ModelSQL(ModelStorage):
         old_left, old_right, parent_id = fetchone
         if old_left == old_right == 0:
             cursor.execute(*table.select(Max(right),
-                    where=field == None))
+                    where=field == Null))
             old_left, = cursor.fetchone()
             old_left += 1
             old_right = old_left + 1
@@ -1244,7 +1269,7 @@ class ModelSQL(ModelStorage):
             cursor.execute(*table.select(right, where=table.id == parent_id))
             parent_right = cursor.fetchone()[0]
         else:
-            cursor.execute(*table.select(Max(right), where=field == None))
+            cursor.execute(*table.select(Max(right), where=field == Null))
             fetchone = cursor.fetchone()
             if fetchone:
                 parent_right = fetchone[0] + 1

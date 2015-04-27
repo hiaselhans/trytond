@@ -1,5 +1,5 @@
-#This file is part of Tryton.  The COPYRIGHT file at the top level of
-#this repository contains the full copyright notices and license terms.
+# This file is part of Tryton.  The COPYRIGHT file at the top level of
+# this repository contains the full copyright notices and license terms.
 from string import Template
 import time
 from itertools import izip
@@ -174,6 +174,18 @@ class Sequence(ModelSQL, ModelView):
                 })
 
     @classmethod
+    def view_attributes(cls):
+        return [
+            ('//group[@id="incremental"]', 'states', {
+                    'invisible': ~Eval('type').in_(['incremental']),
+                    }),
+            ('//group[@id="timestamp"]', 'states', {
+                    'invisible': ~Eval('type').in_(
+                        ['decimal timestamp', 'hexadecimal timestamp']),
+                    }),
+            ]
+
+    @classmethod
     def create(cls, vlist):
         sequences = super(Sequence, cls).create(vlist)
         for sequence, values in izip(sequences, vlist):
@@ -312,7 +324,7 @@ class Sequence(ModelSQL, ModelView):
                     % sequence._sql_sequence_name)
                 number_next, = cursor.fetchone()
             else:
-                #Pre-fetch number_next
+                # Pre-fetch number_next
                 number_next = sequence.number_next_internal
 
                 cls.write([sequence], {

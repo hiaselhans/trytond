@@ -1,10 +1,12 @@
-#This file is part of Tryton.  The COPYRIGHT file at the top level of
-#this repository contains the full copyright notices and license terms.
+# This file is part of Tryton.  The COPYRIGHT file at the top level of
+# this repository contains the full copyright notices and license terms.
 
 from trytond.backend.table import TableHandlerInterface
 import logging
 
 __all__ = ['TableHandler']
+
+logger = logging.getLogger(__name__)
 
 
 class TableHandler(TableHandlerInterface):
@@ -43,7 +45,7 @@ class TableHandler(TableHandlerInterface):
                 self.cursor.execute('ALTER TABLE "%s" '
                     'ADD COLUMN id INTEGER' % self.table_name)
             self._update_definitions()
-        if self.history and not '__id' in self._columns:
+        if self.history and '__id' not in self._columns:
             self.cursor.execute('ALTER TABLE "%s" '
                 'ADD COLUMN __id INTEGER '
                 'DEFAULT nextval(\'"%s"\') NOT NULL' %
@@ -69,7 +71,7 @@ class TableHandler(TableHandlerInterface):
 
     @staticmethod
     def table_rename(cursor, old_name, new_name):
-        #Rename table
+        # Rename table
         if (TableHandler.table_exist(cursor, old_name)
                 and not TableHandler.table_exist(cursor, new_name)):
             cursor.execute('ALTER TABLE "%s" RENAME TO "%s"'
@@ -78,7 +80,7 @@ class TableHandler(TableHandlerInterface):
         old_sequence = old_name + '_id_seq'
         new_sequence = new_name + '_id_seq'
         TableHandler.sequence_rename(cursor, old_sequence, new_sequence)
-        #Rename history table
+        # Rename history table
         old_history = old_name + "__history"
         new_history = new_name + "__history"
         if (TableHandler.table_exist(cursor, old_history)
@@ -209,7 +211,7 @@ class TableHandler(TableHandlerInterface):
         if self.column_exist(column_name):
             if (column_name in ('create_date', 'write_date')
                     and column_type[1].lower() != 'timestamp(6)'):
-                #Migrate dates from timestamp(0) to timestamp
+                # Migrate dates from timestamp(0) to timestamp
                 self.cursor.execute('ALTER TABLE "' + self.table_name + '" '
                     'ALTER COLUMN "' + column_name + '" TYPE timestamp')
             comment()
@@ -225,11 +227,11 @@ class TableHandler(TableHandlerInterface):
                         ]:
                     self.alter_type(column_name, base_type)
                 else:
-                    logging.getLogger('init').warning(
+                    logger.warning(
                         'Unable to migrate column %s on table %s '
-                        'from %s to %s.'
-                        % (column_name, self.table_name,
-                            self._columns[column_name]['typname'], base_type))
+                        'from %s to %s.',
+                        column_name, self.table_name,
+                        self._columns[column_name]['typname'], base_type)
 
             if (base_type == 'varchar'
                     and self._columns[column_name]['typname'] == 'varchar'):
@@ -243,13 +245,13 @@ class TableHandler(TableHandlerInterface):
                         and self._columns[column_name]['size'] < field_size):
                     self.alter_size(column_name, column_type[1])
                 else:
-                    logging.getLogger('init').warning(
+                    logger.warning(
                         'Unable to migrate column %s on table %s '
-                        'from varchar(%s) to varchar(%s).'
-                        % (column_name, self.table_name,
-                            self._columns[column_name]['size'] > 0 and
-                            self._columns[column_name]['size'] or "",
-                            field_size))
+                        'from varchar(%s) to varchar(%s).',
+                        column_name, self.table_name,
+                        self._columns[column_name]['size'] > 0 and
+                        self._columns[column_name]['size'] or "",
+                        field_size)
             return
 
         column_type = column_type[1]
@@ -350,16 +352,15 @@ class TableHandler(TableHandlerInterface):
                     'ALTER COLUMN "' + column_name + '" SET NOT NULL')
                 self._update_definitions()
             else:
-                logging.getLogger('init').warning(
+                logger.warning(
                     'Unable to set column %s '
                     'of table %s not null !\n'
                     'Try to re-run: '
                     'trytond.py --update=module\n'
                     'If it doesn\'t work, update records '
                     'and execute manually:\n'
-                    'ALTER TABLE "%s" ALTER COLUMN "%s" SET NOT NULL'
-                    % (column_name, self.table_name, self.table_name,
-                        column_name))
+                    'ALTER TABLE "%s" ALTER COLUMN "%s" SET NOT NULL',
+                    column_name, self.table_name, self.table_name, column_name)
         elif action == 'remove':
             if not self._columns[column_name]['notnull']:
                 return
@@ -385,13 +386,13 @@ class TableHandler(TableHandlerInterface):
         except Exception:
             if exception:
                 raise
-            logging.getLogger('init').warning(
+            logger.warning(
                 'unable to add \'%s\' constraint on table %s !\n'
                 'If you want to have it, you should update the records '
                 'and execute manually:\n'
-                'ALTER table "%s" ADD CONSTRAINT "%s" %s'
-                % (constraint, self.table_name, self.table_name, ident,
-                    constraint))
+                'ALTER table "%s" ADD CONSTRAINT "%s" %s',
+                constraint, self.table_name, self.table_name, ident,
+                constraint)
         self._update_definitions()
 
     def drop_constraint(self, ident, exception=False, table=None):
@@ -405,9 +406,9 @@ class TableHandler(TableHandlerInterface):
         except Exception:
             if exception:
                 raise
-            logging.getLogger('init').warning(
-                'unable to drop \'%s\' constraint on table %s!'
-                % (ident, self.table_name))
+            logger.warning(
+                'unable to drop \'%s\' constraint on table %s!',
+                ident, self.table_name)
         self._update_definitions()
 
     def drop_column(self, column_name, exception=False):
@@ -421,9 +422,9 @@ class TableHandler(TableHandlerInterface):
         except Exception:
             if exception:
                 raise
-            logging.getLogger('init').warning(
-                'unable to drop \'%s\' column on table %s!'
-                % (column_name, self.table_name))
+            logger.warning(
+                'unable to drop \'%s\' column on table %s!',
+                column_name, self.table_name, exc_info=True)
         self._update_definitions()
 
     @staticmethod

@@ -1,5 +1,5 @@
-#This file is part of Tryton.  The COPYRIGHT file at the top level of
-#this repository contains the full copyright notices and license terms.
+# This file is part of Tryton.  The COPYRIGHT file at the top level of
+# this repository contains the full copyright notices and license terms.
 from functools import wraps
 
 from trytond.model import ModelView, ModelSQL, fields
@@ -9,7 +9,7 @@ from trytond.wizard import Wizard, StateView, Button, StateTransition, \
 from trytond import backend
 from trytond.pool import Pool
 from trytond.transaction import Transaction
-from trytond.pyson import Eval
+from trytond.pyson import Eval, If
 from trytond.rpc import RPC
 
 __all__ = [
@@ -119,6 +119,15 @@ class Module(ModelSQL, ModelView):
                 if dep.name in name2id:
                     child_ids[name2id[dep.name]].append(child.id)
         return child_ids
+
+    @classmethod
+    def view_attributes(cls):
+        return [('/tree', 'colors',
+                If(Eval('state').in_(['to upgrade', 'to install']),
+                    'blue',
+                    If(Eval('state') == 'uninstalled',
+                        'grey',
+                        'black')))]
 
     @classmethod
     def delete(cls, records):
@@ -417,7 +426,7 @@ class ModuleConfigWizard(Wizard):
     first = StateView('ir.module.module.config_wizard.first',
         'ir.module_config_wizard_first_view_form', [
             Button('Cancel', 'end', 'tryton-cancel'),
-            Button('Ok', 'action', 'tryton-ok', default=True),
+            Button('OK', 'action', 'tryton-ok', default=True),
             ])
     other = StateView('ir.module.module.config_wizard.other',
         'ir.module_config_wizard_other_view_form', [
@@ -427,7 +436,7 @@ class ModuleConfigWizard(Wizard):
     action = ConfigStateAction()
     done = StateView('ir.module.module.config_wizard.done',
         'ir.module_config_wizard_done_view_form', [
-            Button('Ok', 'end', 'tryton-close', default=True),
+            Button('OK', 'end', 'tryton-close', default=True),
             ])
 
     def transition_start(self):
@@ -473,7 +482,7 @@ class ModuleInstallUpgrade(Wizard):
     upgrade = StateTransition()
     done = StateView('ir.module.module.install_upgrade.done',
         'ir.module_install_upgrade_done_view_form', [
-            Button('Ok', 'config', 'tryton-ok', default=True),
+            Button('OK', 'config', 'tryton-ok', default=True),
             ])
     config = StateAction('ir.act_module_config_wizard')
 

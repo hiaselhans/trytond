@@ -1,5 +1,5 @@
-#This file is part of Tryton.  The COPYRIGHT file at the top level of
-#this repository contains the full copyright notices and license terms.
+# This file is part of Tryton.  The COPYRIGHT file at the top level of
+# this repository contains the full copyright notices and license terms.
 from trytond.protocols.sslsocket import SSLSocket
 from trytond.protocols.dispatcher import dispatch
 from trytond.protocols.common import daemon, RegisterHandlerMixin
@@ -10,7 +10,6 @@ import SimpleXMLRPCServer
 import SocketServer
 import xmlrpclib
 import socket
-import sys
 import base64
 import datetime
 from types import DictType
@@ -29,7 +28,7 @@ def dump_decimal(self, value, write):
     self.dump_struct(value, write)
 
 
-def dump_buffer(self, value, write):
+def dump_bytes(self, value, write):
     self.write = write
     value = xmlrpclib.Binary(value)
     value.encode(self)
@@ -54,12 +53,22 @@ def dump_time(self, value, write):
         }
     self.dump_struct(value, write)
 
+
+def dump_timedelta(self, value, write):
+    value = {'__class__': 'timedelta',
+        'seconds': value.total_seconds(),
+        }
+    self.dump_struct(value, write)
+
 xmlrpclib.Marshaller.dispatch[Decimal] = dump_decimal
 xmlrpclib.Marshaller.dispatch[type(None)] = \
         lambda self, value, write: write("<value><nil/></value>")
 xmlrpclib.Marshaller.dispatch[datetime.date] = dump_date
 xmlrpclib.Marshaller.dispatch[datetime.time] = dump_time
-xmlrpclib.Marshaller.dispatch[buffer] = dump_buffer
+xmlrpclib.Marshaller.dispatch[datetime.timedelta] = dump_timedelta
+if bytes != str:
+    xmlrpclib.Marshaller.dispatch[bytes] = dump_bytes
+xmlrpclib.Marshaller.dispatch[bytearray] = dump_bytes
 
 
 def dump_struct(self, value, write, escape=xmlrpclib.escape):
@@ -94,6 +103,8 @@ XMLRPCDecoder.register('date',
 XMLRPCDecoder.register('time',
     lambda dct: datetime.time(dct['hour'], dct['minute'], dct['second'],
         dct['microsecond']))
+XMLRPCDecoder.register('timedelta',
+    lambda dct: datetime.timedelta(seconds=dct['seconds']))
 XMLRPCDecoder.register('Decimal', lambda dct: Decimal(dct['decimal']))
 
 
@@ -122,7 +133,8 @@ xmlrpclib.Unmarshaller.dispatch["dateTime.iso8601"] = _end_dateTime
 def _end_base64(self, data):
     value = xmlrpclib.Binary()
     value.decode(data)
-    self.append(buffer(value.data))
+    cast = bytearray if bytes == str else bytes
+    self.append(cast(value.data))
     self._value = 0
 xmlrpclib.Unmarshaller.dispatch['base64'] = _end_base64
 
@@ -152,14 +164,14 @@ class GenericXMLRPCRequestHandler:
                 return dispatch(host, port, 'XML-RPC', database_name, user,
                         session, object_type, object_name, method, *params)
             except (NotLogged, ConcurrencyException), exception:
-                logger.debug(exception_message, exc_info=sys.exc_info())
+                logger.debug(exception_message, exc_info=True)
                 raise xmlrpclib.Fault(exception.code, str(exception))
             except (UserError, UserWarning), exception:
-                logger.debug(exception_message, exc_info=sys.exc_info())
+                logger.debug(exception_message, exc_info=True)
                 error, description = exception.args
                 raise xmlrpclib.Fault(exception.code, str(exception))
             except Exception, exception:
-                logger.error(exception_message, exc_info=sys.exc_info())
+                logger.error(exception_message, exc_info=True)
                 raise xmlrpclib.Fault(255, str(exception))
         finally:
             security.logout(database_name, user, session)

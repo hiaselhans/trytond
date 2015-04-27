@@ -1,5 +1,5 @@
-#This file is part of Tryton.  The COPYRIGHT file at the top level of
-#this repository contains the full copyright notices and license terms.
+# This file is part of Tryton.  The COPYRIGHT file at the top level of
+# this repository contains the full copyright notices and license terms.
 from trytond.protocols.sslsocket import SSLSocket
 from trytond.protocols.dispatcher import dispatch
 from trytond.config import config
@@ -55,8 +55,14 @@ JSONDecoder.register('date',
 JSONDecoder.register('time',
     lambda dct: datetime.time(dct['hour'], dct['minute'], dct['second'],
         dct['microsecond']))
-JSONDecoder.register('buffer', lambda dct:
-    buffer(base64.decodestring(dct['base64'])))
+JSONDecoder.register('timedelta',
+    lambda dct: datetime.timedelta(seconds=dct['seconds']))
+
+
+def _bytes_decoder(dct):
+    cast = bytearray if bytes == str else bytes
+    return cast(base64.decodestring(dct['base64']))
+JSONDecoder.register('bytes', _bytes_decoder)
 JSONDecoder.register('Decimal', lambda dct: Decimal(dct['decimal']))
 
 
@@ -105,11 +111,17 @@ JSONEncoder.register(datetime.time,
         'second': o.second,
         'microsecond': o.microsecond,
         })
-JSONEncoder.register(buffer,
+JSONEncoder.register(datetime.timedelta,
     lambda o: {
-        '__class__': 'buffer',
-        'base64': base64.encodestring(o),
+        '__class__': 'timedelta',
+        'seconds': o.total_seconds(),
         })
+_bytes_encoder = lambda o: {
+    '__class__': 'bytes',
+    'base64': base64.encodestring(o),
+    }
+JSONEncoder.register(bytes, _bytes_encoder)
+JSONEncoder.register(bytearray, _bytes_encoder)
 JSONEncoder.register(Decimal,
     lambda o: {
         '__class__': 'Decimal',
@@ -145,7 +157,7 @@ class SimpleJSONRPCDispatcher(SimpleXMLRPCServer.SimpleXMLRPCDispatcher):
         response = {'id': req_id}
 
         try:
-            #generate response
+            # generate response
             if dispatch_method is not None:
                 response['result'] = dispatch_method(method, params)
             else:

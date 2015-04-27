@@ -80,7 +80,7 @@ method signature is::
 
     on_change_<field name>()
 
-This method must return a dictionary with the values of fields to be updated.
+This method must change the value of the fields to be updated.
 
 .. note::
 
@@ -269,7 +269,7 @@ A single line string field.
     method ``autocomplete_<field name>`` of the model when the user changes one
     of those field value. The method signature is::
 
-        autocomplete_<field name>(values)
+        autocomplete_<field name>()
 
     This method must return a list of string that will populate the
     ComboboxEntry in the client.
@@ -336,6 +336,9 @@ DateTime
 .. class:: DateTime(string[, format, \**options])
 
 A date and time, represented in Python by a ``datetime.datetime`` instance.
+It is stored in `UTC`_ while displayed in the user timezone.
+
+.. _`UTC`: https://en.wikipedia.org/wiki/Coordinated_Universal_Time
 
 .. attribute:: DateTime.format
 
@@ -361,12 +364,26 @@ A time, represented in Python by a ``datetime.time`` instance.
 
     Same as :attr:`DateTime.format`
 
+TimeDelta
+---------
+
+.. class:: TimeDelta(string[, converter[, \**options]])
+
+An interval, represented in Python by a ``datetime.timedelta`` instance.
+
+.. attribute:: TimeDelta.converter
+
+    The name of the context key containing the time converter.
+    A time converter is a dictionary with the keys: ``s`` (second), ``m``
+    (minute), ``h`` (hour), ``d`` (day), ``w`` (week), ``M`` (month), ``Y``
+    (year) and the value in second.
+
 Binary
 ------
 
 .. class:: Binary(string[, \**options])
 
-A binary field. It will be represented in Python by a ``str`` instance.
+A binary field. It will be represented in Python by a ``bytes`` instance.
 
 :class:`Binary` has one extra optional argument:
 
@@ -770,3 +787,11 @@ A dictionary field with predefined keys.
 
     The name of the :class:`DictSchemaMixin` model that stores the definition
     of keys.
+
+Instance methods:
+
+.. method:: Dict.translated([name[, type_]])
+
+    Returns a descriptor for the translated `values` or `keys` of the field
+    following `type_`. The descriptor must be used on the same class as the
+    field. Default `type_` is `values`.

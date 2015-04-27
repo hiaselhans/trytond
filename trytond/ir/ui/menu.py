@@ -1,6 +1,8 @@
-#This file is part of Tryton.  The COPYRIGHT file at the top level of
-#this repository contains the full copyright notices and license terms.
+# This file is part of Tryton.  The COPYRIGHT file at the top level of
+# this repository contains the full copyright notices and license terms.
 from itertools import groupby
+
+from sql import Null
 
 from trytond.model import ModelView, ModelSQL, fields
 from trytond.transaction import Transaction
@@ -169,7 +171,7 @@ class UIMenu(ModelSQL, ModelView):
                     ('rec_name', 'ilike', '%%%s%%' % text),
                     ]):
             if record.action:
-                yield record.id, record.rec_name, record.icon
+                yield record, record.rec_name, record.icon
 
     @classmethod
     def search(cls, domain, offset=0, limit=None, order=None, count=False,
@@ -294,7 +296,7 @@ class UIMenuFavorite(ModelSQL, ModelView):
     @staticmethod
     def order_sequence(tables):
         table, _ = tables[None]
-        return [table.sequence == None, table.sequence]
+        return [table.sequence == Null, table.sequence]
 
     @staticmethod
     def default_user():

@@ -1,5 +1,5 @@
-#This file is part of Tryton.  The COPYRIGHT file at the top level of
-#this repository contains the full copyright notices and license terms.
+# This file is part of Tryton.  The COPYRIGHT file at the top level of
+# this repository contains the full copyright notices and license terms.
 from trytond.backend.database import DatabaseInterface, CursorInterface
 from trytond.config import config
 import os
@@ -8,14 +8,13 @@ import datetime
 import time
 import sys
 import threading
-import math
 
 _FIX_ROWCOUNT = False
 try:
     from pysqlite2 import dbapi2 as sqlite
     from pysqlite2.dbapi2 import IntegrityError as DatabaseIntegrityError
     from pysqlite2.dbapi2 import OperationalError as DatabaseOperationalError
-    #pysqlite2 < 2.5 doesn't return correct rowcount
+    # pysqlite2 < 2.5 doesn't return correct rowcount
     _FIX_ROWCOUNT = sqlite.version_info < (2, 5, 0)
 except ImportError:
     import sqlite3 as sqlite
@@ -140,7 +139,12 @@ class SQLiteCharLength(Function):
 
 
 def sign(value):
-    return math.copysign(1, value)
+    if value > 0:
+        return 1
+    elif value < 0:
+        return -1
+    else:
+        return value
 
 
 MAPPING = {
@@ -179,7 +183,8 @@ class Database(DatabaseInterface):
                 raise IOError('Database "%s" doesn\'t exist!' % db_filename)
         if self._conn is not None:
             return self
-        self._conn = sqlite.connect(path, detect_types=sqlite.PARSE_DECLTYPES)
+        self._conn = sqlite.connect(path,
+            detect_types=sqlite.PARSE_DECLTYPES | sqlite.PARSE_COLNAMES)
         self._conn.create_function('extract', 2, SQLiteExtract.extract)
         self._conn.create_function('date_trunc', 2, date_trunc)
         self._conn.create_function('split_part', 3, split_part)
@@ -190,6 +195,8 @@ class Database(DatabaseInterface):
             self._conn.create_function('replace', 3, replace)
         self._conn.create_function('now', 0, now)
         self._conn.create_function('sign', 1, sign)
+        self._conn.create_function('greatest', -1, max)
+        self._conn.create_function('least', -1, min)
         self._conn.execute('PRAGMA foreign_keys = ON')
         return self
 
@@ -400,11 +407,12 @@ class Cursor(CursorInterface):
     def has_constraint(self):
         return False
 
-sqlite.register_converter('NUMERIC', lambda val: Decimal(val))
+sqlite.register_converter('NUMERIC', lambda val: Decimal(val.decode('utf-8')))
 if sys.version_info[0] == 2:
     sqlite.register_adapter(Decimal, lambda val: buffer(str(val)))
+    sqlite.register_adapter(bytearray, lambda val: buffer(val))
 else:
-    sqlite.register_adapter(Decimal, lambda val: bytes(str(val)))
+    sqlite.register_adapter(Decimal, lambda val: str(val).encode('utf-8'))
 
 
 def adapt_datetime(val):
@@ -412,4 +420,18 @@ def adapt_datetime(val):
 sqlite.register_adapter(datetime.datetime, adapt_datetime)
 sqlite.register_adapter(datetime.time, lambda val: val.isoformat())
 sqlite.register_converter('TIME', lambda val: datetime.time(*map(int,
-            val.split(':'))))
+            val.decode('utf-8').split(':'))))
+sqlite.register_adapter(datetime.timedelta, lambda val: val.total_seconds())
+
+
+def convert_interval(value):
+    value = float(value)
+    # It is not allowed to instatiate timedelta with the min/max total seconds
+    if value >= _interval_max:
+        return datetime.timedelta.max
+    elif value <= _interval_min:
+        return datetime.timedelta.min
+    return datetime.timedelta(seconds=value)
+_interval_max = datetime.timedelta.max.total_seconds()
+_interval_min = datetime.timedelta.min.total_seconds()
+sqlite.register_converter('INTERVAL', convert_interval)

@@ -1,13 +1,13 @@
-#This file is part of Tryton.  The COPYRIGHT file at the top level of
-#this repository contains the full copyright notices and license terms.
+# This file is part of Tryton.  The COPYRIGHT file at the top level of
+# this repository contains the full copyright notices and license terms.
 import datetime
 import time
-from sql import Literal
+from sql import Literal, Null
 from sql.aggregate import Count, Max
 
-from trytond.model import ModelView, ModelSQL, fields
-from trytond.pyson import Eval
-from trytond.tools import safe_eval, grouped_slice
+from trytond.model import ModelView, ModelSQL, fields, EvalEnvironment
+from trytond.pyson import Eval, PYSONDecoder
+from trytond.tools import grouped_slice
 import trytond.backend as backend
 from trytond.tools import reduce_ids
 from trytond.transaction import Transaction
@@ -29,7 +29,7 @@ class Trigger(ModelSQL, ModelView):
             'invisible': (Eval('on_create', False)
                 | Eval('on_write', False)
                 | Eval('on_delete', False)),
-        }, depends=['on_create', 'on_write', 'on_delete'])
+            }, depends=['on_create', 'on_write', 'on_delete'])
     on_create = fields.Boolean('On Create', select=True, states={
         'invisible': Eval('on_time', False),
         }, depends=['on_time'])
@@ -45,9 +45,10 @@ class Trigger(ModelSQL, ModelView):
     limit_number = fields.Integer('Limit Number', required=True,
         help='Limit the number of call to "Action Function" by records.\n'
         '0 for no limit.')
-    minimum_delay = fields.Float('Minimum Delay', help='Set a minimum delay '
-        'in minutes between call to "Action Function" for the same record.\n'
-        '0 for no delay.')
+    minimum_time_delay = fields.TimeDelta('Minimum Delay',
+        help='Set a minimum time delay between call to "Action Function" '
+        'for the same record.\n'
+        'empty for no delay.')
     action_model = fields.Many2One('ir.model', 'Action Model', required=True)
     action_function = fields.Char('Action Function', required=True)
     _get_triggers_cache = Cache('ir_trigger.get_triggers')
@@ -65,6 +66,29 @@ class Trigger(ModelSQL, ModelView):
                     'valid python expression on trigger "%(trigger)s".'),
                 })
         cls._order.insert(0, ('name', 'ASC'))
+
+    @classmethod
+    def __register__(cls, module_name):
+        TableHandler = backend.get('TableHandler')
+        cursor = Transaction().cursor
+        table = TableHandler(cursor, cls, module_name)
+        sql_table = cls.__table__()
+
+        super(Trigger, cls).__register__(module_name)
+
+        # Migration from 3.4:
+        # change minimum_delay into timedelta minimu_time_delay
+        if table.column_exist('minimum_delay'):
+            cursor.execute(*sql_table.select(
+                    sql_table.id, sql_table.minimum_delay,
+                    where=sql_table.minimum_delay != Null))
+            for id_, delay in cursor.fetchall():
+                delay = datetime.timedelta(hours=delay)
+                cursor.execute(*sql_table.update(
+                        [sql_table.minimu_time_delay],
+                        [delay],
+                        where=sql_table.id == id_))
+            table.drop_column('minimum_delay')
 
     @classmethod
     def validate(cls, triggers):
@@ -96,36 +120,24 @@ class Trigger(ModelSQL, ModelView):
     @fields.depends('on_time')
     def on_change_on_time(self):
         if self.on_time:
-            return {
-                    'on_create': False,
-                    'on_write': False,
-                    'on_delete': False,
-                    }
-        return {}
+            self.on_create = False
+            self.on_write = False
+            self.on_delete = False
 
     @fields.depends('on_create')
     def on_change_on_create(self):
         if self.on_create:
-            return {
-                    'on_time': False,
-                    }
-        return {}
+            self.on_time = False
 
     @fields.depends('on_write')
     def on_change_on_write(self):
         if self.on_write:
-            return {
-                    'on_time': False,
-                    }
-        return {}
+            self.on_time = False
 
     @fields.depends('on_delete')
     def on_change_on_delete(self):
         if self.on_delete:
-            return {
-                    'on_time': False,
-                    }
-        return {}
+            self.on_time = False
 
     @classmethod
     def get_triggers(cls, model_name, mode):
@@ -159,8 +171,8 @@ class Trigger(ModelSQL, ModelView):
         env['current_date'] = datetime.datetime.today()
         env['time'] = time
         env['context'] = Transaction().context
-        env['self'] = record
-        return bool(safe_eval(trigger.condition, env))
+        env['self'] = EvalEnvironment(record, record.__class__)
+        return bool(PYSONDecoder(env).decode(trigger.condition))
 
     @classmethod
     def trigger_action(cls, records, trigger):
@@ -194,8 +206,8 @@ class Trigger(ModelSQL, ModelView):
                         new_ids.append(record_id)
             ids = new_ids
 
-        # Filter on minimum_delay
-        if trigger.minimum_delay:
+        # Filter on minimum_time_delay
+        if trigger.minimum_time_delay:
             new_ids = []
             for sub_ids in grouped_slice(ids):
                 sub_ids = list(sub_ids)
@@ -223,15 +235,14 @@ class Trigger(ModelSQL, ModelView):
                         delay[record_id] = datetime.datetime(year, month, day,
                                 hours, minutes, seconds, microseconds)
                     if (datetime.datetime.now() - delay[record_id]
-                            >= datetime.timedelta(
-                                minutes=trigger.minimum_delay)):
+                            >= trigger.minimum_time_delay):
                         new_ids.append(record_id)
             ids = new_ids
 
         records = Model.browse(ids)
         if records:
             getattr(ActionModel, trigger.action_function)(records, trigger)
-        if trigger.limit_number or trigger.minimum_delay:
+        if trigger.limit_number or trigger.minimum_time_delay:
             to_create = []
             for record in records:
                 to_create.append({

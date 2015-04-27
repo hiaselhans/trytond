@@ -1,5 +1,5 @@
-#This file is part of Tryton.  The COPYRIGHT file at the top level of
-#this repository contains the full copyright notices and license terms.
+# This file is part of Tryton.  The COPYRIGHT file at the top level of
+# this repository contains the full copyright notices and license terms.
 from threading import Lock
 from collections import OrderedDict
 
@@ -115,6 +115,11 @@ class Cache(object):
                                 [[Now(), name]]))
                 Cache._resets[dbname].clear()
             cursor.commit()
+
+    @classmethod
+    def drop(cls, dbname):
+        for inst in cls._cache_instance:
+            inst._cache.pop(dbname, None)
 
 
 class LRUDict(OrderedDict):

@@ -1,12 +1,11 @@
-#This file is part of Tryton.  The COPYRIGHT file at the top level of
-#this repository contains the full copyright notices and license terms.
+# This file is part of Tryton.  The COPYRIGHT file at the top level of
+# this repository contains the full copyright notices and license terms.
 import SocketServer
 import socket
 import BaseHTTPServer
 import urlparse
 import time
 import urllib
-import sys
 import logging
 from threading import local
 import xml.dom.minidom
@@ -21,7 +20,7 @@ from pywebdav.lib.davcmd import copyone, copytree, moveone, movetree, \
 from trytond.protocols.sslsocket import SSLSocket
 from trytond.protocols.common import daemon
 from trytond.security import login
-from trytond.version import PACKAGE, VERSION, WEBSITE
+from trytond import __version__
 from trytond.tools.misc import LocalDict
 from trytond import backend
 from trytond.pool import Pool
@@ -134,9 +133,9 @@ class TrytonDAVInterface(iface.dav_interface):
         if isinstance(exception, (NotLogged, ConcurrencyException, UserError,
                     UserWarning, DAV_Error, DAV_NotFound, DAV_Secret,
                     DAV_Forbidden)):
-            logger.debug('Exception', exc_info=sys.exc_info())
+            logger.debug('Exception %s', exception, exc_info=True)
         else:
-            logger.error('Exception', exc_info=sys.exc_info())
+            logger.error('Exception %s', exception, exc_info=True)
 
     @staticmethod
     def get_dburi(uri):
@@ -199,8 +198,7 @@ class TrytonDAVInterface(iface.dav_interface):
             res += '<head>'
             res += ('<meta http-equiv="Content-Type" content="text/html; '
                 'charset=utf-8">')
-            res += ('<title>%s - WebDAV - %s</title>'
-                % (PACKAGE, dbname or 'root'))
+            res += '<title>Tryton - WebDAV - %s</title>' % dbname or 'root'
             res += '</head>'
             res += '<body>'
             res += '<h2>Collection: %s</h2>' % (get_urifilename(uri) or '/')
@@ -220,8 +218,8 @@ class TrytonDAVInterface(iface.dav_interface):
                     % (quote_uri(child), get_urifilename(child)))
             res += '</ul>'
             res += '<hr noshade>'
-            res += ('<em>Powered by <a href="%s">%s</a> version %s</em>'
-                % (quote_uri(WEBSITE), PACKAGE, VERSION))
+            res += ('<em>Powered by <a href="http://www.tryton.org/">'
+                'Tryton</a> version %s</em>' % __version__)
             res += '</body>'
             res += '</html>'
             return res
@@ -528,7 +526,8 @@ class WebDAVAuthRequestHandler(WebDAVServer.DAVRequestHandler):
         dbname = Transaction().cursor.database_name
         Transaction().stop()
         if dbname:
-            Cache.resets(dbname)
+            with Transaction().start(dbname, 0):
+                Cache.resets(dbname)
 
     def parse_request(self):
         if not BaseHTTPServer.BaseHTTPRequestHandler.parse_request(self):
@@ -573,7 +572,7 @@ class WebDAVAuthRequestHandler(WebDAVServer.DAVRequestHandler):
                 with Transaction().start(dbname, 0) as transaction:
                     database_list = Pool.database_list()
                     pool = Pool(dbname)
-                    if not dbname in database_list:
+                    if dbname not in database_list:
                         pool.init()
                     Share = pool.get('webdav.share')
                     user = Share.get_login(key, command, path)
@@ -581,7 +580,7 @@ class WebDAVAuthRequestHandler(WebDAVServer.DAVRequestHandler):
             if not user:
                 return None
 
-        Transaction().start(dbname, user, {
+        Transaction().start(dbname, user, context={
                 '_check_access': True,
                 })
         Cache.clean(dbname)

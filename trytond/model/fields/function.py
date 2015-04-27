@@ -1,9 +1,10 @@
-#This file is part of Tryton.  The COPYRIGHT file at the top level of
-#this repository contains the full copyright notices and license terms.
+# This file is part of Tryton.  The COPYRIGHT file at the top level of
+# this repository contains the full copyright notices and license terms.
 
 import inspect
 import copy
 from trytond.model.fields.field import Field
+from trytond.tools import is_instance_method
 from trytond.transaction import Transaction
 
 
@@ -57,6 +58,10 @@ class Function(Field):
                 return
         setattr(self._field, name, value)
 
+    @property
+    def sql_type(self):
+        raise AttributeError
+
     def convert_domain(self, domain, tables, Model):
         name, operator, value = domain[:3]
         if not self.searcher:
@@ -71,10 +76,11 @@ class Function(Field):
         '''
         with Transaction().set_context(_check_access=False):
             method = getattr(Model, self.getter)
+            instance_method = is_instance_method(Model, self.getter)
 
             def call(name):
                 records = Model.browse(ids)
-                if not hasattr(method, 'im_self') or method.im_self:
+                if not instance_method:
                     return method(records, name)
                 else:
                     return dict((r.id, method(r, name)) for r in records)

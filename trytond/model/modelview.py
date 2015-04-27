@@ -1,12 +1,13 @@
-#This file is part of Tryton.  The COPYRIGHT file at the top level of
-#this repository contains the full copyright notices and license terms.
+# This file is part of Tryton.  The COPYRIGHT file at the top level of
+# this repository contains the full copyright notices and license terms.
 from lxml import etree
 from functools import wraps
 import copy
+import collections
 
-from trytond.model import Model
-from trytond.tools import safe_eval, ClassProperty
-from trytond.pyson import PYSONEncoder, CONTEXT
+from trytond.model import Model, fields
+from trytond.tools import ClassProperty, is_instance_method
+from trytond.pyson import PYSONDecoder, PYSONEncoder
 from trytond.transaction import Transaction
 from trytond.cache import Cache
 from trytond.pool import Pool
@@ -42,26 +43,26 @@ def _inherit_apply(src, inherit):
                         index = parent.index(enext)
                         parent.insert(index, child)
                 else:
-                    parent.extend(element2.getchildren())
+                    parent.extend(list(element2))
                 parent.remove(element)
             elif pos == 'replace_attributes':
-                child = element2.getchildren()[0]
+                child = element2[0]
                 for attr in child.attrib:
                     element.set(attr, child.get(attr))
             elif pos == 'inside':
-                element.extend(element2.getchildren())
+                element.extend(list(element2))
             elif pos == 'after':
                 parent = element.getparent()
                 enext = element.getnext()
                 if enext is not None:
-                    for child in element2:
+                    for child in list(element2):
                         index = parent.index(enext)
                         parent.insert(index, child)
                 else:
-                    parent.extend(element2.getchildren())
+                    parent.extend(list(element2))
             elif pos == 'before':
                 parent = element.getparent()
-                for child in element2:
+                for child in list(element2):
                     index = parent.index(element)
                     parent.insert(index, child)
             else:
@@ -72,6 +73,20 @@ def _inherit_apply(src, inherit):
                 'Couldn\'t find tag (%s: %s) in parent view!'
                 % (element2.tag, element2.get('expr')))
     return etree.tostring(tree_src, encoding='utf-8')
+
+
+def on_change(func):
+    @wraps(func)
+    def wrapper(self, *args, **kwargs):
+        result = func(self, *args, **kwargs)
+        assert result is None, func
+        return self
+    wrapper.on_change = True
+    return wrapper
+
+
+def on_change_result(record):
+    return record._changed_values
 
 
 class ModelView(Model):
@@ -101,7 +116,101 @@ class ModelView(Model):
         super(ModelView, cls).__setup__()
         cls.__rpc__['fields_view_get'] = RPC()
         cls.__rpc__['view_toolbar_get'] = RPC()
+        cls.__rpc__['on_change'] = RPC(instantiate=0)
+        cls.__rpc__['on_change_with'] = RPC(instantiate=0)
         cls._buttons = {}
+
+        if hasattr(cls, '__depend_methods'):
+            cls.__depend_methods = cls.__depend_methods.copy()
+        else:
+            cls.__depend_methods = collections.defaultdict(set)
+
+        if hasattr(cls, '__change_buttons'):
+            cls.__change_buttons = cls.__change_buttons.copy()
+        else:
+            cls.__change_buttons = collections.defaultdict(set)
+
+        def setup_field(field, field_name):
+            for attribute in ('on_change', 'on_change_with', 'autocomplete',
+                    'selection_change_with'):
+                if attribute == 'selection_change_with':
+                    if isinstance(
+                            getattr(field, 'selection', None), basestring):
+                        function_name = field.selection
+                    else:
+                        continue
+                else:
+                    function_name = '%s_%s' % (attribute, field_name)
+                if not getattr(cls, function_name, None):
+                    continue
+                # Search depends on all parent class because field has been
+                # copied with the original definition
+                for parent_cls in cls.__mro__:
+                    function = getattr(parent_cls, function_name, None)
+                    if not function:
+                        continue
+                    if getattr(function, 'depends', None):
+                        setattr(field, attribute,
+                            getattr(field, attribute) | function.depends)
+                    if getattr(function, 'depend_methods', None):
+                        cls.__depend_methods[(field_name, attribute)] |= \
+                            function.depend_methods
+                function = getattr(cls, function_name, None)
+                if (attribute == 'on_change'
+                        and not getattr(function, 'on_change', None)):
+                    # Decorate on_change to always return self
+                    setattr(cls, function_name, on_change(function))
+
+        def setup_callable(function, name):
+            if hasattr(function, 'change'):
+                cls.__change_buttons[name] |= function.change
+
+        for name in dir(cls):
+            attr = getattr(cls, name)
+            if isinstance(attr, fields.Field):
+                setup_field(attr, name)
+            elif isinstance(attr, collections.Callable):
+                setup_callable(attr, name)
+
+    @classmethod
+    def __post_setup__(cls):
+        super(ModelView, cls).__post_setup__()
+
+        # Update __rpc__
+        for field_name, field in cls._fields.iteritems():
+            if isinstance(field, (fields.Selection, fields.Reference)) \
+                    and not isinstance(field.selection, (list, tuple)) \
+                    and field.selection not in cls.__rpc__:
+                instantiate = 0 if field.selection_change_with else None
+                cls.__rpc__.setdefault(field.selection,
+                    RPC(instantiate=instantiate))
+
+            for attribute in ('on_change', 'on_change_with', 'autocomplete'):
+                function_name = '%s_%s' % (attribute, field_name)
+                if getattr(cls, function_name, None):
+                    result = None
+                    if attribute == 'on_change':
+                        result = on_change_result
+                    cls.__rpc__.setdefault(function_name,
+                        RPC(instantiate=0, result=result))
+
+        for button in cls._buttons:
+            if not is_instance_method(cls, button):
+                cls.__rpc__.setdefault(button,
+                    RPC(readonly=False, instantiate=0))
+            else:
+                cls.__rpc__.setdefault(button,
+                    RPC(instantiate=0, result=on_change_result))
+
+        # Update depend on methods
+        for (field_name, attribute), others in (
+                cls.__depend_methods.iteritems()):
+            field = getattr(cls, field_name)
+            for other in others:
+                other_field = getattr(cls, other)
+                setattr(field, attribute,
+                    getattr(field, attribute)
+                    | getattr(other_field, attribute))
 
     @classmethod
     def fields_view_get(cls, view_id=None, view_type='form'):
@@ -110,8 +219,11 @@ class ModelView(Model):
         If view_id is None the first one will be used of view_type.
         The definition is a dictionary with keys:
            - model: the model name
+           - type: the type of the view
+           - view_id: the id of the view
            - arch: the xml description of the view
            - fields: a dictionary with the definition of each field in the view
+           - field_childs: the name of the childs field for tree
         '''
         key = (cls.__name__, view_id, view_type)
         result = cls._fields_view_get_cache.get(key)
@@ -193,8 +305,8 @@ class ModelView(Model):
                     raise_p = True
             for view in views:
                 if view.domain:
-                    if not safe_eval(view.domain,
-                            {'context': Transaction().context}):
+                    if not PYSONDecoder({'context': Transaction().context}
+                            ).decode(view.domain):
                         continue
                 if not view.arch or not view.arch.strip():
                     continue
@@ -281,10 +393,20 @@ class ModelView(Model):
         return value
 
     @classmethod
+    def view_attributes(cls):
+        'Return a list of xpath, attribute name and value'
+        return []
+
+    @classmethod
     def _view_look_dom_arch(cls, tree, type, field_children=None):
         pool = Pool()
         ModelAccess = pool.get('ir.model.access')
         FieldAccess = pool.get('ir.model.field.access')
+
+        encoder = PYSONEncoder()
+        for xpath, attribute, value in cls.view_attributes():
+            for element in tree.xpath(xpath):
+                element.set(attribute, encoder.encode(value))
 
         fields_width = {}
         tree_root = tree.getroottree().getroot()
@@ -307,15 +429,16 @@ class ModelView(Model):
 
         # Remove field without read access
         for field in fields_to_remove:
-            for element in tree.xpath(
-                    '//field[@name="%s"] | //label[@name="%s"]'
-                    % (field, field)):
-                if type == 'form':
-                    element.tag = 'label'
-                    element.attrib.clear()
-                elif type == 'tree':
+            xpath = ('//field[@name="%(field)s"] | //label[@name="%(field)s"]'
+                ' | //page[@name="%(field)s"] | //group[@name="%(field)s"]'
+                ' | //separator[@name="%(field)s"]') % {'field': field}
+            for element in tree.xpath(xpath):
+                if type == 'tree' or element.tag == 'page':
                     parent = element.getparent()
                     parent.remove(element)
+                elif type == 'form':
+                    element.tag = 'label'
+                    element.attrib.clear()
 
         if type == 'tree':
             ViewTreeWidth = pool.get('ir.ui.view_tree_width')
@@ -424,15 +547,7 @@ class ModelView(Model):
             if element.get('name') in fields_width:
                 element.set('width', str(fields_width[element.get('name')]))
 
-        # convert attributes into pyson
         encoder = PYSONEncoder()
-        for attr in ('states', 'domain', 'spell', 'colors'):
-            if (element.get(attr)
-                    # Avoid double evaluation from inherit with different model
-                    and '__' not in element.get(attr)):
-                element.set(attr, encoder.encode(safe_eval(element.get(attr),
-                    CONTEXT)))
-
         if element.tag == 'button':
             button_name = element.attrib['name']
             if button_name in cls._buttons:
@@ -445,6 +560,14 @@ class ModelView(Model):
                 states = states.copy()
                 states['readonly'] = True
             element.set('states', encoder.encode(states))
+
+            change = cls.__change_buttons[button_name]
+            if change:
+                element.set('change', encoder.encode(list(change)))
+            if not is_instance_method(cls, button_name):
+                element.set('type', 'class')
+            else:
+                element.set('type', 'instance')
 
         # translate view
         if Transaction().language != 'en_US':
@@ -516,3 +639,83 @@ class ModelView(Model):
                 return action_id
             return wrapper
         return decorator
+
+    @staticmethod
+    def button_change(*fields):
+        def decorator(func):
+            func = ModelView.button(func)
+            func = on_change(func)
+            func.change = set(fields)
+            return func
+        return decorator
+
+    def on_change(self, fieldnames):
+        for fieldname in sorted(fieldnames):
+            method = getattr(self, 'on_change_%s' % fieldname, None)
+            if method:
+                method()
+        # XXX remove backward compatibility
+        return [self._changed_values]
+
+    def on_change_with(self, fieldnames):
+        changes = {}
+        for fieldname in fieldnames:
+            method_name = 'on_change_with_%s' % fieldname
+            changes[fieldname] = getattr(self, method_name)()
+        return changes
+
+    @property
+    def _changed_values(self):
+        """Return the values changed since the instantiation.
+        By default, the value of a field is its internal representation except:
+            - for Many2One and One2One field: the id.
+            - for Reference field: the string model,id
+            - for Many2Many: the list of ids
+            - for One2Many: a dictionary composed of three keys:
+                - add: a list of tuple, the first element is the index where
+                  the new line is added, the second element is
+                  `_default_values`
+                - update: a list of dictionary of `_changed_values` including
+                  the `id`
+                - remove: a list of ids
+        """
+        from .modelstorage import ModelStorage
+        changed = {}
+        init_values = self._init_values or {}
+        if not self._values:
+            return changed
+        for fname, value in self._values.iteritems():
+            field = self._fields[fname]
+            if (value == init_values.get(fname)
+                    and field._type != 'one2many'):
+                continue
+            if field._type in ('many2one', 'one2one', 'reference'):
+                if value:
+                    if isinstance(value, ModelStorage):
+                        changed['%s.rec_name' % fname] = value.rec_name
+                    if field._type == 'reference':
+                        value = str(value)
+                    else:
+                        value = value.id
+            elif field._type == 'one2many':
+                targets = value
+                init_targets = list(init_values.get(fname, []))
+                value = collections.defaultdict(list)
+                value['remove'] = [t.id for t in init_targets if t.id]
+                for i, target in enumerate(targets):
+                    if target.id in value['remove']:
+                        value['remove'].remove(target.id)
+                        target_changed = target._changed_values
+                        if target_changed:
+                            target_changed['id'] = target.id
+                            value['update'].append(target_changed)
+                    else:
+                        value['add'].append((i, target._default_values))
+                if not value['remove']:
+                    del value['remove']
+                if not value:
+                    continue
+            elif field._type == 'many2many':
+                value = [r.id for r in value]
+            changed[fname] = value
+        return changed

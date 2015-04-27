@@ -1,7 +1,9 @@
-#This file is part of Tryton.  The COPYRIGHT file at the top level of
-#this repository contains the full copyright notices and license terms.
+# This file is part of Tryton.  The COPYRIGHT file at the top level of
+# this repository contains the full copyright notices and license terms.
 import re
 import heapq
+
+from sql import Null
 from sql.aggregate import Max
 from sql.conditionals import Case
 from collections import defaultdict
@@ -20,6 +22,7 @@ from trytond.pyson import Bool, Eval
 from trytond.rpc import RPC
 import trytond.backend as backend
 from trytond.protocols.jsonrpc import JSONDecoder, JSONEncoder
+from trytond.tools import is_instance_method
 try:
     from trytond.tools.StringMatcher import StringMatcher
 except ImportError:
@@ -168,7 +171,7 @@ class Model(ModelSQL, ModelView):
     def global_search(cls, text, limit, menu='ir.ui.menu'):
         """
         Search on models for text including menu
-        Returns a list of tuple (ratio, model, model_name, id, rec_name, icon)
+        Returns a list of tuple (ratio, model, model_name, id, name, icon)
         The size of the list is limited to limit
         """
         pool = Pool()
@@ -194,12 +197,12 @@ class Model(ModelSQL, ModelView):
                 Model = pool.get(model.model)
                 if not hasattr(Model, 'search_global'):
                     continue
-                for id_, rec_name, icon in Model.search_global(text):
-                    if isinstance(rec_name, str):
-                        rec_name = rec_name.decode('utf-8')
-                    s.set_seq1(rec_name)
+                for record, name, icon in Model.search_global(text):
+                    if isinstance(name, str):
+                        name = name.decode('utf-8')
+                    s.set_seq1(name)
                     yield (s.ratio(), model.model, model.rec_name,
-                        id_, rec_name, icon)
+                        record.id, name, icon)
         return heapq.nlargest(int(limit), generate())
 
 
@@ -309,7 +312,7 @@ class ModelField(ModelSQL, ModelView):
         for field_name in model_fields:
             if model_fields[field_name]['module'] == module_name \
                     and field_name not in model._fields:
-                #XXX This delete field even when it is defined later
+                # XXX This delete field even when it is defined later
                 # in the module
                 cursor.execute(*ir_model_field.delete(
                         where=ir_model_field.id ==
@@ -511,7 +514,7 @@ class ModelAccess(ModelSQL, ModelView):
                 Max(Case((model_access.perm_create, 1), else_=0)),
                 Max(Case((model_access.perm_delete, 1), else_=0)),
                 where=ir_model.model.in_(models)
-                & ((user_group.user == user) | (model_access.group == None)),
+                & ((user_group.user == user) | (model_access.group == Null)),
                 group_by=ir_model.model))
         access.update(dict(
                 (m, {'read': r, 'write': w, 'create': c, 'delete': d})
@@ -561,7 +564,12 @@ class ModelAccess(ModelSQL, ModelView):
         elif field._type == 'reference':
             selection = field.selection
             if isinstance(selection, basestring):
-                selection = getattr(Model, field.selection)()
+                sel_func = getattr(Model, field.selection)
+                if not is_instance_method(Model, field.selection):
+                    selection = sel_func()
+                else:
+                    # XXX Can not check access right on instance method
+                    selection = []
             for model_name, _ in selection:
                 if not cls.check(model_name, mode=mode,
                         raise_exception=False):
@@ -691,7 +699,7 @@ class ModelFieldAccess(ModelSQL, ModelView):
                 Max(Case((field_access.perm_create, 1), else_=0)),
                 Max(Case((field_access.perm_delete, 1), else_=0)),
                 where=ir_model.model.in_(models)
-                & ((user_group.user == user) | (field_access.group == None)),
+                & ((user_group.user == user) | (field_access.group == Null)),
                 group_by=[ir_model.model, model_field.name]))
         for m, f, r, w, c, d in cursor.fetchall():
             accesses[m][f] = {'read': r, 'write': w, 'create': c, 'delete': d}
@@ -870,7 +878,7 @@ class ModelData(ModelSQL, ModelView):
         Operator = fields.SQL_OPERATORS[operator]
         query = table.select(table.id,
             where=Operator(
-                (table.fs_values != table.values) & (table.fs_values != None),
+                (table.fs_values != table.values) & (table.fs_values != Null),
                 value))
         return [('id', 'in', query)]
 
@@ -910,10 +918,9 @@ class ModelData(ModelSQL, ModelView):
             return dict(json.loads(values, object_hook=JSONDecoder()))
         except ValueError:
             # Migration from 3.2
-            from ..tools import safe_eval
             from decimal import Decimal
             import datetime
-            return safe_eval(values, {
+            return eval(values, {
                     'Decimal': Decimal,
                     'datetime': datetime,
                     })
@@ -1002,7 +1009,7 @@ class ModelGraph(Report):
         graph.set('ratio', 'auto')
         cls.fill_graph(models, graph, level=data['level'], filter=filter)
         data = graph.create(prog='dot', format='png')
-        return ('png', buffer(data), False, action_report.name)
+        return ('png', fields.Binary.cast(data), False, action_report.name)
 
     @classmethod
     def fill_graph(cls, models, graph, level=1, filter=None):
