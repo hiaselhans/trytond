@@ -9,7 +9,7 @@ from email.mime.text import MIMEText
 from email.header import Header
 
 from trytond.model import ModelView, ModelSQL, fields
-from trytond.tools import safe_eval, get_smtp_server
+from trytond.tools import get_smtp_server
 from trytond.transaction import Transaction
 from trytond.pool import Pool
 import trytond.backend as backend

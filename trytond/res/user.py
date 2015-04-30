@@ -23,7 +23,7 @@ except ImportError:
 
 from trytond.model import ModelView, ModelSQL, fields
 from trytond.wizard import Wizard, StateView, Button, StateTransition
-from trytond.tools import safe_eval, grouped_slice
+from trytond.tools import grouped_slice
 import trytond.backend as backend
 from trytond.transaction import Transaction
 from trytond.cache import Cache

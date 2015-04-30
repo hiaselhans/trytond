@@ -872,7 +872,7 @@ this repository contains the full copyright notices and license terms. -->
             <field name="group" ref="group_admin"/>
         </record>
 
-        <record model="ir.rule.group" id="rule_group_session">
+        <!--<record model="ir.rule.group" id="rule_group_session">
             <field name="model"
                 search="[('model', '=', 'ir.session')]"/>
             <field name="global_p" eval="True"/>
@@ -882,7 +882,7 @@ this repository contains the full copyright notices and license terms. -->
                 eval="[('create_uid', '=', Eval('user', {}).get('id', -1))]"
                 pyson="1"/>
             <field name="rule_group" ref="rule_group_session"/>
-        </record>
+        </record>-->
 
         <record model="ir.rule.group" id="rule_group_session_wizard">
             <field name="model"

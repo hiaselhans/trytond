@@ -200,8 +200,7 @@ class Index(dict):
         """
         Get all modules which depend or extras_depend on 'module_name'
         """
-        return filter(lambda module: module_name in module.depends +
-                                                    module.extras_depend,
+        return filter(lambda module: module_name in self.recursive_all_deps(module.name),
                       self.itervalues())
 
 
@@ -218,10 +217,10 @@ class Index(dict):
         """
         get recursive depends for 'module_name' including extra-depends
         """
-        depends = set(self[module_name].depends +
-                      self[module_name].extras_depend)
-        for dep in depends:
-            depends.update(self.recursive_all_deps(dep))
+        depends = set()
+        for dep in self[module_name].depends + self[module_name].extras_depend:
+            depends.add(dep)
+            depends.union(self.recursive_all_deps(dep))
         return depends
 
     def __str__(self):
@@ -242,6 +241,7 @@ def load_module_graph(graph, pool, update=None, lang=None):
     """
     Load all the modules from a given graph
     """
+    logger = logging.getLogger("modules")
     if lang is None:
         lang = [config.get('database', 'language')]
     modules_todo = []
@@ -253,13 +253,19 @@ def load_module_graph(graph, pool, update=None, lang=None):
     cursor.execute(*ir_module.select(ir_module.name, ir_module.state,
                                      where=ir_module.name.in_(modules)))
 
-    module_states = dict(cursor.fetchall())
+    to_update = set()
+    update = update or []
+    for mod_name in update:
+        to_update.add(mod_name)
+        deps = [p.name for p in Index().get_all_children(mod_name)]
+        to_update = to_update.union(deps)
 
+    module_states = dict(cursor.fetchall())
     for module in graph:
         logger.info(module.name)
         classes = pool.setup(module.name)
         package_state = module_states.get(module.name, 'uninstalled')
-        if update and module.name in update:
+        if module.name in to_update:
             if package_state == 'installed':
                 package_state = 'to upgrade'
             elif package_state != 'to upgrade':
@@ -348,21 +354,10 @@ def register_classes():
     """
     index = Index.create_index()
     sorted_list = index.create_graph()
-    #import trytond.ir
-    #trytond.ir.register()
-    #import trytond.res
-    #trytond.res.register()
-    #import trytond.webdav
-    #trytond.webdav.register()
-    #import trytond.tests
-    #trytond.tests.register()
 
     logger = logging.getLogger('modules')
 
     for package in sorted_list:
-
-        #if package.name in ('ir', 'res', 'webdav', 'tests'):
-        #    continue
 
         logger.info('%s:registering classes' % package.name)
         if not os.path.isdir(package.path):

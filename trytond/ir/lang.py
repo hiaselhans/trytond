@@ -6,7 +6,7 @@ from ast import literal_eval
 
 from trytond.model import ModelView, ModelSQL, fields
 from trytond.cache import Cache
-from trytond.tools import safe_eval, datetime_strftime
+from trytond.tools import datetime_strftime
 from trytond.transaction import Transaction
 from trytond.pool import Pool
 from .time_locale import TIME_LOCALE
