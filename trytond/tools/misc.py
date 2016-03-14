@@ -20,6 +20,10 @@ from trytond.config import config, parse_uri
 from trytond.transaction import Transaction
 
 
+def file_open(*args):
+    pass
+
+
 def find_in_path(name):
     if os.name == "nt":
         sep = ';'
